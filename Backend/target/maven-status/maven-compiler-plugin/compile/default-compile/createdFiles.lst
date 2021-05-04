@@ -1,0 +1,8 @@
+app\model\Exceptions\InvalidPhoneNumberException.class
+app\model\Validators\EmailValidator.class
+app\model\Exceptions\InvalidEmailException.class
+app\model\Validators\EmailValidation.class
+app\SmartWalletApplication.class
+app\model\Validators\PhoneNumberValidation.class
+app\model\User\User.class
+app\model\Validators\PhoneNumberValidator.class
