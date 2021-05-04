@@ -27,12 +27,15 @@ public class User {
     @PhoneNumberValidation
     public String phone;
 
+    @NotEmpty
+    public String password;
+
     public double accountCredit;
 
     //Constructor
     public User() {}
 
-    public User(String name, String email, String phone) {
+    public User(String name, String email, String phone, String password) {
 
         isAValidPhoneNumber(phone);
         isAValidEmail(email);
@@ -40,6 +43,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.phone = phone;
+        this.password = password;
         this.accountCredit = 0;
     }
 
