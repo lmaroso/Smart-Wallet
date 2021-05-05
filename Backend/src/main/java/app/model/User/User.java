@@ -1,61 +1,107 @@
 package app.model.User;
 
 import app.model.Exceptions.InvalidEmailException;
-import app.model.Exceptions.InvalidPhoneNumberException;
-import app.model.Validators.EmailValidation;
-import app.model.Validators.PhoneNumberValidation;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.Collection;
+import java.util.Collections;
+import static app.model.User.UserRole.USER;
 
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type",discriminatorType = DiscriminatorType.STRING)
-public class User {
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
+public class User implements UserDetails {
 
     //Parameters
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public long id;
-
-    @NotEmpty(message = "validations.name")
-    public String name;
-
-    @EmailValidation
-    public String email;
-
-    @PhoneNumberValidation
-    public String phone;
+    private long id;
 
     @NotEmpty
-    public String password;
+    private String name;
 
-    public double accountCredit;
+    @NotEmpty
+    private String email;
+
+    @NotEmpty
+    private String password;
+
+    private double accountCredit;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
+    private Boolean expired;
+
+    private Boolean locked;
+
+    private Boolean enabled;
 
     //Constructor
     public User() {}
 
-    public User(String name, String email, String phone, String password) {
+    public User(String name, String email, String password) {
 
-        isAValidPhoneNumber(phone);
         isAValidEmail(email);
 
         this.name = name;
         this.email = email;
-        this.phone = phone;
         this.password = password;
         this.accountCredit = 0;
+        this.role = USER;
+        this.expired = false;
+        this.locked = false;
+        this.enabled = true;
+    }
+
+    public String getEmail(){
+        return this.email;
     }
 
     //Methods
-    protected void isAValidPhoneNumber(String phoneNumber) throws InvalidPhoneNumberException {
-        if (!phoneNumber.matches("^(?:(?:00|\\+)?549?)?0?(?:11|[2368]\\d)(?:(?=\\d{0,2}15)\\d{2})??\\d{8}$"))
-            throw new InvalidPhoneNumberException();
-    }
-
     private void isAValidEmail(String newEmail) {
         if (!newEmail.matches("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"))
-            throw new InvalidEmailException();
+            throw new InvalidEmailException(newEmail);
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(this.role.name());
+        return Collections.singletonList(authority);
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.name;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return !this.expired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !this.locked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
 }
