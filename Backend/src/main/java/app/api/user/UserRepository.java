@@ -1,4 +1,4 @@
-package app.api;
+package app.api.user;
 
 import app.model.User.User;
 import org.springframework.data.jpa.repository.JpaRepository;

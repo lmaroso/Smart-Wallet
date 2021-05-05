@@ -1,6 +1,6 @@
 package app.security.config;
 
-import app.api.UserService;
+import app.api.user.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -26,11 +26,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/register")
-                    .permitAll()
-                .anyRequest()
+                    .antMatchers("/*")
+                    .permitAll();
+                /*.anyRequest()
                 .authenticated().and()
-                .formLogin();
+                .formLogin();*/
     }
 
     @Override

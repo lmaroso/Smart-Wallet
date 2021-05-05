@@ -17,7 +17,6 @@ import static app.model.User.UserRole.USER;
 public class User implements UserDetails {
 
     //Parameters
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -59,11 +58,16 @@ public class User implements UserDetails {
         this.enabled = true;
     }
 
+
+    //Methods
     public String getEmail(){
         return this.email;
     }
 
-    //Methods
+    public void setPassword(String password){
+        this.password = password;
+    }
+
     private void isAValidEmail(String newEmail) {
         if (!newEmail.matches("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"))
             throw new InvalidEmailException(newEmail);
