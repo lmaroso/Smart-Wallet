@@ -19,12 +19,12 @@ const api = (path, options) => {
 		return fetch(`${HOST}${path}`, {
 			method,
 			headers,
-		}).then(res => res.body ? res.text() : null);
+		}).then(response => response.text());
 	return fetch(`${HOST}${path}`, {
 		method,
 		headers,
 		body: type === "form" ? encodeFormData(body) : JSON.stringify(body),
-	}).then(res => res.body ? res.text() : null);
+	}).then((response) => response.json());
 };   
 
 //Requests
