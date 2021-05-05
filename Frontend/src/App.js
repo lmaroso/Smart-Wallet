@@ -1,25 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import "@ionic/core/css/core.css";
+import "@ionic/core/css/ionic.bundle.css";
+import React from "react";
+import moment from "moment";
+import "./App.scss";
+import "moment/locale/es";
+import{ IonApp } from "@ionic/react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import Routes from "./routes";
+
+moment.locale("es");
+
+const App = () => (
+	<IonApp>
+		<Routes />
+	</IonApp>
+);
 
 export default App;
