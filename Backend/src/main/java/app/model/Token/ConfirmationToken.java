@@ -1,8 +1,6 @@
 package app.model.Token;
 
 import app.model.User.User;
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,6 +9,7 @@ import java.time.LocalDateTime;
 public class ConfirmationToken {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)
@@ -31,8 +30,9 @@ public class ConfirmationToken {
     )
     private User user;
 
-    public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt,
-                             LocalDateTime confirmedAt, User user){
+    public ConfirmationToken(){};
+
+    public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt, User user){
 
         this.token = token;
         this.createdAt = createdAt;
@@ -40,6 +40,18 @@ public class ConfirmationToken {
         this.confirmedAt = confirmedAt;
         this.user = user;
 
+    }
+
+    public LocalDateTime getConfirmedAt(){
+        return this.confirmedAt;
+    }
+
+    public LocalDateTime getExpiresAt(){
+        return this.expiresAt;
+    }
+
+    public User getUser(){
+        return this.user;
     }
 
 

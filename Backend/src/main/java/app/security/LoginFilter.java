@@ -27,7 +27,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     public Authentication attemptAuthentication(
             HttpServletRequest req, HttpServletResponse res)
-            throws AuthenticationException, IOException, ServletException {
+            throws AuthenticationException, IOException {
 
         InputStream body = req.getInputStream();
 
