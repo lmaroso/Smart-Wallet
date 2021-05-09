@@ -1,6 +1,5 @@
 package app.api.user;
 
-import app.api.user.UserRepository;
 import app.model.Exceptions.InvalidEmailException;
 import app.model.Exceptions.UsedEmailException;
 import app.model.User.User;
@@ -57,7 +56,7 @@ public class UserService implements UserDetailsService {
         if(userExists){
             throw new UsedEmailException(user.getEmail());
         }
-        //user.setPassword(bCryptPasswordEncoder.encode(user.getEmail()));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return "Se guardo correctamente";
     }

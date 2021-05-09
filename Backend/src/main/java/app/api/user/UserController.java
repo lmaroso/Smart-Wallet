@@ -1,11 +1,8 @@
 package app.api.user;
 
-import app.dto.LoginDTO;
 import app.dto.UserDTO;
-import app.model.Exceptions.InvalidUserPassException;
 import app.model.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -24,28 +21,8 @@ public class UserController {
     @PostMapping(value = "/register")
     public String registerUser(@RequestBody UserDTO userDTO) {
 
-        User user = new User(userDTO.name, userDTO.email, userDTO.password);
+        User user = new User(userDTO.getName(), userDTO.getEmail(), userDTO.getPassword());
         return userService.registerUser(user);
-    }
-
-    @PostMapping(value = "/login")
-    public void loginUser(@RequestBody LoginDTO loginDTO) {
-
-        User user;
-
-        //Chequeo nombre de usuario.
-        try {
-            user = userService.findUserByEmail(loginDTO.email);
-        }
-        catch (UsernameNotFoundException e) {
-            throw new InvalidUserPassException();
-        }
-
-        //Chequeo password.
-        if(!loginDTO.pass.equals(user.getPassword())){
-            throw new InvalidUserPassException();
-        }
-
     }
 
     @RequestMapping(value = "/user/{name}", method = RequestMethod.GET)
