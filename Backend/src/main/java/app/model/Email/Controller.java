@@ -43,7 +43,8 @@ public class Controller {
             message.setFrom(new InternetAddress(mail.getUser()));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(mail.getReceiver()));
             message.setSubject(mail.getSubject());
-            message.setContent(multi);
+            message.setText(mail.getMessage(), "utf-8", "html");
+            //message.setContent(multi);
 
             Transport t = s.getTransport("smtp");
             t.connect(mail.getUser(), mail.getPass());

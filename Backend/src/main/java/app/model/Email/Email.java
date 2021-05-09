@@ -13,8 +13,8 @@ public class Email {
 
     public Email(){
 
-        this.user = "hello@smart-wallet.com";
-        this.pass = "ktmlnpbqckpkbtcd";
+        this.user = "smart.wallet.app1@gmail.com";
+        this.pass = "smartwallet2021";
         this.subject  = "";
         this.receiver = "";
         this.message  = "";

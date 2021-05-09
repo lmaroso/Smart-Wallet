@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
+@RequestMapping(path = "register")
 public class ConfirmationTokenController {
 
     @Autowired
@@ -15,7 +16,7 @@ public class ConfirmationTokenController {
         this.confirmationTokenService = confirmationTokenService;
     }
 
-    @PostMapping(path = "/register/confirm")
+    @GetMapping(path = "confirm")
     public String confirm(@RequestParam("token") String token) {
         return confirmationTokenService.confirmToken(token);
     }

@@ -19,10 +19,10 @@ public class UserController {
 
     //Post
     @PostMapping(value = "/register")
-    public String registerUser(@RequestBody UserDTO userDTO) {
+    public void registerUser(@RequestBody UserDTO userDTO) {
 
         User user = new User(userDTO.getName(), userDTO.getEmail(), userDTO.getPassword());
-        return userService.registerUser(user);
+        userService.registerUser(user);
     }
 
     @RequestMapping(value = "/user/{name}", method = RequestMethod.GET)

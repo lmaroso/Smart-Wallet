@@ -43,14 +43,12 @@ public class UserService implements UserDetailsService {
         return this.findUserByEmail(email);
     }
 
-    public String registerUser(User user) {
+    public void registerUser(User user) {
         boolean isValidEmail = this.emailValidator.test(user.getUsername());
         if (!isValidEmail){
             throw new InvalidEmailException(user.getUsername());
         }
-        String token = this.signUpUser(user);
-
-        return token;
+        this.signUpUser(user);
     }
 
     public User findUserNamed(String name) {
@@ -62,7 +60,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, email)));
     }
 
-    public String signUpUser(User user){
+    public void signUpUser(User user){
         boolean userExists = userRepository.findByEmail(user.getUsername()).isPresent();
         if(userExists){
             throw new UsedEmailException(user.getUsername());
@@ -78,12 +76,11 @@ public class UserService implements UserDetailsService {
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         Sender sender = new Sender("Client send", this.buildConfirmEmail(user.getUsername(), user.getName(), token));
         sender.start();
-        return token;
     }
 
     private Email buildConfirmEmail(String reciver, String name, String token){
         Email email = new Email();
-        String link = "localhost:8080/register/confirm?token=" + token;
+        String link = "http://localhost:8080/register/confirm?token=" + token;
 
         email.setReceiver(reciver);
         email.setSubject("Confirm your email");
