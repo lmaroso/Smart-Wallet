@@ -1,15 +1,15 @@
 import React from "react";
 import { IonPage, IonContent } from "@ionic/react";
 
-import Footer from "../components/Footer";
-import Header from "../components/Header";
+import Footer from "../Footer/Footer";
+import Header from "../Header/Header";
 
 import "./PageWrapper.scss";
 
 const PageWrapper = ({ children }) => (
 	<IonPage className="content">
 		<Header />
-		<IonContent>
+		<IonContent className="marginSides">
 			{children}
 		</IonContent>
 		<Footer />

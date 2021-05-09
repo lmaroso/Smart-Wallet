@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
-import Home from "./pages/Home/Home";
+import Register from "./pages/Register/Register";
 
 const Routes = () => (
 	<BrowserRouter>
@@ -10,7 +10,7 @@ const Routes = () => (
 			return (
 				<Switch location={location}>
 					{/* <Route exact component={NoPage} path="/404" /> */}
-					<Route exact component={Home} path="/" />
+					<Route exact component={Register} path="/" />
 					{/* <Route exact component={NoPage} path="/" /> */}
 				</Switch>
 			);}
