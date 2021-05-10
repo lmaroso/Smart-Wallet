@@ -1,4 +1,4 @@
-package app.security.config;
+package app.security;
 
 import app.api.user.UserService;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -26,11 +27,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/*")
-                    .permitAll();
-                /*.anyRequest()
+                    .antMatchers("/register*/**") .permitAll()
+                    .antMatchers("/login") .permitAll()
+                .anyRequest()
                 .authenticated().and()
-                .formLogin();*/
+                .addFilterBefore(new LoginFilter("/login", authenticationManager()),
+                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(),
+                        UsernamePasswordAuthenticationFilter.class);
+
     }
 
     @Override

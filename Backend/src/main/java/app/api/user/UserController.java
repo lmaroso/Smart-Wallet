@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     private IncomeService incomeService;

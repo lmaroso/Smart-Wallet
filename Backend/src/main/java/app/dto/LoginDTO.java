@@ -2,14 +2,23 @@ package app.dto;
 
 public class LoginDTO {
 
-    public String email;
-    public String pass;
+    private String username;
+    private String password;
 
-    public LoginDTO(String email, String pass){
+    public String getUsername() {
+        return this.username;
+    }
 
-        this.email = email;
-        this.pass = pass;
+    public void setUsername(String email) {
+        this.username = email;
+    }
 
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
 }

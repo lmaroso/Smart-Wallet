@@ -55,13 +55,13 @@ public class User implements UserDetails {
         this.role = USER;
         this.expired = false;
         this.locked = false;
-        this.enabled = true;
+        this.enabled = false;
     }
 
 
     //Methods
-    public String getEmail(){
-        return this.email;
+    public String getName(){
+        return this.name;
     }
 
     public void setPassword(String password){
@@ -86,7 +86,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.name;
+        return this.email;
     }
 
     @Override

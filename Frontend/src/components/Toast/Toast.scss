@@ -1,0 +1,11 @@
+.toastError {
+    --background: var(--ion-color-danger);
+    --color: white;
+    --button-color: white;
+}
+
+.toastSuccess {
+    --background: var(--ion-color-success);
+    --color: white;
+    --button-color: white;
+}
