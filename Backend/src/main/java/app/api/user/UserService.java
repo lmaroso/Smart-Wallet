@@ -1,6 +1,5 @@
 package app.api.user;
 
-import app.api.user.UserRepository;
 import app.model.Exceptions.InvalidEmailException;
 import app.model.Exceptions.UsedEmailException;
 import app.model.User.User;
