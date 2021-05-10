@@ -24,7 +24,7 @@ public class UserController {
     @PostMapping(value = "/register")
     public String registerUser(@RequestBody UserDTO userDTO) {
 
-        User user = new User(userDTO.name, userDTO.email, userDTO.password);
+        User user = new User(userDTO.getName(), userDTO.getEmail(), userDTO.getPassword());
         return userService.registerUser(user);
     }
 
@@ -35,14 +35,14 @@ public class UserController {
 
         //Chequeo nombre de usuario.
         try {
-            user = userService.findUserByEmail(loginDTO.email);
+            user = userService.findUserByEmail(loginDTO.getUsername());
         }
         catch (UsernameNotFoundException e) {
             throw new InvalidUserPassException();
         }
 
         //Chequeo password.
-        if(!loginDTO.pass.equals(user.getPassword())){
+        if(!loginDTO.getPassword().equals(user.getPassword())){
             throw new InvalidUserPassException();
         }
 
