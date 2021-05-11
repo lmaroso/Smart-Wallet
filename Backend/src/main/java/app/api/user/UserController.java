@@ -15,17 +15,17 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-    private final UserService userService;
+    private UserService userService;
 
     @Autowired
     private IncomeService incomeService;
 
     //Post
     @PostMapping(value = "/register")
-    public String registerUser(@RequestBody UserDTO userDTO) {
+    public void registerUser(@RequestBody UserDTO userDTO) {
 
         User user = new User(userDTO.getName(), userDTO.getEmail(), userDTO.getPassword());
-        return userService.registerUser(user);
+        userService.registerUser(user);
     }
 
     @PostMapping(value = "/login")
