@@ -14,10 +14,10 @@ const Register = () => {
 	const [toastText, setToastText] = useState("");
 
 	const onClickRegister = () => {
-		register({name, email, password })
-			.then(() => {
-				// eslint-disable-next-line no-console
-				// console.log(response);
+		register({ name, email, password })
+			.then((response) => {
+				//eslint-disable-next-line no-console
+				console.log(response);
 				// if (response.status === 200) {
 				setToastType("success");
 				setToastText("El usuario se registró exitosamente");

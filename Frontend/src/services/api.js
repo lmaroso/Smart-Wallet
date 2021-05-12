@@ -19,13 +19,20 @@ const api = (path, options) => {
 		return fetch(`${HOST}${path}`, {
 			method,
 			headers,
-		}).then(response => response.text());
+		}).then(handleResponse);
 	return fetch(`${HOST}${path}`, {
 		method,
 		headers,
 		body: type === "form" ? encodeFormData(body) : JSON.stringify(body),
-	}).then((response) => response.json());
-};   
+	}).then(handleResponse);
+};
+
+const handleResponse = response => {
+	return {
+		status: response.status,
+		body: response.body ? response : null
+	};
+};
 
 //Requests
 
@@ -38,3 +45,7 @@ export const register = body => api("/register", {
 	body: { ...body }
 });
 
+export const login = body => api("/login", {
+	method: POST,
+	body: { ...body }
+});
