@@ -19,20 +19,16 @@ const Register = () => {
 
 	const onClickRegister = () => {
 		login({ username, password })
-			.then((response) => {
-				//eslint-disable-next-line no-console
-				console.log(response);
-				// if (response.status === 200) {
-				setToastType("success");
-				setToastText("El usuario se registró exitosamente");
-				// } else if (response.status >= 400) {
-				// 	setToastType("error");
-				// 	setToastText(response.message);
-				// }
+			.then(({ status, data }) => {
+				if (status === 200) {
+					setToastType("success");
+					setToastText("Login exitoso");
+				} else if (status >= 400) {
+					setToastType("error");
+					setToastText(data);
+				}
 				setShouldShowToast(true);
 			});
-		// eslint-disable-next-line no-console
-		// .catch((error) => console.log(error));
 	};
 	return (
 		<PageWrapper>

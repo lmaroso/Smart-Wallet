@@ -1,51 +1,30 @@
-import fetch from "isomorphic-unfetch";
+import axios from "axios";
 
-import encodeFormData from "./encodeFormData";
-
-const HOST = "http://localhost:8080";
-const GET = "GET";
-const POST = "POST";
-
-const api = (path, options) => {
-	const { method, body, type } = {
-		method: GET,
-		body: {},
-		...options,
-	};
-	const headers = { "Content-Type": "application/json" };
-	if (type === "form") headers["Content-Type"] = "application/x-www-form-urlencoded";
-
-	if (method === GET)
-		return fetch(`${HOST}${path}`, {
-			method,
-			headers,
-		}).then(handleResponse);
-	return fetch(`${HOST}${path}`, {
-		method,
-		headers,
-		body: type === "form" ? encodeFormData(body) : JSON.stringify(body),
-	}).then(handleResponse);
-};
+const api = axios.create({
+	baseURL: "http://localhost:8080",
+	headers: { "Content-Type": "application/json" }
+});
 
 const handleResponse = response => {
 	return {
+		data: response.data,
 		status: response.status,
-		body: response.body ? response : null
+		headers: response.headers
 	};
 };
 
-//Requests
+const handleError = ({ response }) => {
+	return {
+		data: response.data.message,
+		status: response.status,
+		headers: response.headers
+	};
+};
 
-// export const get = () => api("", {
-// 	method: GET
-// });
+export const register = body => api.post("/register", body)
+	.then(handleResponse)
+	.catch(handleError);
 
-export const register = body => api("/register", {
-	method: POST,
-	body: { ...body }
-});
-
-export const login = body => api("/login", {
-	method: POST,
-	body: { ...body }
-});
+export const login = body => api.post("/login", body)
+	.then(handleResponse)
+	.catch(handleError);
