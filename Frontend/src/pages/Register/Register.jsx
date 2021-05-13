@@ -4,7 +4,7 @@ import RegisterView from "./RegisterView";
 
 import { register } from "../../services/api";
 
-const Register = () => {
+const Register = ({ history }) => {
 
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -18,7 +18,10 @@ const Register = () => {
 			.then(({ status, data }) => {
 				if (status === 200) {
 					setToastType("success");
-					setToastText("El usuario se registró exitosamente");
+					setToastText("Se registró exitosamente. Por favor verificá tu correo para activar el usuario");
+					setTimeout(() => {
+						history.push({ pathname: "/login" });
+					}, 4000);
 				} else if (status >= 400) {
 					setToastType("error");
 					setToastText(data);

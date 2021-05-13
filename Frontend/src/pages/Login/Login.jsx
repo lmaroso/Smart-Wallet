@@ -9,7 +9,7 @@ import Toast from "../../components/Toast/Toast";
 
 import { login } from "../../services/api";
 
-const Register = () => {
+const Register = ({ history }) => {
 
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -22,8 +22,15 @@ const Register = () => {
 			.then(({ status, data }) => {
 				if (status === 200) {
 					setToastType("success");
-					setToastText("Login exitoso");
-				} else if (status >= 400) {
+					setToastText("Login exitoso! Ingresando...");
+					//Falta guardar el token
+					setTimeout(() => {
+						history.push({ pathname: "/dashboard" });
+					}, 4000);
+				} else if (status === 403) {
+					setToastType("error");
+					setToastText("La combinacion de usuario y contraseña ingresada no existe");
+				} else {
 					setToastType("error");
 					setToastText(data);
 				}

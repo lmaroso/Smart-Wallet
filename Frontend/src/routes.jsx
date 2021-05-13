@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
+import Dashboard from "./pages/Dashboard/Dashboard";
 
 const Routes = () => (
 	<BrowserRouter>
@@ -12,9 +13,9 @@ const Routes = () => (
 				<Switch location={location}>
 					{/* <Route exact component={NoPage} path="/404" /> */}
 					<Route exact component={Register} path="/" />
-					<Route exact component={Login} path="/login" />
 					<Route exact component={Register} path="/register" />
-					{/* <Route exact component={NoPage} path="/" /> */}
+					<Route exact component={Login} path="/login" />
+					<Route exact component={Dashboard} path="/dashboard" />
 				</Switch>
 			);}
 		} />
