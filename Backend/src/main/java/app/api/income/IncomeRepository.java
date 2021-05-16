@@ -1,4 +1,4 @@
-package app.api.user;
+package app.api.income;
 
 import app.model.User.Income;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -15,6 +15,12 @@ public class Income {
     private long id;
 
     @NotEmpty
+    private String name;
+
+    @NotEmpty
+    private String description;
+
+    @NotEmpty
     private Integer amount;
 
     @NotEmpty
@@ -26,11 +32,28 @@ public class Income {
     //Constructor
     public Income() {}
 
-    public Income(Integer amount, LocalDateTime date, Boolean programmed) {
-
+    public Income(String name, String description, Integer amount, LocalDateTime date, Boolean programmed) {
+        this.name = name;
+        this.description = description;
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getAmount() {
@@ -64,4 +87,5 @@ public class Income {
     public Boolean isProgrammed(Boolean programmed){
         return this.programmed;
     }
+
 }

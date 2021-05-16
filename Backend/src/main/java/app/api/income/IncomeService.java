@@ -1,5 +1,6 @@
-package app.api.user;
+package app.api.income;
 
+import app.api.income.IncomeRepository;
 import app.model.Exceptions.InvalidAmountException;
 import app.model.User.Income;
 import org.springframework.beans.factory.annotation.Autowired;
