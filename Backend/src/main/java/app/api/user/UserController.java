@@ -1,6 +1,5 @@
 package app.api.user;
 
-import app.api.income.IncomeService;
 import app.dto.ProfileDTO;
 import app.dto.UserDTO;
 import app.model.User.User;
@@ -23,9 +22,9 @@ public class UserController {
     }
 
     //Get
-    @GetMapping(value = "/getProfile/{email}")
-    public ProfileDTO findUserByEmail(@PathVariable("email") String email) {
-        User user = userService.findUserByEmail(email);
+    @GetMapping(value = "/getProfile/{id}")
+    public ProfileDTO findUserByEmail(@PathVariable("id") String id) {
+        User user = userService.findUserById(id);
         return new ProfileDTO(user.getName(), user.getUsername());
     }
 

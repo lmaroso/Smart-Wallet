@@ -1,6 +1,7 @@
 package app.security;
 
 import app.dto.LoginDTO;
+import app.model.User.User;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,8 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -53,8 +52,11 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
             HttpServletResponse res, FilterChain chain,
             Authentication auth) throws IOException, ServletException {
 
-        // Si la autenticacion fue exitosa, agregamos el token a la respuesta
+        //Si la autenticacion fue exitosa, agregamos el token y el id a la respuesta.
         JwtUtil.addAuthentication(res, auth.getName());
+        //JwtUtil.addId(res, user.getId());
+        JwtUtil.addId(res, ((User) auth.getPrincipal()).getId());
+
     }
 }
 
