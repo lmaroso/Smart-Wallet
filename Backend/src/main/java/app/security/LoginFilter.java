@@ -3,6 +3,7 @@ package app.security;
 import app.dto.LoginDTO;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -51,6 +52,12 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
             HttpServletRequest req,
             HttpServletResponse res, FilterChain chain,
             Authentication auth) throws IOException, ServletException {
+
+        res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+        res.setHeader("Access-Control-Allow-Headers",
+                "content-type, x-gwt-module-base, x-gwt-permutation, Authorization");
 
         // Si la autenticacion fue exitosa, agregamos el token a la respuesta
         JwtUtil.addAuthentication(res, auth.getName());
