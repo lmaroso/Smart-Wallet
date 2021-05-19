@@ -1,4 +1,4 @@
-package app.model.User;
+package app.model.Income;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;

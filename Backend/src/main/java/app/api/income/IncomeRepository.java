@@ -1,6 +1,6 @@
 package app.api.income;
 
-import app.model.User.Income;
+import app.model.Income.Income;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,5 +10,5 @@ import org.springframework.transaction.annotation.Transactional;
 public interface IncomeRepository extends JpaRepository<Income, Long> {
 
     @Override
-    <S extends Income> S save(S entity);
+    Income save(Income income);
 }

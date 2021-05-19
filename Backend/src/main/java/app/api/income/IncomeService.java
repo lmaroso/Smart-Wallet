@@ -1,8 +1,7 @@
 package app.api.income;
 
-import app.api.income.IncomeRepository;
 import app.model.Exceptions.InvalidAmountException;
-import app.model.User.Income;
+import app.model.Income.Income;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +18,11 @@ public class IncomeService {
         //this.emailValidator = new EmailValidator();
     }
 
-    public void saveIncome (Income income){
+    public Income saveIncome (Income income){
         if(!income.isAvailable()) {
             throw new InvalidAmountException();
         }
-        incomeRepository.save(income);
+       return incomeRepository.save(income);
+        }
+        ;
     }
-
-}
