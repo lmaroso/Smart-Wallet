@@ -16,30 +16,32 @@ const RegisterView = ({
 	shouldShowToast,
 	toastText,
 	toastType,
-	onClickRegister
+	onSubmit
 }) => (
 	<PageWrapper>
-		<Input
-			required={true}
-			type="name"
-			value={name}
-			onChange={event => setName(event.detail.value)}
-		/>
-		<Input
-			required={true}
-			type="email"
-			value={email}
-			onChange={event => setEmail(event.detail.value)}
-		/>
-		<Input
-			required={true}
-			type="password"
-			value={password}
-			onChange={event => setPassword(event.detail.value)}
-		/>
-		<Button expand="block" onClick={() => onClickRegister()}>
-            Registrarse
-		</Button>
+		<form onSubmit={onSubmit}>
+			<Input
+				required
+				custom="name"
+				value={name}
+				onChange={event => setName(event.detail.value)}
+			/>
+			<Input
+				required
+				custom="email"
+				value={email}
+				onChange={event => setEmail(event.detail.value)}
+			/>
+			<Input
+				required
+				custom="password"
+				value={password}
+				onChange={event => setPassword(event.detail.value)}
+			/>
+			<Button expand="block" type="submit">
+				Registrarse
+			</Button>
+		</form>
 		<Toast isOpen={shouldShowToast} message={toastText} type={toastType} onDidDismiss={() => setShouldShowToast(false)} />
 	</PageWrapper>
 );

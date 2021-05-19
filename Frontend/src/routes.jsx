@@ -4,6 +4,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import Income from "./pages/Income/Income";
 
 const Routes = () => (
 	<BrowserRouter>
@@ -16,6 +17,7 @@ const Routes = () => (
 					<Route exact component={Register} path="/register" />
 					<Route exact component={Login} path="/login" />
 					<Route exact component={Dashboard} path="/dashboard" />
+					<Route exact component={Income} path="/income" />
 				</Switch>
 			);}
 		} />

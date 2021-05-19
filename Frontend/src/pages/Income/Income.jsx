@@ -1,27 +1,30 @@
 import React, { useState } from "react";
+import moment from "moment";
 
-import RegisterView from "./RegisterView";
+import IncomeView from "./IncomeView";
 
-import { register } from "../../services/api";
+import { addIncome } from "../../services/api";
 
-const Register = ({ history }) => {
+const Income = ({ history }) => {
 
 	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const [description, setDescription] = useState("");
+	const [amount, setAmount] = useState(0);
+	const [programmed, setProgrammed] = useState(false);
 	const [shouldShowToast, setShouldShowToast] = useState(false);
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
 
 	const onSubmit = (event) => {
 		event.preventDefault();
-		register({ name, email, password })
+		const date = moment().format("YYYY-MM-DD[T]HH:mm:ss");
+		addIncome({ name, description, amount, date, programmed })
 			.then(({ status, data }) => {
 				if (status === 200) {
 					setToastType("success");
-					setToastText("Se registró exitosamente. Por favor verificá tu correo para activar el usuario");
+					setToastText("Guardado exitosamente");
 					setTimeout(() => {
-						history.push({ pathname: "/login" });
+						history.push({ pathname: "/dashboard" });
 					}, 4000);
 				} else if (status >= 400) {
 					setToastType("error");
@@ -31,13 +34,15 @@ const Register = ({ history }) => {
 			});
 	};
 	return (
-		<RegisterView
-			email={email}
+		<IncomeView
+			amount={amount}
+			description={description}
 			name={name}
-			password={password}
-			setEmail={setEmail}
+			programmed={programmed}
+			setAmount={setAmount}
+			setDescription={setDescription}
 			setName={setName}
-			setPassword={setPassword}
+			setProgrammed={setProgrammed}
 			setShouldShowToast={setShouldShowToast}
 			shouldShowToast={shouldShowToast}
 			toastText={toastText}
@@ -47,4 +52,4 @@ const Register = ({ history }) => {
 	);
 };
 
-export default Register;
+export default Income;

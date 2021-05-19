@@ -4,18 +4,17 @@ import { IonItem, IonLabel, IonInput } from "@ionic/react";
 // import "./Input.scss";
 import { INPUT_FIELDS } from "./constants";
 
-const Input = ({ inputmode, label, onChange, placeholder, required, type, value }) => {
+const Input = ({ inputmode, label, onChange, placeholder, required, type, custom, value }) => {
 	return (
 		<IonItem>
-			<IonLabel position="floating">{type ? INPUT_FIELDS[type].label : label}</IonLabel>
+			<IonLabel position="floating">{custom ? INPUT_FIELDS[custom].label : label}</IonLabel>
 			<IonInput
-				inputmode={type ? INPUT_FIELDS[type].inputmode : inputmode}
-				placeholder={type ? INPUT_FIELDS[type].placeholder : placeholder}
+				inputmode={custom ? INPUT_FIELDS[custom].inputmode : inputmode}
+				placeholder={custom ? INPUT_FIELDS[custom].placeholder : placeholder}
 				required={required}
-				type={type && INPUT_FIELDS[type].type}
+				type={custom ? INPUT_FIELDS[custom].type : type}
 				value={value}
 				onIonChange={onChange}
-				// className={[className, "button", cancel && "cancel"].join(" ")}
 			/>
 		</IonItem>
 	);

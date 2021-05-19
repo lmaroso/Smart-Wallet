@@ -8,6 +8,7 @@ import Input from "../../components/Input/Input";
 import Toast from "../../components/Toast/Toast";
 
 import { login } from "../../services/api";
+import { setKey } from "../../utils/localStorage";
 
 const Register = ({ history }) => {
 
@@ -17,13 +18,14 @@ const Register = ({ history }) => {
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
 
-	const onClickRegister = () => {
+	const onSubmit = (event) => {
+		event.preventDefault();
 		login({ username, password })
-			.then(({ status, data }) => {
+			.then(({ status, data, headers }) => {
 				if (status === 200) {
 					setToastType("success");
 					setToastText("Login exitoso! Ingresando...");
-					//Falta guardar el token
+					setKey("token", headers.authorization);
 					setTimeout(() => {
 						history.push({ pathname: "/dashboard" });
 					}, 4000);
@@ -39,21 +41,23 @@ const Register = ({ history }) => {
 	};
 	return (
 		<PageWrapper>
-			<Input
-				required={true}
-				type="email"
-				value={username}
-				onChange={event => setUsername(event.detail.value)}
-			/>
-			<Input
-				required={true}
-				type="password"
-				value={password}
-				onChange={event => setPassword(event.detail.value)}
-			/>
-			<Button expand="block" onClick={() => onClickRegister()}>
-            Login
-			</Button>
+			<form onSubmit={onSubmit}>
+				<Input
+					required
+					custom="email"
+					value={username}
+					onChange={event => setUsername(event.detail.value)}
+				/>
+				<Input
+					required
+					custom="password"
+					value={password}
+					onChange={event => setPassword(event.detail.value)}
+				/>
+				<Button expand="block" type="submit">
+				Login
+				</Button>
+			</form>
 			<Toast isOpen={shouldShowToast} message={toastText} type={toastType} onDidDismiss={() => setShouldShowToast(false)} />
 		</PageWrapper>
 		// <LoginView
@@ -62,11 +66,10 @@ const Register = ({ history }) => {
 		// 	setUsername={setUsername}
 		// 	setPassword={setPassword}
 		// 	setShouldShowToast={setShouldShowToast}
-		// 	setToastType={setToastType}
 		// 	shouldShowToast={shouldShowToast}
 		// 	toastText={toastText}
 		// 	toastType={toastType}
-		// 	onClickRegister={onClickRegister}
+		// 	onSubmit={onSubmit}
 		// />
 	);
 };
