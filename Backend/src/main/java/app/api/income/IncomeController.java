@@ -1,8 +1,10 @@
 package app.api.income;
 
 import app.dto.IncomeDTO;
-import app.model.User.Income;
+import app.model.Income.Income;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +18,8 @@ public class IncomeController {
     private IncomeService incomeService;
 
     @PostMapping(value = "/addIncome")
-    public void addIncome(@RequestBody IncomeDTO incomeDTO) {
+    public ResponseEntity<Income> addIncome(@RequestBody IncomeDTO incomeDTO) {
         Income income = new Income(incomeDTO.getName(), incomeDTO.getDescription(), incomeDTO.getAmount(), incomeDTO.getDate(), incomeDTO.getProgrammed());
-        incomeService.saveIncome(income);
+        return new ResponseEntity<>(incomeService.saveIncome(income), HttpStatus.CREATED);
+        }
     }
-}

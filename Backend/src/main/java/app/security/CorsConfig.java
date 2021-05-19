@@ -21,7 +21,7 @@ public class CorsConfig {
                         .allowedOrigins(allowedOrigin)
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*")
-                        .exposedHeaders("Authorization");
+                        .exposedHeaders("Authorization", "UserId");
             }
         };
     }

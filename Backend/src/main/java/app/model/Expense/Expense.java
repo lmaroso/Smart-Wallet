@@ -1,4 +1,4 @@
-package app.model.User;
+package app.model.Expense;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -7,12 +7,15 @@ import java.time.LocalDateTime;
 @Entity
 @Inheritance(strategy= InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-public class Income {
+public class Expense {
 
     //Parameters
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    @NotEmpty
+    private String type;
 
     @NotEmpty
     private String name;
@@ -30,15 +33,20 @@ public class Income {
     private Boolean programmed;
 
     //Constructor
-    public Income() {}
+    public Expense() {}
 
-    public Income(String name, String description, Integer amount, LocalDateTime date, Boolean programmed) {
+    public Expense(String type, String name, String description, Integer amount, LocalDateTime date, Boolean programmed) {
+        this.type = type;
         this.name = name;
         this.description = description;
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
     }
+
+    public String getType() { return type; }
+
+    public void setType(String type) { this.type = type; }
 
     public String getName() {
         return name;
