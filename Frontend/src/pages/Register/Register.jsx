@@ -17,7 +17,7 @@ const Register = ({ history }) => {
 		event.preventDefault();
 		register({ name, email, password })
 			.then(({ status, data }) => {
-				if (status === 200) {
+				if (status === 200 || status === 201) {
 					setToastType("success");
 					setToastText("Se registró exitosamente. Por favor verificá tu correo para activar el usuario");
 					setTimeout(() => {

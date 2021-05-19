@@ -42,7 +42,7 @@ const IncomeView = ({
 			<Input
 				inputmode="text"
 				label="Nombre"
-				placeholder="Ingrese un nombre del nuevo gasto"
+				placeholder="Ingrese un nombre del nuevo ingreso"
 				required={true}
 				type="text"
 				value={name}
@@ -51,7 +51,7 @@ const IncomeView = ({
 			<Input
 				inputmode="text"
 				label="Descripción"
-				placeholder="Ingrese una descripción del nuevo gasto"
+				placeholder="Descripción del nuevo ingreso"
 				required={true}
 				type="text"
 				value={description}

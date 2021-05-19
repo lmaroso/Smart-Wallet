@@ -22,7 +22,7 @@ const Register = ({ history }) => {
 		event.preventDefault();
 		login({ username, password })
 			.then(({ status, data, headers }) => {
-				if (status === 200) {
+				if (status === 200 || status === 201) {
 					setToastType("success");
 					setToastText("Login exitoso! Ingresando...");
 					setKey("token", headers.authorization);

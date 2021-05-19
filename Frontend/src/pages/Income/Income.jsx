@@ -10,7 +10,7 @@ const Income = ({ history }) => {
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 	const [amount, setAmount] = useState(0);
-	const [programmed, setProgrammed] = useState(false);
+	const [programmed, setProgrammed] = useState(null);
 	const [shouldShowToast, setShouldShowToast] = useState(false);
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
@@ -20,7 +20,7 @@ const Income = ({ history }) => {
 		const date = moment().format("YYYY-MM-DD[T]HH:mm:ss");
 		addIncome({ name, description, amount, date, programmed })
 			.then(({ status, data }) => {
-				if (status === 200) {
+				if (status === 200 || status === 201) {
 					setToastType("success");
 					setToastText("Guardado exitosamente");
 					setTimeout(() => {
