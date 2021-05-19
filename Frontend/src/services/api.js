@@ -9,7 +9,8 @@ const handleResponse = response => {
 	return {
 		data: response.data,
 		status: response.status,
-		headers: response.headers
+		// eslint-disable-next-line no-console
+		headers: console.log(response.headers) || response.headers
 	};
 };
 

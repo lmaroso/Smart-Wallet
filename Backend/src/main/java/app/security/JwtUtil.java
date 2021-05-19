@@ -22,8 +22,15 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS512, "not_so_secret")
                 .compact();
 
-        //agregamos al encabezado el token
+        //Agregamos al encabezado el token.
         res.addHeader("Authorization",  token);
+    }
+
+    static void addId(HttpServletResponse res, Long id){
+
+        //Agregamos al encabezado el id.
+        res.addHeader("UserId",  id.toString());
+
     }
 
     // Método para validar el token enviado por el cliente

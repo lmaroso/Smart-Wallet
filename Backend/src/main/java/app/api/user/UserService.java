@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -22,6 +23,7 @@ import java.util.UUID;
 public class UserService implements UserDetailsService {
 
     private final static String USER_NOT_FOUND = "User %s not found";
+    private final static String ID_NOT_FOUND = "Id %s not found";
 
     @Autowired
     private final UserRepository userRepository;
@@ -49,6 +51,21 @@ public class UserService implements UserDetailsService {
             throw new InvalidEmailException(user.getUsername());
         }
         this.signUpUser(user);
+    }
+
+    public User findUserById(String id){
+
+        Long longID = Long.valueOf(0);
+
+        try {
+            longID = Long.parseLong(id);
+        }
+        catch (Exception e){
+            new UsernameNotFoundException(String.format(ID_NOT_FOUND, id));
+        }
+
+        return userRepository.findById(longID)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(ID_NOT_FOUND, id)));
     }
 
     public User findUserNamed(String name) {

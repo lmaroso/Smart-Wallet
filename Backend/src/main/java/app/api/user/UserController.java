@@ -1,9 +1,7 @@
 package app.api.user;
 
-import app.api.income.IncomeService;
+import app.dto.ProfileDTO;
 import app.dto.UserDTO;
-import app.dto.IncomeDTO;
-import app.model.User.Income;
 import app.model.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +21,11 @@ public class UserController {
         userService.registerUser(user);
     }
 
-    @RequestMapping(value = "/user/{name}", method = RequestMethod.GET)
-    public User findUserNamed(@PathVariable("name") String name) {
-        return userService.findUserNamed(name);
+    //Get
+    @GetMapping(value = "/getProfile/{id}")
+    public ProfileDTO findUserByEmail(@PathVariable("id") String id) {
+        User user = userService.findUserById(id);
+        return new ProfileDTO(user.getName(), user.getUsername());
     }
 
 }
