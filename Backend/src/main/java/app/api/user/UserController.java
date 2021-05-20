@@ -23,7 +23,7 @@ public class UserController {
 
     //Get
     @GetMapping(value = "/getProfile/{id}")
-    public ProfileDTO findUserByEmail(@PathVariable("id") String id) {
+    public ProfileDTO findUserById(@PathVariable("id") String id) {
         User user = userService.findUserById(id);
         return new ProfileDTO(user.getName(), user.getUsername());
     }
