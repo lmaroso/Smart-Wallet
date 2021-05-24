@@ -1,5 +1,6 @@
 package app.api.expense;
 
+import app.api.user.UserService;
 import app.dto.ExpenseDTO;
 import app.model.Expense.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,17 @@ public class ExpenseController {
     @Autowired
     private ExpenseService expenseService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping(value = "/addExpense")
     public void addIncome(@RequestBody ExpenseDTO expenseDTO) {
-        Expense expense = new Expense(expenseDTO.getType(), expenseDTO.getName(), expenseDTO.getDescription(), expenseDTO.getAmount(), expenseDTO.getDate(), expenseDTO.getProgrammed());
+        Expense expense = new Expense(expenseDTO.getUserId(),
+                expenseDTO.getName(), expenseDTO.getDescription(),
+                expenseDTO.getAmount(), expenseDTO.getDate(),
+                expenseDTO.getProgrammed());
+
+        userService.addExpense(expense);
         expenseService.saveExpense(expense);
     }
 }
