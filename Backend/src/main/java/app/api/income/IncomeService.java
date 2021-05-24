@@ -14,8 +14,6 @@ public class IncomeService {
     //Constructor
     public IncomeService(IncomeRepository incomeRepository) {
         this.incomeRepository = incomeRepository;
-
-        //this.emailValidator = new EmailValidator();
     }
 
     public Income saveIncome (Income income){
@@ -23,6 +21,6 @@ public class IncomeService {
             throw new InvalidAmountException();
         }
        return incomeRepository.save(income);
-        }
-        ;
     }
+
+}

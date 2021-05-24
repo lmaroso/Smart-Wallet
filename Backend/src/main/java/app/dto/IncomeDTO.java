@@ -5,19 +5,29 @@ import java.time.LocalDateTime;
 
 public class IncomeDTO {
 
+    public String userId;
     public String name;
     public String description;
     public Integer amount;
     public LocalDateTime date;
     public Boolean programmed;
 
-    public IncomeDTO(String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
+    public IncomeDTO(String userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
+        this.userId = userId;
         this.name = name;
         this.description = description;
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
 
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getName() {
