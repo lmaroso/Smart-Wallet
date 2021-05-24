@@ -1,9 +1,10 @@
 package integationTests;
 
 import app.SmartWalletApplication;
-import app.dto.LoginDTO;
+import app.dto.IncomeDTO;
 import app.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
+import java.time.LocalDateTime;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -80,4 +81,19 @@ public class IntegrationTests {
 
     }*/
 
+    @Test
+    public void testAddIncome() throws Exception{
+
+        //UserDTO user = new UserDTO("Ama", "amahjaime@gmail.com", "ama");
+        IncomeDTO income = new IncomeDTO("1", "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        String jsonRequest = mapper.writeValueAsString(income);
+
+       String token = "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQW1hIiwiZW1haWwiOiJkYXZpbGFtZWxpZTIxQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiYW1hbGlhamFpbWUifQ.hb7l6gYsKoWQsHbybEyys41dU231Y_zPZhy1troRgY4";
+
+        MvcResult result = mockMvc
+                .perform(post("/addIncome").
+                        header("Authorization", token)
+                        .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated()).andReturn();
+    }
 }
