@@ -23,4 +23,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User a " +
             "SET a.enabled = TRUE WHERE a.email = ?1")
     int enableAppUser(String email);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User a " +
+            "SET a.accountCredit = a.accountCredit+:income WHERE a.id = :id")
+    void updateIncome (double income, long id );
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User a " +
+            "SET a.accountExpense = a.accountExpense+:expense WHERE a.id = :id")
+    void addExpense (double expense, long id );
+
 }

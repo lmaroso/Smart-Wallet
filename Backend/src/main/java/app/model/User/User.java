@@ -32,6 +32,8 @@ public class User implements UserDetails {
 
     private double accountCredit;
 
+    private double accountExpense;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
@@ -52,6 +54,7 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.accountCredit = 0;
+        this.accountExpense = 0;
         this.role = USER;
         this.expired = false;
         this.locked = false;
@@ -70,6 +73,14 @@ public class User implements UserDetails {
 
     public void setPassword(String password){
         this.password = password;
+    }
+
+    public double getAccountCredit() {
+        return accountCredit;
+    }
+
+    public double getAccountExpense(){
+        return accountExpense;
     }
 
     private void isAValidEmail(String newEmail) {

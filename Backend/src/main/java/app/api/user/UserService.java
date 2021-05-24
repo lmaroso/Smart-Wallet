@@ -5,6 +5,8 @@ import app.api.token.ConfirmationTokenService;
 import app.model.Email.Email;
 import app.model.Email.Sender;
 import app.model.Exceptions.*;
+import app.model.Expense.Expense;
+import app.model.Income.Income;
 import app.model.Token.ConfirmationToken;
 import app.model.User.User;
 import app.model.Validators.EmailValidator;
@@ -104,6 +106,16 @@ public class UserService implements UserDetailsService {
         email.setMessage(this.buildConfirmEmailMessage(name, link));
 
         return email;
+    }
+
+    public void updateIncome(Income income){
+        User user = findUserById(income.getUserId());
+        userRepository.updateIncome(income.getAmount(), user.getId());
+    }
+
+    public void addExpense(Expense expense){
+        User user = findUserById(expense.getUserId());
+        userRepository.addExpense(expense.getAmount(), user.getId());
     }
 
     private String buildConfirmEmailMessage(String name, String link) {
