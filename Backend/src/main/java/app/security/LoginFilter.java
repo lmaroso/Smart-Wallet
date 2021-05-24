@@ -54,7 +54,6 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
         //Si la autenticacion fue exitosa, agregamos el token y el id a la respuesta.
         JwtUtil.addAuthentication(res, auth.getName());
-        //JwtUtil.addId(res, user.getId());
         JwtUtil.addId(res, ((User) auth.getPrincipal()).getId());
 
     }

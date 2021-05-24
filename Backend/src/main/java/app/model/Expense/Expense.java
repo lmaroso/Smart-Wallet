@@ -15,7 +15,7 @@ public class Expense {
     private long id;
 
     @NotEmpty
-    private String userId;
+    private Long userId;
 
     @NotEmpty
     private String name;
@@ -35,7 +35,7 @@ public class Expense {
     //Constructor
     public Expense() {}
 
-    public Expense(String userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed) {
+    public Expense(Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed) {
         this.userId = userId;
         this.name = name;
         this.description = description;
@@ -44,9 +44,9 @@ public class Expense {
         this.programmed = programmed;
     }
 
-    public String getUserId() { return userId; }
+    public Long getUserId() { return userId; }
 
-    public void setUserId(String userId) { this.userId = userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 
     public String getName() {
         return name;

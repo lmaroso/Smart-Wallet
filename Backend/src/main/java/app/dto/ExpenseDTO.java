@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 
 public class ExpenseDTO {
 
-    public String userId;
+    public Long userId;
     public String name;
     public String description;
     public Integer amount;
     public LocalDateTime date;
     public Boolean programmed;
 
-    public ExpenseDTO(String userId, String type, String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
+    public ExpenseDTO(Long userId, String type, String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
         this.userId = userId;
         this.name = name;
         this.description = description;
@@ -20,11 +20,11 @@ public class ExpenseDTO {
         this.programmed = programmed;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

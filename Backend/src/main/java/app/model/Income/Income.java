@@ -15,7 +15,7 @@ public class Income {
     private long id;
 
     @NotEmpty
-    private String userId;
+    private Long userId;
 
     @NotEmpty
     private String name;
@@ -35,7 +35,7 @@ public class Income {
     //Constructor
     public Income() {}
 
-    public Income(String idUser, String name, String description, Integer amount, LocalDateTime date, Boolean programmed) {
+    public Income(Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed) {
         this.userId = userId;
         this.name = name;
         this.description = description;
@@ -44,11 +44,11 @@ public class Income {
         this.programmed = programmed;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

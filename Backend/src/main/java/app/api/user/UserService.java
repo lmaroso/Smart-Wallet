@@ -55,18 +55,8 @@ public class UserService implements UserDetailsService {
         this.signUpUser(user);
     }
 
-    public User findUserById(String id){
-
-        Long longID = Long.valueOf(0);
-
-        try {
-            longID = Long.parseLong(id);
-        }
-        catch (Exception e){
-            new UsernameNotFoundException(String.format(ID_NOT_FOUND, id));
-        }
-
-        return userRepository.findById(longID)
+    public User findUserById(Long id){
+        return userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(ID_NOT_FOUND, id)));
     }
 
@@ -116,6 +106,10 @@ public class UserService implements UserDetailsService {
     public void addExpense(Expense expense){
         User user = findUserById(expense.getUserId());
         userRepository.addExpense(expense.getAmount(), user.getId());
+    }
+
+    public void enableUser(String email){
+        userRepository.enableAppUser(email);
     }
 
     private String buildConfirmEmailMessage(String name, String link) {

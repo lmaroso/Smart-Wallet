@@ -4,11 +4,14 @@ import app.dto.ProfileDTO;
 import app.dto.UserDTO;
 import app.model.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
 public class UserController {
+
+    private final static String ID_NOT_FOUND = "Id %s not found";
 
     @Autowired
     private UserService userService;
@@ -24,8 +27,18 @@ public class UserController {
     //Get
     @GetMapping(value = "/getProfile/{id}")
     public ProfileDTO findUserById(@PathVariable("id") String id) {
-        User user = userService.findUserById(id);
+
+        Long longID = Long.valueOf(0);
+
+        try {
+            longID = Long.parseLong(id);
+        }
+        catch (Exception e){
+            new UsernameNotFoundException(String.format(ID_NOT_FOUND, id));
+        }
+        User user = userService.findUserById(longID);
         return new ProfileDTO(user.getName(), user.getUsername());
+
     }
 
 }
