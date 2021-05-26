@@ -41,6 +41,7 @@ public class ConfirmationToken {
         this.user = user;
 
     }
+    public String getToken(){return this.token;};
 
     public LocalDateTime getConfirmedAt(){
         return this.confirmedAt;

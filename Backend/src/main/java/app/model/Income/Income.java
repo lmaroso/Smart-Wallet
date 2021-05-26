@@ -84,10 +84,6 @@ public class Income {
         this.date = date;
     }
 
-    public Boolean getProgrammed() {
-        return programmed;
-    }
-
     public void setProgrammed(Boolean programmed) {
         this.programmed = programmed;
     }
@@ -96,7 +92,7 @@ public class Income {
         return this.amount > 0;
     }
 
-    public Boolean isProgrammed(Boolean programmed){
+    public Boolean isProgrammed(){
         return this.programmed;
     }
 
