@@ -4,11 +4,12 @@ import { IonItem, IonLabel, IonInput } from "@ionic/react";
 // import "./Input.scss";
 import { INPUT_FIELDS } from "./constants";
 
-const Input = ({ inputmode, label, onChange, placeholder, required, type, custom, value }) => {
+const Input = ({ disabled, inputmode, label, onChange, placeholder, required, type, custom, value }) => {
 	return (
 		<IonItem>
 			<IonLabel position="floating">{custom ? INPUT_FIELDS[custom].label : label}</IonLabel>
 			<IonInput
+				disabled={disabled}
 				inputmode={custom ? INPUT_FIELDS[custom].inputmode : inputmode}
 				placeholder={custom ? INPUT_FIELDS[custom].placeholder : placeholder}
 				required={required}

@@ -13,8 +13,7 @@ const handleResponse = response => {
 	return {
 		data: response.data,
 		status: response.status,
-		// eslint-disable-next-line no-console
-		headers: console.log(response.headers) || response.headers
+		headers: response.headers
 	};
 };
 
@@ -42,7 +41,19 @@ export const login = body => api.post("/login", body)
 	.then(handleResponse)
 	.catch(handleError);
 
-export const addIncome = body => api.post("/addIncome", body, {
+export const addIncome = body => api.post("/addIncome", { userId: parseInt(getKey("userid")), ...body }, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
+
+export const getProfile = () => api.get(`/getProfile/${getKey("userid")}`, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
+
+export const addExpense = body => api.post("/addExpense", { userId: parseInt(getKey("userid")), ...body }, {
 	headers: { Authorization: getKey("token"), ...headers }
 })
 	.then(handleResponse)
