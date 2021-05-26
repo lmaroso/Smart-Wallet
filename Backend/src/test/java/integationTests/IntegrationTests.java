@@ -56,6 +56,8 @@ public class IntegrationTests {
 
     private String smart2Token;
 
+    private String smart2Id;
+
     @Before
     public void setup() throws Exception {
 
@@ -95,19 +97,20 @@ public class IntegrationTests {
                 .getHeader("Authorization");
 
     }
-
-  /*  @Test
+/*
+    @Test
     public void testConfirmUser() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
         String userToken = confirmationTokenService.getTokenByUser(user);
 
-        mockMvc.perform(get("register/confirm?token={userToken}", userToken)
+        mockMvc.perform(get("register/confirm?={token}", userToken)
+        .header("Authorization", smart2Token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        } */
+     } */
 
     @Test
     public void testSuccessRegister() throws Exception {
@@ -184,12 +187,28 @@ public class IntegrationTests {
 
         String loginJsonRequest = mapper.writeValueAsString(loginUser);
 
-        mockMvc.perform(post("/login").content(loginJsonRequest)
+        mockMvc.perform(post("/login")
+                .content(loginJsonRequest)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
                 .andReturn();
 
     }
+
+    /*
+    @Test
+    public void testProfile() throws Exception{
+
+        String id = String.valueOf(userService.findUserByEmail("smart.wallet.app2@gmail.com").getId());
+
+        mockMvc.perform(get("profile/{id}" , id)
+                .header("Authorization", smart2Token)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+    } */
+
 
     @Test
     public void testSuccessAddIncome() throws Exception{
