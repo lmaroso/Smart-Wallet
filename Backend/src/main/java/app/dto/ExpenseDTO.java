@@ -11,7 +11,7 @@ public class ExpenseDTO {
     public LocalDateTime date;
     public Boolean programmed;
 
-    public ExpenseDTO(Long userId, String type, String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
+    public ExpenseDTO(Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
         this.userId = userId;
         this.name = name;
         this.description = description;

@@ -22,7 +22,7 @@ public class IncomeController {
     private UserService userService;
 
     @PostMapping(value = "/addIncome")
-    public ResponseEntity<Income> addIncome(@RequestBody IncomeDTO incomeDTO) {
+    public HttpStatus addIncome(@RequestBody IncomeDTO incomeDTO) {
 
         Income income = new Income(incomeDTO.getUserId(),
                 incomeDTO.getName(), incomeDTO.getDescription(),
@@ -30,7 +30,9 @@ public class IncomeController {
                 incomeDTO.getProgrammed());
 
         userService.updateIncome(income);
-        return new ResponseEntity<>(incomeService.saveIncome(income), HttpStatus.CREATED);
+        incomeService.saveIncome(income);
+
+        return HttpStatus.OK;
     }
 
 }

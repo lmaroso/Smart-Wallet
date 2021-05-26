@@ -4,6 +4,7 @@ import app.api.user.UserService;
 import app.dto.ExpenseDTO;
 import app.model.Expense.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,7 @@ public class ExpenseController {
     private UserService userService;
 
     @PostMapping(value = "/addExpense")
-    public void addIncome(@RequestBody ExpenseDTO expenseDTO) {
+    public HttpStatus addIncome(@RequestBody ExpenseDTO expenseDTO) {
         Expense expense = new Expense(expenseDTO.getUserId(),
                 expenseDTO.getName(), expenseDTO.getDescription(),
                 expenseDTO.getAmount(), expenseDTO.getDate(),
@@ -28,5 +29,7 @@ public class ExpenseController {
 
         userService.addExpense(expense);
         expenseService.saveExpense(expense);
+
+        return HttpStatus.OK;
     }
 }
