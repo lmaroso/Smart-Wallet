@@ -3,7 +3,7 @@ import moment from "moment";
 
 import ExpenseView from "./ExpenseView";
 
-import { addIncome } from "../../services/api";
+import { addExpense } from "../../services/api";
 import { getKey } from "../../utils/localStorage";
 
 const Expense = ({ history }) => {
@@ -25,7 +25,7 @@ const Expense = ({ history }) => {
 	const onSubmit = (event) => {
 		event.preventDefault();
 		const date = moment().format("YYYY-MM-DD[T]HH:mm:ss");
-		addIncome({ name, description, amount, date, programmed })
+		addExpense({ name, description, amount, date, programmed })
 			.then(({ status, data }) => {
 				if (status === 200 || status === 201) {
 					setToastType("success");
