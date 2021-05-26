@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 
-// import LoginView from "./LoginView";
-
-import PageWrapper from "../../components/PageWrapper/PageWrapper";
-import Button from "../../components/Button/Button";
-import Input from "../../components/Input/Input";
-import Toast from "../../components/Toast/Toast";
+import LoginView from "./LoginView";
 
 import { login } from "../../services/api";
 import { setKey } from "../../utils/localStorage";
 
-const Register = ({ history }) => {
+const Login = ({ history }) => {
 
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -26,6 +21,7 @@ const Register = ({ history }) => {
 					setToastType("success");
 					setToastText("Login exitoso! Ingresando...");
 					setKey("token", headers.authorization);
+					setKey("userid", headers.userid);
 					setTimeout(() => {
 						history.push({ pathname: "/dashboard" });
 					}, 4000);
@@ -40,38 +36,19 @@ const Register = ({ history }) => {
 			});
 	};
 	return (
-		<PageWrapper>
-			<form onSubmit={onSubmit}>
-				<Input
-					required
-					custom="email"
-					value={username}
-					onChange={event => setUsername(event.detail.value)}
-				/>
-				<Input
-					required
-					custom="password"
-					value={password}
-					onChange={event => setPassword(event.detail.value)}
-				/>
-				<Button expand="block" type="submit">
-				Login
-				</Button>
-			</form>
-			<Toast isOpen={shouldShowToast} message={toastText} type={toastType} onDidDismiss={() => setShouldShowToast(false)} />
-		</PageWrapper>
-		// <LoginView
-		// 	username={username}
-		// 	password={password}
-		// 	setUsername={setUsername}
-		// 	setPassword={setPassword}
-		// 	setShouldShowToast={setShouldShowToast}
-		// 	shouldShowToast={shouldShowToast}
-		// 	toastText={toastText}
-		// 	toastType={toastType}
-		// 	onSubmit={onSubmit}
-		// />
+		
+		<LoginView
+			password={password}
+			setPassword={setPassword}
+			setShouldShowToast={setShouldShowToast}
+			setUsername={setUsername}
+			shouldShowToast={shouldShowToast}
+			toastText={toastText}
+			toastType={toastType}
+			username={username}
+			onSubmit={onSubmit}
+		/>
 	);
 };
 
-export default Register;
+export default Login;

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 
 import IncomeView from "./IncomeView";
 
 import { addIncome } from "../../services/api";
+import { getKey } from "../../utils/localStorage";
 
 const Income = ({ history }) => {
 
@@ -14,6 +15,12 @@ const Income = ({ history }) => {
 	const [shouldShowToast, setShouldShowToast] = useState(false);
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
+
+	useEffect(() => {
+		if(!getKey("token")) {
+			history.push({ pathname: "/" });
+		}
+	}, [history]);
 
 	const onSubmit = (event) => {
 		event.preventDefault();

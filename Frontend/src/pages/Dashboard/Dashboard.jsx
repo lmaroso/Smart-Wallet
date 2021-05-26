@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-const Dashboard = () => {
+import { getKey } from "../../utils/localStorage";
+
+const Dashboard = ({ history }) => {
+
+	useEffect(() => {
+		if(!getKey("token")) {
+			history.push({ pathname: "/" });
+		}
+	}, [history]);
+
 	return (
 		<div>Dashboard</div>
 	);
