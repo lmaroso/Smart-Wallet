@@ -68,7 +68,6 @@ public class IntegrationTests {
                 .build();
 
         //Registra usuarios para tests.
-        UserDTO smart1RegisterUser  = new UserDTO("Smart1", "smart.wallet.app1@gmail.com", "sw");
         UserDTO smart2RegisterUser  = new UserDTO("Smart2", "smart.wallet.app2@gmail.com", "sw");
         UserDTO smart3RegisterUser  = new UserDTO("Smart3", "smart.wallet.app3@gmail.com", "sw");
 
@@ -106,18 +105,18 @@ public class IntegrationTests {
 
     }
 
-    /*@Test
+    @Test
     public void testConfirmUser() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app3@gmail.com");
         String userToken = confirmationTokenService.getTokenByUser(user);
 
-        mockMvc.perform(get("register/confirm/" + userToken)
+        mockMvc.perform(get("/register/confirm?token=" + userToken)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
-    }*/
+    }
 
     @Test
     public void testSuccessRegister() throws Exception {
