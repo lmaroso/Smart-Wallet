@@ -17,11 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 import static org.junit.Assert.assertEquals;
@@ -68,11 +70,17 @@ public class IntegrationTests {
         //Registra usuarios para tests.
         UserDTO smart1RegisterUser  = new UserDTO("Smart1", "smart.wallet.app1@gmail.com", "sw");
         UserDTO smart2RegisterUser  = new UserDTO("Smart2", "smart.wallet.app2@gmail.com", "sw");
+        UserDTO smart3RegisterUser  = new UserDTO("Smart3", "smart.wallet.app3@gmail.com", "sw");
 
-        String smart1RegisterJsonRequest  = mapper.writeValueAsString(smart1RegisterUser);
         String smart2RegisterJsonRequest  = mapper.writeValueAsString(smart2RegisterUser);
+        String smart3RegisterJsonRequest  = mapper.writeValueAsString(smart3RegisterUser);
 
         mockMvc.perform(post("/register").content(smart2RegisterJsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(post("/register").content(smart3RegisterJsonRequest)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -97,20 +105,19 @@ public class IntegrationTests {
                 .getHeader("Authorization");
 
     }
-/*
-    @Test
+
+    /*@Test
     public void testConfirmUser() throws Exception{
 
-        User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
+        User user = userService.findUserByEmail("smart.wallet.app3@gmail.com");
         String userToken = confirmationTokenService.getTokenByUser(user);
 
-        mockMvc.perform(get("register/confirm?={token}", userToken)
-        .header("Authorization", smart2Token)
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("register/confirm/" + userToken)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
-     } */
+    }*/
 
     @Test
     public void testSuccessRegister() throws Exception {
@@ -195,19 +202,18 @@ public class IntegrationTests {
 
     }
 
-    /*
     @Test
     public void testProfile() throws Exception{
 
         String id = String.valueOf(userService.findUserByEmail("smart.wallet.app2@gmail.com").getId());
 
-        mockMvc.perform(get("profile/{id}" , id)
+        mockMvc.perform(get("/getProfile/" + id)
                 .header("Authorization", smart2Token)
-                .contentType(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
-    } */
+    }
 
 
     @Test
