@@ -2,6 +2,7 @@ package app.model.Income;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,7 +15,7 @@ public class Income {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotEmpty
+    @NotNull
     private Long userId;
 
     @NotEmpty
@@ -23,13 +24,13 @@ public class Income {
     @NotEmpty
     private String description;
 
-    @NotEmpty
+    @NotNull
     private Integer amount;
 
-    @NotEmpty
+    @NotNull
     private LocalDateTime date;
 
-    @NotEmpty
+    @NotNull
     private Boolean programmed;
 
     //Constructor

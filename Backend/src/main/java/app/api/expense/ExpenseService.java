@@ -27,7 +27,7 @@ public class ExpenseService {
         if(!expense.isAvailable()) {
             throw new InvalidAmountException();
         }
-        Expense ex = expenseRepository.save(expense);
+        expenseRepository.save(expense);
 
     }
 

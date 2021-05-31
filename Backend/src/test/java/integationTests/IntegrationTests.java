@@ -1,6 +1,9 @@
 package integationTests;
 
 import app.SmartWalletApplication;
+import app.api.expense.ExpenseRepository;
+import app.api.expense.ExpenseService;
+import app.api.income.IncomeRepository;
 import app.api.token.ConfirmationTokenService;
 import app.api.user.UserRepository;
 import app.api.user.UserService;
@@ -8,6 +11,8 @@ import app.dto.ExpenseDTO;
 import app.dto.IncomeDTO;
 import app.dto.LoginDTO;
 import app.dto.UserDTO;
+import app.model.Expense.Expense;
+import app.model.Income.Income;
 import app.model.User.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -16,6 +21,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -24,6 +33,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -47,6 +59,9 @@ public class IntegrationTests {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ExpenseService expenseService;
 
     @Autowired
     UserRepository userRepository;
@@ -285,6 +300,45 @@ public class IntegrationTests {
                 .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
+        List<Expense> expenses = expenseService.getExpense(String.valueOf(user.getId()));
+
+        assertEquals(1, expenses.size());
+
+    }
+
+    @Test
+    public void testSuccessAdd3Expenses() throws Exception{
+
+        User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
+        ExpenseDTO expense1 = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000, LocalDateTime.now(), true);
+        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Supermercado", "Compra mensual", 7000, LocalDateTime.now(), true);
+        ExpenseDTO expense3 = new ExpenseDTO(user.getId(),"Club", "Cuota social", 3500, LocalDateTime.now(), true);
+        String jsonRequest1 = mapper.writeValueAsString(expense1);
+        String jsonRequest2 = mapper.writeValueAsString(expense2);
+        String jsonRequest3 = mapper.writeValueAsString(expense3);
+
+        mockMvc.perform(post("/addExpense")
+                .header("Authorization", smart2Token)
+                .content(jsonRequest1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        mockMvc.perform(post("/addExpense")
+                .header("Authorization", smart2Token)
+                .content(jsonRequest2).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        mockMvc.perform(post("/addExpense")
+                .header("Authorization", smart2Token)
+                .content(jsonRequest3).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        List<Expense> expenses = expenseService.getExpense(String.valueOf(user.getId()));
+
+        User updatedUser = userService.findUserById(user.getId());
+
+        assertEquals(3, expenses.size());
+        assertEquals(30500, updatedUser.getAccountExpense(), 0);
+
     }
 
     @Test
@@ -313,8 +367,8 @@ public class IntegrationTests {
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        //assertEquals("Not found expense", result.getResolvedException().getMessage());
        assertEquals( 200, result.getResponse().getStatus());
+
     }
 
     @Test

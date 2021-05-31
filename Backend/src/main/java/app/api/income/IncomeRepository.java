@@ -9,6 +9,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public interface IncomeRepository extends JpaRepository<Income, Long> {
 
-    @Override
-    Income save(Income income);
+
 }

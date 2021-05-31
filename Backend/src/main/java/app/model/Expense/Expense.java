@@ -2,6 +2,7 @@ package app.model.Expense;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,7 +15,7 @@ public class Expense {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotEmpty
+    @NotNull
     private Long userId;
 
     @NotEmpty
@@ -23,13 +24,13 @@ public class Expense {
     @NotEmpty
     private String description;
 
-    @NotEmpty
+    @NotNull
     private Integer amount;
 
-    @NotEmpty
+    @NotNull
     private LocalDateTime date;
 
-    @NotEmpty
+    @NotNull
     private Boolean programmed;
 
     //Constructor
@@ -42,6 +43,10 @@ public class Expense {
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public Long getUserId() { return userId; }
