@@ -17,13 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 import static org.junit.Assert.assertEquals;
@@ -56,9 +54,9 @@ public class IntegrationTests {
     @Autowired
     private ConfirmationTokenService confirmationTokenService;
 
-    private String smart2Token;
+    private String smart1Token;
 
-    private String smart2Id;
+    private String smart2Token;
 
     @Before
     public void setup() throws Exception {
@@ -68,11 +66,18 @@ public class IntegrationTests {
                 .build();
 
         //Registra usuarios para tests.
+        UserDTO smart1RegisterUser  = new UserDTO("Smart1", "smart.wallet.app1@gmail.com", "sw");
         UserDTO smart2RegisterUser  = new UserDTO("Smart2", "smart.wallet.app2@gmail.com", "sw");
         UserDTO smart3RegisterUser  = new UserDTO("Smart3", "smart.wallet.app3@gmail.com", "sw");
 
+        String smart1RegisterJsonRequest  = mapper.writeValueAsString(smart1RegisterUser);
         String smart2RegisterJsonRequest  = mapper.writeValueAsString(smart2RegisterUser);
         String smart3RegisterJsonRequest  = mapper.writeValueAsString(smart3RegisterUser);
+
+        mockMvc.perform(post("/register").content(smart1RegisterJsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
 
         mockMvc.perform(post("/register").content(smart2RegisterJsonRequest)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -89,19 +94,41 @@ public class IntegrationTests {
         userService.enableUser("smart.wallet.app2@gmail.com");
 
         //Loguea usuarios para utilizar en tests.
+        LoginDTO smart1LoginUser = new LoginDTO();
+        smart1LoginUser.setUsername("smart.wallet.app1@gmail.com");
+        smart1LoginUser.setPassword("sw");
+
         LoginDTO smart2LoginUser = new LoginDTO();
         smart2LoginUser.setUsername("smart.wallet.app2@gmail.com");
         smart2LoginUser.setPassword("sw");
 
+        String smart1LoginJsonRequest = mapper.writeValueAsString(smart1LoginUser);
         String smart2LoginJsonRequest = mapper.writeValueAsString(smart2LoginUser);
 
         //Realiza logins y obtiene tokens.
+        smart1Token = mockMvc.perform(post("/login").content(smart1LoginJsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getHeader("Authorization");
+
         smart2Token = mockMvc.perform(post("/login").content(smart2LoginJsonRequest)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getHeader("Authorization");
+
+        //Agrega un Gasto
+        User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000, LocalDateTime.now(), true);
+        String jsonRequestExpense = mapper.writeValueAsString(expense);
+
+        mockMvc.perform(post("/addExpense")
+                .header("Authorization", smart1Token)
+                .content(jsonRequestExpense).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
 
     }
 
@@ -166,6 +193,7 @@ public class IntegrationTests {
                 .content(loginJsonRequest)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
+
     }
 
     @Test
@@ -214,7 +242,6 @@ public class IntegrationTests {
 
     }
 
-
     @Test
     public void testSuccessAddIncome() throws Exception{
 
@@ -242,6 +269,7 @@ public class IntegrationTests {
 
         assertEquals("Amount is not allow", result.getResolvedException().getMessage());
         assertEquals( 400, result.getResponse().getStatus());
+
     }
 
 
@@ -271,6 +299,35 @@ public class IntegrationTests {
                 .content(jsonRequest).contentType(MediaType.APPLICATION_JSON)).andReturn();
 
         assertEquals("Amount is not allow", result.getResolvedException().getMessage());
+        assertEquals( 400, result.getResponse().getStatus());
+
+    }
+
+    @Test
+    public void testSuccessGetExpense() throws Exception{
+
+        String id = String.valueOf(userService.findUserByEmail("smart.wallet.app1@gmail.com").getId());
+
+        MvcResult result = mockMvc.perform(get("/getExpense/" + id)
+                .header("Authorization", smart1Token)
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        //assertEquals("Not found expense", result.getResolvedException().getMessage());
+       assertEquals( 200, result.getResponse().getStatus());
+    }
+
+    @Test
+    public void testIncorrectGetExpense() throws Exception{
+
+        String id = String.valueOf(userService.findUserByEmail("smart.wallet.app2@gmail.com").getId());
+
+        MvcResult result = mockMvc.perform(get("/getExpense/" + id)
+                .header("Authorization", smart2Token)
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        assertEquals("Not found expense", result.getResolvedException().getMessage());
         assertEquals( 400, result.getResponse().getStatus());
     }
 
