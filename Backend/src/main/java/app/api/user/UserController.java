@@ -4,6 +4,7 @@ import app.dto.ProfileDTO;
 import app.dto.UserDTO;
 import app.model.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,4 +42,17 @@ public class UserController {
 
     }
 
+    //Post
+    @PostMapping(value="/edit/{id}")
+    public void editProfile(@PathVariable("id") String id, @RequestBody ProfileDTO profileDTO){
+        Long longID = Long.valueOf(0);
+
+        try {
+            longID = Long.parseLong(id);
+        }
+        catch (Exception e){
+            new UsernameNotFoundException(String.format(ID_NOT_FOUND, id));
+        }
+        userService.updateProfile(longID, profileDTO.getName(), profileDTO.getEmail());
+    }
 }

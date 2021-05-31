@@ -29,7 +29,7 @@ public class IncomeController {
                 incomeDTO.getAmount(), incomeDTO.getDate(),
                 incomeDTO.getProgrammed());
 
-        userService.updateIncome(income);
+        userService.updateAccountCredit(income);
         incomeService.saveIncome(income);
 
         return HttpStatus.OK;

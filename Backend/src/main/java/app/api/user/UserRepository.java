@@ -28,12 +28,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User a " +
             "SET a.accountCredit = a.accountCredit+:income WHERE a.id = :id")
-    void updateIncome (double income, long id );
+    void updateAccountCredit (double income, long id );
 
     @Transactional
     @Modifying
     @Query("UPDATE User a " +
             "SET a.accountExpense = a.accountExpense+:expense WHERE a.id = :id")
-    void addExpense (double expense, long id );
+    void updateAccountExpense (double expense, long id );
 
 }

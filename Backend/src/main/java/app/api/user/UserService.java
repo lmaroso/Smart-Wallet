@@ -98,18 +98,25 @@ public class UserService implements UserDetailsService {
         return email;
     }
 
-    public void updateIncome(Income income){
+    public void updateAccountCredit(Income income){
         User user = findUserById(income.getUserId());
-        userRepository.updateIncome(income.getAmount(), user.getId());
+        userRepository.updateAccountCredit(income.getAmount(), user.getId());
     }
 
-    public void addExpense(Expense expense){
+    public void updateAccountExpense(Expense expense){
         User user = findUserById(expense.getUserId());
-        userRepository.addExpense(expense.getAmount(), user.getId());
+        userRepository.updateAccountExpense(expense.getAmount(), user.getId());
     }
 
     public void enableUser(String email){
         userRepository.enableAppUser(email);
+    }
+
+    public void updateProfile(Long id, String name, String email) {
+
+        User user = findUserById(id);
+        //userRepository.updateProfile(id, name, email);
+
     }
 
     private String buildConfirmEmailMessage(String name, String link) {
@@ -180,5 +187,6 @@ public class UserService implements UserDetailsService {
                 "\n" +
                 "</div></div>";
     }
+
 
 }
