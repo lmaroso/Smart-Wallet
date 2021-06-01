@@ -565,4 +565,70 @@ public class IntegrationTests {
 
     }
 
+    @Test
+    public void testUserRegisterLoginAndEditProfile() throws Exception{
+
+        UserDTO smart4RegisterUser  = new UserDTO("Smart4", "smart.wallet.app4@gmail.com", "sw");
+        String smart4RegisterJsonRequest  = mapper.writeValueAsString(smart4RegisterUser);
+
+        //El usuario se registra.
+        mockMvc.perform(post("/register").content(smart4RegisterJsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        User user = userService.findUserByEmail("smart.wallet.app4@gmail.com");
+        String userToken = confirmationTokenService.getTokenByUser(user);
+
+        //El usuario confirma su token.
+        mockMvc.perform(get("/register/confirm?token=" + userToken)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        LoginDTO loginUser = new LoginDTO();
+        loginUser.setUsername("smart.wallet.app4@gmail.com");
+        loginUser.setPassword("sw");
+
+        String loginJsonRequest = mapper.writeValueAsString(loginUser);
+
+        //El usuario se loguea
+        String smart4Token = mockMvc.perform(post("/login").content(loginJsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getHeader("Authorization");
+
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        String incomeJsonRequest = mapper.writeValueAsString(income);
+
+        //El usuario consulta su perfil
+        String id = String.valueOf(userService.findUserByEmail("smart.wallet.app4@gmail.com").getId());
+
+        mockMvc.perform(get("/getProfile/" + id)
+                .header("Authorization", smart2Token)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        //El usuario edita su perfil
+        ProfileDTO profileDTO = new ProfileDTO("S2", "smart.wallet.app@gmail.com");
+
+        String jsonRequest = mapper.writeValueAsString(profileDTO);
+
+        mockMvc.perform(post("/edit/" + id)
+                .header("Authorization", smart2Token)
+                .content(jsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        User editProfileUser = userService.findUserById(user.getId());
+
+        assertEquals(editProfileUser.getUsername() , "smart.wallet.app@gmail.com");
+        assertEquals(editProfileUser.getName(), "S2");
+
+    }
+
 }
