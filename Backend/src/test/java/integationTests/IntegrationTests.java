@@ -8,10 +8,7 @@ import app.api.income.IncomeService;
 import app.api.token.ConfirmationTokenService;
 import app.api.user.UserRepository;
 import app.api.user.UserService;
-import app.dto.ExpenseDTO;
-import app.dto.IncomeDTO;
-import app.dto.LoginDTO;
-import app.dto.UserDTO;
+import app.dto.*;
 import app.model.Expense.Expense;
 import app.model.Income.Income;
 import app.model.User.User;
@@ -22,10 +19,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -35,8 +28,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-
 import static org.junit.Assert.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -145,6 +136,7 @@ public class IntegrationTests {
         //Agrega un gasto.
         ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000, LocalDateTime.now(), true);
         String jsonRequestExpense = mapper.writeValueAsString(expense);
+
         mockMvc.perform(post("/addExpense")
                 .header("Authorization", smart1Token)
                 .content(jsonRequestExpense).contentType(MediaType.APPLICATION_JSON))
@@ -225,7 +217,7 @@ public class IntegrationTests {
     }
 
     @Test
-    public void testIncorrectPasswordLogin() throws Exception {
+    public void testLoginWithIncorrectPassword() throws Exception {
 
         LoginDTO loginUser = new LoginDTO();
         loginUser.setUsername("smart.wallet.app1@gmail.com");
@@ -241,7 +233,7 @@ public class IntegrationTests {
     }
 
     @Test
-    public void testIncorrectUsernameLogin() throws Exception {
+    public void testLoginWithIncorrectUsername() throws Exception {
 
         LoginDTO loginUser = new LoginDTO();
         loginUser.setUsername("incorrect_email@gmail.com");
@@ -258,7 +250,7 @@ public class IntegrationTests {
     }
 
     @Test
-    public void testProfile() throws Exception{
+    public void testSuccessGetProfile() throws Exception{
 
         String id = String.valueOf(userService.findUserByEmail("smart.wallet.app2@gmail.com").getId());
 
@@ -266,6 +258,57 @@ public class IntegrationTests {
                 .header("Authorization", smart2Token)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andReturn();
+
+    }
+
+    @Test
+    public void testSuccessEditProfile() throws Exception{
+
+        String id =  String.valueOf(userService.findUserByEmail("smart.wallet.app2@gmail.com").getId());
+        ProfileDTO profileDTO = new ProfileDTO("S2", "smart.wallet.app@gmail.com");
+
+        String jsonRequest = mapper.writeValueAsString(profileDTO);
+
+        mockMvc.perform(post("/edit/" + id)
+                .header("Authorization", smart2Token)
+                .content(jsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+    }
+
+    @Test
+    public void testEditProfileWithUsedEmail() throws Exception{
+
+        String id =  String.valueOf(userService.findUserByEmail("smart.wallet.app2@gmail.com").getId());
+        ProfileDTO profileDTO = new ProfileDTO("S2", "smart.wallet.app1@gmail.com");
+
+        String jsonRequest = mapper.writeValueAsString(profileDTO);
+
+        mockMvc.perform(post("/edit/" + id)
+                .header("Authorization", smart2Token)
+                .content(jsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+    }
+
+    @Test
+    public void testEditProfileWithIncorrectEmail() throws Exception{
+
+        String id =  String.valueOf(userService.findUserByEmail("smart.wallet.app2@gmail.com").getId());
+        ProfileDTO profileDTO = new ProfileDTO("S2", "incorrect_email.com");
+
+        String jsonRequest = mapper.writeValueAsString(profileDTO);
+
+        mockMvc.perform(post("/edit/" + id)
+                .header("Authorization", smart2Token)
+                .content(jsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
                 .andReturn();
 
     }
@@ -415,7 +458,7 @@ public class IntegrationTests {
     }
 
     @Test
-    public void testIncorrectAddExpense() throws Exception{
+    public void testAddExpenseWithIncorrectAmount() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
         ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 0, LocalDateTime.now(), true);
@@ -455,7 +498,8 @@ public class IntegrationTests {
                 .andReturn();
 
         assertEquals("Not found expense", result.getResolvedException().getMessage());
-        assertEquals( 400, result.getResponse().getStatus());
+        assertEquals( 200, result.getResponse().getStatus());
+
     }
 
     @Test
