@@ -69,7 +69,12 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, email)));
     }
 
+    public boolean userExists(String username){
+        return false;
+    }
+
     public void signUpUser(User user){
+
         boolean userExists = userRepository.findByEmail(user.getUsername()).isPresent();
         if(userExists){
             throw new UsedEmailException(user.getUsername());
@@ -114,8 +119,21 @@ public class UserService implements UserDetailsService {
 
     public void updateProfile(Long id, String name, String email) {
 
+        boolean isValidEmail = this.emailValidator.test(email);
+        if (!isValidEmail){
+            throw new InvalidEmailException(email);
+        }
+
+        boolean userExists = userRepository.findByEmail(email).isPresent();
+        if(userExists){
+            throw new UsedEmailException(email);
+        }
+
         User user = findUserById(id);
-        //userRepository.updateProfile(id, name, email);
+        user.setName(name);
+        user.setEmail(email);
+
+        userRepository.save(user);
 
     }
 
