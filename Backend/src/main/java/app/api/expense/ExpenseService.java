@@ -31,7 +31,7 @@ public class ExpenseService {
 
     }
 
-    public List<Expense> getExpense(String id){
+    public List<Expense> getExpenseHistory(String id){
 
         Long longID = Long.parseLong(id);
 

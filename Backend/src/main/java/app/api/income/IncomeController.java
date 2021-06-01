@@ -2,14 +2,14 @@ package app.api.income;
 
 import app.api.user.UserService;
 import app.dto.IncomeDTO;
+import app.model.Exceptions.NotFoundIncome;
 import app.model.Income.Income;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -33,6 +33,15 @@ public class IncomeController {
         incomeService.saveIncome(income);
 
         return HttpStatus.OK;
+    }
+
+    @GetMapping(value = "/getIncomeHistory/{id}")
+    public ResponseEntity<List<Income>> getIncome(@PathVariable("id") String id){
+        List<Income> incomes = incomeService.getIncomeHistory(id);
+        if(incomes.isEmpty()){
+            throw new NotFoundIncome();
+        }
+        return new ResponseEntity<>(incomes, HttpStatus.OK);
     }
 
 }

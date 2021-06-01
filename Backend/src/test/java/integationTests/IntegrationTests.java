@@ -4,6 +4,7 @@ import app.SmartWalletApplication;
 import app.api.expense.ExpenseRepository;
 import app.api.expense.ExpenseService;
 import app.api.income.IncomeRepository;
+import app.api.income.IncomeService;
 import app.api.token.ConfirmationTokenService;
 import app.api.user.UserRepository;
 import app.api.user.UserService;
@@ -62,6 +63,9 @@ public class IntegrationTests {
 
     @Autowired
     private ExpenseService expenseService;
+
+    @Autowired
+    private IncomeService incomeService;
 
     @Autowired
     UserRepository userRepository;
@@ -135,14 +139,23 @@ public class IntegrationTests {
                 .getResponse()
                 .getHeader("Authorization");
 
-        //Agrega un Gasto
+        //Obtengo un usuario.
         User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
+
+        //Agrega un gasto.
         ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000, LocalDateTime.now(), true);
         String jsonRequestExpense = mapper.writeValueAsString(expense);
-
         mockMvc.perform(post("/addExpense")
                 .header("Authorization", smart1Token)
                 .content(jsonRequestExpense).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        //Agrega un ingreso.
+        IncomeDTO income = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 90000, LocalDateTime.now(), true);
+        String jsonRequestIncome = mapper.writeValueAsString(income);
+        mockMvc.perform(post("/addIncome")
+                .header("Authorization", smart1Token)
+                .content(jsonRequestIncome).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
     }
@@ -269,6 +282,38 @@ public class IntegrationTests {
                 .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
+        List<Income> incomes = incomeService.getIncomeHistory(String.valueOf(user.getId()));
+
+        assertEquals(1, incomes.size());
+
+    }
+
+    @Test
+    public void testSuccessAdd2Incomes() throws Exception{
+
+        User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
+        ExpenseDTO income1 = new ExpenseDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000, LocalDateTime.now(), true);
+        ExpenseDTO income2 = new ExpenseDTO(user.getId(),"Extra", "Horas extras", 2000, LocalDateTime.now(), false);
+        String jsonRequest1 = mapper.writeValueAsString(income1);
+        String jsonRequest2 = mapper.writeValueAsString(income2);
+
+        mockMvc.perform(post("/addIncome")
+                .header("Authorization", smart2Token)
+                .content(jsonRequest1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        mockMvc.perform(post("/addIncome")
+                .header("Authorization", smart2Token)
+                .content(jsonRequest2).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        List<Income> incomes = incomeService.getIncomeHistory(String.valueOf(user.getId()));
+
+        User updatedUser = userService.findUserById(user.getId());
+
+        assertEquals(2, incomes.size());
+        assertEquals(82000, updatedUser.getAccountCredit(), 0);
+
     }
 
     @Test
@@ -282,9 +327,37 @@ public class IntegrationTests {
                 .header("Authorization", smart2Token)
                 .content(jsonRequest).contentType(MediaType.APPLICATION_JSON)).andReturn();
 
-        assertEquals("Amount is not allow", result.getResolvedException().getMessage());
+        assertEquals("Amount is not allowed", result.getResolvedException().getMessage());
         assertEquals( 400, result.getResponse().getStatus());
 
+    }
+
+    @Test
+    public void testSuccessGetIncomeHistory() throws Exception{
+
+        String id = String.valueOf(userService.findUserByEmail("smart.wallet.app1@gmail.com").getId());
+
+        MvcResult result = mockMvc.perform(get("/getIncomeHistory/" + id)
+                .header("Authorization", smart1Token)
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        assertEquals( 200, result.getResponse().getStatus());
+
+    }
+
+    @Test
+    public void testIncorrectGetIncomeHistory() throws Exception{
+
+        String id = String.valueOf(userService.findUserByEmail("smart.wallet.app2@gmail.com").getId());
+
+        MvcResult result = mockMvc.perform(get("/getIncomeHistory/" + id)
+                .header("Authorization", smart2Token)
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        assertEquals("Not found income", result.getResolvedException().getMessage());
+        assertEquals( 400, result.getResponse().getStatus());
     }
 
 
@@ -300,7 +373,7 @@ public class IntegrationTests {
                 .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
-        List<Expense> expenses = expenseService.getExpense(String.valueOf(user.getId()));
+        List<Expense> expenses = expenseService.getExpenseHistory(String.valueOf(user.getId()));
 
         assertEquals(1, expenses.size());
 
@@ -332,7 +405,7 @@ public class IntegrationTests {
                 .content(jsonRequest3).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
-        List<Expense> expenses = expenseService.getExpense(String.valueOf(user.getId()));
+        List<Expense> expenses = expenseService.getExpenseHistory(String.valueOf(user.getId()));
 
         User updatedUser = userService.findUserById(user.getId());
 
@@ -352,17 +425,17 @@ public class IntegrationTests {
                 .header("Authorization", smart2Token)
                 .content(jsonRequest).contentType(MediaType.APPLICATION_JSON)).andReturn();
 
-        assertEquals("Amount is not allow", result.getResolvedException().getMessage());
+        assertEquals("Amount is not allowed", result.getResolvedException().getMessage());
         assertEquals( 400, result.getResponse().getStatus());
 
     }
 
     @Test
-    public void testSuccessGetExpense() throws Exception{
+    public void testSuccessGetExpenseHistory() throws Exception{
 
         String id = String.valueOf(userService.findUserByEmail("smart.wallet.app1@gmail.com").getId());
 
-        MvcResult result = mockMvc.perform(get("/getExpense/" + id)
+        MvcResult result = mockMvc.perform(get("/getExpenseHistory/" + id)
                 .header("Authorization", smart1Token)
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn();
@@ -372,11 +445,11 @@ public class IntegrationTests {
     }
 
     @Test
-    public void testIncorrectGetExpense() throws Exception{
+    public void testIncorrectGetExpenseHistory() throws Exception{
 
         String id = String.valueOf(userService.findUserByEmail("smart.wallet.app2@gmail.com").getId());
 
-        MvcResult result = mockMvc.perform(get("/getExpense/" + id)
+        MvcResult result = mockMvc.perform(get("/getExpenseHistory/" + id)
                 .header("Authorization", smart2Token)
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn();

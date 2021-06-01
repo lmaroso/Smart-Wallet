@@ -33,9 +33,9 @@ public class ExpenseController {
         return HttpStatus.OK;
     }
 
-    @GetMapping(value = "/getExpense/{id}")
+    @GetMapping(value = "/getExpenseHistory/{id}")
     public ResponseEntity<List<Expense>> getExpense(@PathVariable("id") String id){
-        List<Expense> expenses = expenseService.getExpense(id);
+        List<Expense> expenses = expenseService.getExpenseHistory(id);
         if(expenses.isEmpty()){
             throw new NotFoundExpense();
         }
