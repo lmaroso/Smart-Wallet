@@ -498,7 +498,7 @@ public class IntegrationTests {
                 .andReturn();
 
         assertEquals("Not found expense", result.getResolvedException().getMessage());
-        assertEquals( 200, result.getResponse().getStatus());
+        assertEquals( 400, result.getResponse().getStatus());
 
     }
 
