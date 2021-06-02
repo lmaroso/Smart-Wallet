@@ -6,7 +6,7 @@ import "./Header.scss";
 const Header = () => (
 	<div>
 		<IonHeader>
-			<IonToolbar className="header">
+			<IonToolbar color="primary">
 				<IonTitle>SmartWallet</IonTitle>
 			</IonToolbar>
 		</IonHeader>

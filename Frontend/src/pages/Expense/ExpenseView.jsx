@@ -73,7 +73,7 @@ const ExpenseView = ({
 			>
 				{selectorOptions()}
 			</Selector>
-			<Button expand="block" type="submit">
+			<Button type="submit">
                 Guardar
 			</Button>
 		</form>

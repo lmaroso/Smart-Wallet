@@ -3,20 +3,19 @@ import { IonButton } from "@ionic/react";
 
 import "./Button.scss";
 
-const Button = ({ /*cancel, className, */children, disabled, expand, type, onClick }) => {
+const Button = ({ cancel, className, children, disabled, type, onClick }) => {
 	return (
-		<>
+		<div className="buttonContainer">
 			<IonButton
-				// className={[className, "button", cancel && "cancel"].join(" ")}
+				className={[className, "button", cancel && "cancel"].join(" ")}
 				disabled={disabled}
-				expand={expand}
-				size="big"
+				expand="block"
 				type={type}
 				onClick={onClick}
 			>
 				{children}
 			</IonButton>
-		</>
+		</div>
 	);
 };
 

@@ -6,13 +6,13 @@ import Header from "../Header/Header";
 
 import "./PageWrapper.scss";
 
-const PageWrapper = ({ children }) => (
+const PageWrapper = ({ children, showFooter }) => (
 	<IonPage className="content">
 		<Header />
 		<IonContent className="marginSides">
 			{children}
 		</IonContent>
-		<Footer />
+		{showFooter && <Footer />}
 	</IonPage>
 );
 

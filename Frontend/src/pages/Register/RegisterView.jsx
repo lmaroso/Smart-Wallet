@@ -38,7 +38,7 @@ const RegisterView = ({
 				value={password}
 				onChange={event => setPassword(event.detail.value)}
 			/>
-			<Button expand="block" type="submit">
+			<Button type="submit">
 				Registrarse
 			</Button>
 		</form>

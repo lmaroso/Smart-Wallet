@@ -58,3 +58,15 @@ export const addExpense = body => api.post("/addExpense", { userId: parseInt(get
 })
 	.then(handleResponse)
 	.catch(handleError);
+
+export const getExpenseHistory = () => api.get(`/getExpenseHistory/${getKey("userid")}`, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
+
+export const getIncomeHistory = () => api.get(`/getIncomeHistory/${getKey("userid")}`, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);

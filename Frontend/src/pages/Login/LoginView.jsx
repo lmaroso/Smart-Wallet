@@ -30,7 +30,7 @@ const LoginView = ({
 				value={password}
 				onChange={event => setPassword(event.detail.value)}
 			/>
-			<Button expand="block" type="submit">
+			<Button type="submit">
 				Login
 			</Button>
 		</form>

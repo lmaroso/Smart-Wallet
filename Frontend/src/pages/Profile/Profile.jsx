@@ -30,7 +30,7 @@ const Profile = ({ history }) => {
 							setLoading(false);
 							setShouldShowToast(true);
 						}
-					}, 2000);
+					}, 1000);
 				});
 		} else {
 			history.push({ pathname: "/" });

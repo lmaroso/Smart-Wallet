@@ -9,7 +9,7 @@ const NoPage = ({ history }) => (
 	<IonPage className="content">
 		<div className="imageContainer">
 			<IonImg src="/images/not-found.png"/>
-			<Button expand="block" onClick={() => history.push({ pathname: "/" })}>
+			<Button onClick={() => history.push({ pathname: "/" })}>
                 Ir al inicio
 			</Button>
 		</div>

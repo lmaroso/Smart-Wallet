@@ -5,7 +5,7 @@ import "./Footer.scss";
 
 const Footer = () => (
 	<IonFooter className="footer">
-		<IonToolbar color="footer"/>
+		<IonToolbar />
 	</IonFooter>
 );
 export default Footer;

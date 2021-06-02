@@ -38,10 +38,10 @@ const ProfileView = ({
 				value={email}
 				onChange={event => setEmail(event.detail.value)}
 			/>
-			<Button expand="block" type="submit">
+			<Button type="submit">
 				Guardar cambios
 			</Button>
-			<Button expand="block" onClick={onClickGetBack}>
+			<Button onClick={onClickGetBack}>
 				Volver al incio
 			</Button>
 		</form>

@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Income from "./pages/Income/Income";
 import Profile from "./pages/Profile/Profile";
 import Expense from "./pages/Expense/Expense";
+import History from "./pages/History/History";
 
 const Routes = () => (
 	<BrowserRouter>
@@ -22,6 +23,7 @@ const Routes = () => (
 					<Route exact component={Income} path="/income" />
 					<Route exact component={Profile} path="/profile" />
 					<Route exact component={Expense} path="/expense" />
+					<Route exact component={History} path="/history" />
 					<Route exact component={NoPage} path="*" />
 				</Switch>
 			);}
