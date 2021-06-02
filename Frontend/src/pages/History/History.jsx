@@ -7,7 +7,7 @@ import { getKey } from "../../utils/localStorage";
 import { SEGMENTS } from "./constants";
 
 const History = ({ history }) => {
-
+	const [loading, setLoading] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedMovement, setSelectedMovement] = useState(null);
 	const [incomes, setIncomes] = useState(null);
@@ -18,15 +18,18 @@ const History = ({ history }) => {
 	const [toastText, setToastText] = useState("");
 
 	useEffect(() => {
+		setLoading(true);
 		if(getKey("token")) {
 			getIncomeHistory()
 				.then(({ status, data }) => {
 					setTimeout(() => {
 						if (status === 200 || status === 201) {
 							setIncomes(data);
+							setLoading(false);
 						} else {
 							setToastType("error");
 							setToastText(data);
+							setLoading(false);
 							setShouldShowToast(true);
 						}
 					}, 1000);
@@ -36,9 +39,11 @@ const History = ({ history }) => {
 					setTimeout(() => {
 						if (status === 200 || status === 201) {
 							setExpenses(data);
+							setLoading(false);
 						} else {
 							setToastType("error");
 							setToastText(data);
+							setLoading(false);
 							setShouldShowToast(true);
 						}
 					}, 1000);
@@ -67,7 +72,7 @@ const History = ({ history }) => {
 			expenses={expenses}
 			incomes={incomes}
 			isModalOpen={isModalOpen}
-			loading={!expenses || !incomes}
+			loading={loading && (!expenses || !incomes)}
 			segmentSelected={segmentSelected}
 			segments={SEGMENTS}
 			selectedMovement={selectedMovement}
