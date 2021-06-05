@@ -103,9 +103,8 @@ public class UserService implements UserDetailsService {
         return email;
     }
 
-    public void updateAccountCredit(Income income){
-        User user = findUserById(income.getUserId());
-        userRepository.updateAccountCredit(income.getAmount(), user.getId());
+    public void updateAccountCredit(long userId, long amount){
+        userRepository.updateAccountCredit(amount, userId);
     }
 
     public void updateAccountExpense(Expense expense){

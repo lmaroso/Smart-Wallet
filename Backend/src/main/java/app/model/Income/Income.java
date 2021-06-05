@@ -45,6 +45,20 @@ public class Income {
         this.programmed = programmed;
     }
 
+    public Income( long id, Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed) {
+        this.id = id;
+        this.userId = userId;
+        this.name = name;
+        this.description = description;
+        this.amount = amount;
+        this.date = date;
+        this.programmed = programmed;
+    }
+
+    public long getId() {
+        return id;
+    }
+
     public Long getUserId() {
         return userId;
     }

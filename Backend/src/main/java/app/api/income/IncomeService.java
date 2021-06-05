@@ -2,6 +2,7 @@ package app.api.income;
 
 import app.model.Exceptions.InvalidAmountException;
 import app.model.Income.Income;
+import app.model.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -43,4 +44,13 @@ public class IncomeService {
 
     }
 
+    public Integer checkAmount(long id, Integer amount) {
+        Integer oldAmount = incomeRepository.findById(id).getAmount();
+        Integer finalAmount = 0;
+
+        if(!oldAmount.equals(amount)){
+            finalAmount =  amount - oldAmount;
+        }
+        return finalAmount;
+    }
 }

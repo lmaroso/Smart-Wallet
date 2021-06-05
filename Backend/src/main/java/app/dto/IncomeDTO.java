@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 public class IncomeDTO {
 
+    public long id;
     public Long userId;
     public String name;
     public String description;
@@ -21,6 +22,8 @@ public class IncomeDTO {
         this.programmed = programmed;
 
     }
+
+    public long getId() { return id; }
 
     public Long getUserId() {
         return userId;

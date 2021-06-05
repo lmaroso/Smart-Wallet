@@ -29,7 +29,22 @@ public class IncomeController {
                 incomeDTO.getAmount(), incomeDTO.getDate(),
                 incomeDTO.getProgrammed());
 
-        userService.updateAccountCredit(income);
+        userService.updateAccountCredit(income.getUserId(), income.getAmount());
+        incomeService.saveIncome(income);
+
+        return HttpStatus.OK;
+    }
+
+    @PostMapping(value = "/editIncome")
+    public HttpStatus editIncome(@RequestBody IncomeDTO incomeDTO){
+
+        Income income = new Income (incomeDTO.getId(), incomeDTO.getUserId(),
+                incomeDTO.getName(), incomeDTO.getDescription(),
+                incomeDTO.getAmount(), incomeDTO.getDate(),
+                incomeDTO.getProgrammed());
+
+        userService.updateAccountCredit(income.getUserId(), incomeService.checkAmount(income.getId(), income.getAmount()));
+
         incomeService.saveIncome(income);
 
         return HttpStatus.OK;
@@ -37,6 +52,7 @@ public class IncomeController {
 
     @GetMapping(value = "/getIncomeHistory/{id}")
     public ResponseEntity<List<Income>> getIncome(@PathVariable("id") String id){
+
         List<Income> incomes = incomeService.getIncomeHistory(id);
         if(incomes.isEmpty()){
             throw new NotFoundIncome();
