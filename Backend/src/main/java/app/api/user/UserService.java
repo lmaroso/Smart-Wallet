@@ -107,9 +107,8 @@ public class UserService implements UserDetailsService {
         userRepository.updateAccountCredit(amount, userId);
     }
 
-    public void updateAccountExpense(Expense expense){
-        User user = findUserById(expense.getUserId());
-        userRepository.updateAccountExpense(expense.getAmount(), user.getId());
+    public void updateAccountExpense(long userId, long amount){
+        userRepository.updateAccountExpense(amount, userId);
     }
 
     public void enableUser(String email){

@@ -45,4 +45,15 @@ public class ExpenseService {
        return expenseRepository.findByUserId(longID);
 
     }
+
+    public long checkAmount(long id, Integer amount) {
+        Integer oldAmount = expenseRepository.findById(id).getAmount();
+        Integer finalAmount = 0;
+
+        if(!oldAmount.equals(amount)){
+            finalAmount =  amount - oldAmount;
+        }
+        return finalAmount;
+    }
+
 }

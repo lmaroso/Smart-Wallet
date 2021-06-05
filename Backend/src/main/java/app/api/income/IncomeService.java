@@ -44,7 +44,7 @@ public class IncomeService {
 
     }
 
-    public Integer checkAmount(long id, Integer amount) {
+    public long checkAmount(long id, Integer amount) {
         Integer oldAmount = incomeRepository.findById(id).getAmount();
         Integer finalAmount = 0;
 

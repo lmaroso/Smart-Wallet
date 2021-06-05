@@ -12,7 +12,7 @@ import java.util.List;
 public interface IncomeRepository extends JpaRepository<Income, Long> {
 
     List<Income> findByUserId(long userId);
-    Income findById(long id);
 
+    Income findById(long id);
 
 }

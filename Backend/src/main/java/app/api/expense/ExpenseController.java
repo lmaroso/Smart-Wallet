@@ -27,7 +27,20 @@ public class ExpenseController {
                 expenseDTO.getAmount(), expenseDTO.getDate(),
                 expenseDTO.getProgrammed());
 
-        userService.updateAccountExpense(expense);
+        userService.updateAccountExpense(expense.getUserId(), expense.getAmount());
+        expenseService.saveExpense(expense);
+
+        return HttpStatus.OK;
+    }
+
+    @PostMapping(value = "/editExpense")
+    public HttpStatus editExpense(@RequestBody ExpenseDTO expenseDTO){
+        Expense expense = new Expense(expenseDTO.getId(), expenseDTO.getUserId(),
+                expenseDTO.getName(), expenseDTO.getDescription(),
+                expenseDTO.getAmount(), expenseDTO.getDate(),
+                expenseDTO.getProgrammed());
+
+        userService.updateAccountExpense(expense.getUserId(), expenseService.checkAmount(expense.getId(), expense.getAmount()));
         expenseService.saveExpense(expense);
 
         return HttpStatus.OK;

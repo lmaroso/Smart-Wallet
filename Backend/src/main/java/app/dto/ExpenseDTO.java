@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public class ExpenseDTO {
 
+    public long id;
     public Long userId;
     public String name;
     public String description;
@@ -19,6 +20,8 @@ public class ExpenseDTO {
         this.date = date;
         this.programmed = programmed;
     }
+
+    public long getId() { return id; }
 
     public Long getUserId() {
         return userId;

@@ -34,6 +34,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User a " +
             "SET a.accountExpense = a.accountExpense+:expense WHERE a.id = :id")
-    void updateAccountExpense (long expense, long id );
+    void updateAccountExpense (double expense, long id );
 
 }
