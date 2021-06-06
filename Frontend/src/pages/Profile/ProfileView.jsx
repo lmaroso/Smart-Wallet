@@ -17,7 +17,6 @@ const ProfileView = ({
 	shouldShowToast,
 	toastText,
 	toastType,
-	onClickGetBack,
 	onSubmit
 }) => (
 	<PageWrapper>
@@ -40,9 +39,6 @@ const ProfileView = ({
 			/>
 			<Button type="submit">
 				Guardar cambios
-			</Button>
-			<Button onClick={onClickGetBack}>
-				Volver al incio
 			</Button>
 		</form>
 		<Toast isOpen={shouldShowToast} message={toastText} type={toastType} onDidDismiss={() => setShouldShowToast(false)} />

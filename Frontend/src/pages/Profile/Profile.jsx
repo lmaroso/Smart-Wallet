@@ -44,8 +44,6 @@ const Profile = ({ history }) => {
 		setShouldShowToast(true);
 	};
 
-	const onClickGetBack = () => history.push({ pathname: "/dashboard" });
-
 	return (
 		<ProfileView
 			email={email}
@@ -58,7 +56,6 @@ const Profile = ({ history }) => {
 			shouldShowToast={shouldShowToast}
 			toastText={toastText}
 			toastType={toastType}
-			onClickGetBack={onClickGetBack}
 			onSubmit={onSubmit}
 		/>
 	);

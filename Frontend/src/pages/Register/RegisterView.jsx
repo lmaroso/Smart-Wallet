@@ -18,7 +18,7 @@ const RegisterView = ({
 	toastType,
 	onSubmit
 }) => (
-	<PageWrapper>
+	<PageWrapper hideMenu>
 		<form onSubmit={onSubmit}>
 			<Input
 				required

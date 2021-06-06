@@ -1,5 +1,7 @@
 import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
+import { IonRouterOutlet } from "@ionic/react";
+import { IonReactRouter } from "@ionic/react-router";
 
 import NoPage from "./pages/NoPage/NoPage";
 import Register from "./pages/Register/Register";
@@ -9,25 +11,24 @@ import Income from "./pages/Income/Income";
 import Profile from "./pages/Profile/Profile";
 import Expense from "./pages/Expense/Expense";
 import History from "./pages/History/History";
+import Test from "./pages/Test/Test";
+
+import { getKey } from "./utils/localStorage";
 
 const Routes = () => (
-	<BrowserRouter>
-		<Route render={({ history, location }) => {
-			history.listen((location) => window._mfq && window._mfq.push(["newPageView", location.pathname]));
-			return (
-				<Switch location={location}>
-					<Route exact component={Register} path="/" />
-					<Route exact component={Register} path="/register" />
-					<Route exact component={Login} path="/login" />
-					<Route exact component={Dashboard} path="/dashboard" />
-					<Route exact component={Income} path="/income" />
-					<Route exact component={Profile} path="/profile" />
-					<Route exact component={Expense} path="/expense" />
-					<Route exact component={History} path="/history" />
-					<Route exact component={NoPage} path="*" />
-				</Switch>
-			);}
-		} />
-	</BrowserRouter>
+	<IonReactRouter>
+		<IonRouterOutlet>
+			<Route exact path="/" render={() => getKey("token") ? <Dashboard /> : <Register /> }/>
+			<Route exact path="/register" render={() => getKey("token") ? <Dashboard /> : <Register /> } />
+			<Route exact path="/login" render={() => getKey("token") ? <Dashboard /> : <Login /> } />
+			<Route exact component={Dashboard} path="/dashboard" render={() => getKey("token") ? <Dashboard /> : <Login /> } />
+			<Route exact component={Income} path="/income" render={() => getKey("token") ? <Income /> : <Login /> } />
+			<Route exact component={Profile} path="/profile" render={() => getKey("token") ? <Profile /> : <Login /> } />
+			<Route exact component={Expense} path="/expense" render={() => getKey("token") ? <Expense /> : <Login /> } />
+			<Route exact component={History} path="/history" render={() => getKey("token") ? <History /> : <Login /> } />
+			<Route exact component={Test} path="/test" />
+			<Route component={NoPage} />
+		</IonRouterOutlet>
+	</IonReactRouter>
 );
 export default Routes;

@@ -63,8 +63,6 @@ const History = ({ history }) => {
 	const onCloseModal = () => {
 		setIsModalOpen(false);
 	};
-
-	const onClickGetBack = () => history.push({ pathname: "/dashboard" });
     
 	return (
 		<HistoryView
@@ -81,7 +79,6 @@ const History = ({ history }) => {
 			toastText={toastText}
 			toastType={toastType}
 			onChange={onChangeSegment}
-			onClickGetBack={onClickGetBack}
 			onCloseModal={onCloseModal}
 		/>
 	);

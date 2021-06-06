@@ -3,7 +3,6 @@ import { IonList } from "@ionic/react";
 
 import PageWrapper from "../../components/PageWrapper/PageWrapper";
 import Segment from "../../components/Segment/Segment";
-import Button from "../../components/Button/Button";
 import Toast from "../../components/Toast/Toast";
 import Loading from "../../components/Loading/Loading";
 import Modal from "../../components/Modal/Modal";
@@ -24,7 +23,6 @@ const HistoryView = ({
 	toastText,
 	toastType,
 	onChange,
-	onClickGetBack,
 	onCloseModal
 }) => (
 	<PageWrapper>
@@ -42,9 +40,6 @@ const HistoryView = ({
 				: <HistoryList historyColor="danger" historySelected={expenses} onSelectItem={createModal} />
 			}
 		</IonList>
-		<Button onClick={onClickGetBack}>
-            Volver al incio
-		</Button>
 		<Toast isOpen={shouldShowToast} message={toastText} type={toastType} onDidDismiss={() => setShouldShowToast(false)} />
 	</PageWrapper>
 );

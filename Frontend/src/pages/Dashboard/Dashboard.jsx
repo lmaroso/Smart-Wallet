@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 
+import PageWrapper from "../../components/PageWrapper/PageWrapper";
+
 import { getKey } from "../../utils/localStorage";
 
 const Dashboard = ({ history }) => {
@@ -11,7 +13,9 @@ const Dashboard = ({ history }) => {
 	}, [history]);
 
 	return (
-		<div>Dashboard</div>
+		<PageWrapper>
+			Dashboard
+		</PageWrapper>
 	);
 };
 

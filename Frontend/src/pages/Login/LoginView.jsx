@@ -16,7 +16,7 @@ const LoginView = ({
 	username,
 	onSubmit
 }) => (
-	<PageWrapper>
+	<PageWrapper hideMenu>
 		<form onSubmit={onSubmit}>
 			<Input
 				required
