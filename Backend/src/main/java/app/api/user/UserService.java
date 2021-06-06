@@ -135,6 +135,11 @@ public class UserService implements UserDetailsService {
 
     }
 
+    public double getBalance(Long id) {
+        User user = findUserById(id);
+        return (user.getAccountCredit() - user.getAccountExpense());
+    }
+
     private String buildConfirmEmailMessage(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
@@ -203,6 +208,7 @@ public class UserService implements UserDetailsService {
                 "\n" +
                 "</div></div>";
     }
+
 
 
 }
