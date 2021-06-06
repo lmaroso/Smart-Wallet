@@ -1,5 +1,7 @@
 import { barChartOutline, documentTextOutline, walletOutline, cashOutline, personOutline, exitOutline } from "ionicons/icons";
 
+import { deleteKey } from "../../utils/localStorage";
+
 export const MENU_ITEMS = [
 	{
 		menuName: "Dashboard",
@@ -29,7 +31,8 @@ export const MENU_ITEMS = [
 	{
 		menuName: "Salir",
 		icon: exitOutline,
-		route: "/login"
+		route: "/login",
+		onClick: () => deleteKey("token")
 	},
 ];
 
