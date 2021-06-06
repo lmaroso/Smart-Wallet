@@ -1,9 +1,11 @@
 package app.api.income;
 
 import app.model.Exceptions.InvalidAmountException;
+import app.model.Exceptions.NotFoundIncome;
 import app.model.Income.Income;
 import app.model.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -53,4 +55,13 @@ public class IncomeService {
         }
         return finalAmount;
     }
+
+    public NotFoundIncome existIncome(long id) {
+        Income income = incomeRepository.findById(id);
+        if(income == null){
+            throw new NotFoundIncome();
+        }
+        return null;
+    }
+
 }

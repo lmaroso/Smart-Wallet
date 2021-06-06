@@ -1,9 +1,7 @@
 package integationTests;
 
 import app.SmartWalletApplication;
-import app.api.expense.ExpenseRepository;
 import app.api.expense.ExpenseService;
-import app.api.income.IncomeRepository;
 import app.api.income.IncomeService;
 import app.api.token.ConfirmationTokenService;
 import app.api.user.UserRepository;
@@ -13,6 +11,7 @@ import app.model.Expense.Expense;
 import app.model.Income.Income;
 import app.model.User.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.mapping.Array;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -376,6 +376,52 @@ public class IntegrationTests {
     }
 
     @Test
+    public void testSuccessEditIncome() throws Exception{
+
+        User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
+
+        long idIncome  = incomeService.getIncomeHistory(String.valueOf(user.getId())).get(0).getId();
+        IncomeDTO income = new IncomeDTO(idIncome, user.getId(),
+                "Sueldo", "Sueldo mensual", 40000, LocalDateTime.now(),
+                false);
+
+        String jsonRequest = mapper.writeValueAsString(income);
+
+        mockMvc.perform(post("/editIncome")
+                .header("Authorization", smart1Token)
+                .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        Integer finalAmountIncome  = incomeService.getIncomeHistory(String.valueOf(user.getId())).get(0).getAmount();
+        Integer expected = 40000;
+
+        double finalAccountCredit = userService.findUserByEmail("smart.wallet.app1@gmail.com").getAccountCredit();
+
+        assertEquals(expected, finalAmountIncome);
+        assertTrue(40000.0 == finalAccountCredit);
+    }
+
+    @Test
+    public void testNotFoundIncomeToEdit() throws Exception{
+        User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
+        long idRandom = 38;
+
+        IncomeDTO income = new IncomeDTO(idRandom, user.getId(),
+                "Sueldo", "Sueldo mensual", 40000, LocalDateTime.now(),
+                false);
+
+
+        String jsonRequest = mapper.writeValueAsString(income);
+
+        MvcResult result = mockMvc.perform(post("/editIncome")
+                .header("Authorization", smart1Token)
+                .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        assertEquals("Not found income", result.getResolvedException().getMessage());
+    }
+
+    @Test
     public void testSuccessGetIncomeHistory() throws Exception{
 
         String id = String.valueOf(userService.findUserByEmail("smart.wallet.app1@gmail.com").getId());
@@ -402,7 +448,6 @@ public class IntegrationTests {
         assertEquals("Not found income", result.getResolvedException().getMessage());
         assertEquals( 400, result.getResponse().getStatus());
     }
-
 
     @Test
     public void testSuccessAddExpense() throws Exception{
@@ -474,6 +519,52 @@ public class IntegrationTests {
     }
 
     @Test
+    public void testSuccessEditExpense() throws Exception{
+
+        User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
+
+        long idExpense  = expenseService.getExpenseHistory(String.valueOf(user.getId())).get(0).getId();
+        ExpenseDTO expense = new ExpenseDTO(idExpense, user.getId(),"Alquiler", "Alquiler mensual", 30000, LocalDateTime.now(), true);
+
+        String jsonRequest = mapper.writeValueAsString(expense);
+
+        mockMvc.perform(post("/editExpense")
+                .header("Authorization", smart1Token)
+                .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        Integer finalAmountExpense  = expenseService.getExpenseHistory(String.valueOf(user.getId())).get(0).getAmount();
+        Integer expected = 30000;
+
+        double finalAccountExpense = userService.findUserByEmail("smart.wallet.app1@gmail.com").getAccountExpense();
+
+        assertEquals(expected, finalAmountExpense);
+        assertTrue(30000.0 == finalAccountExpense);
+    }
+
+    @Test
+    public void testNotFoundExpenseToEdit() throws Exception{
+
+        User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
+        long idRandom = 3555;
+
+        ExpenseDTO expense = new ExpenseDTO(idRandom, user.getId(),
+                "Sueldo", "Sueldo mensual", 40000, LocalDateTime.now(),
+                false);
+
+        String jsonRequest = mapper.writeValueAsString(expense);
+
+        MvcResult result = mockMvc.perform(post("/editExpense")
+                .header("Authorization", smart1Token)
+                .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        assertEquals("Not found expense", result.getResolvedException().getMessage());
+        assertEquals( 400, result.getResponse().getStatus());
+
+    }
+
+    @Test
     public void testSuccessGetExpenseHistory() throws Exception{
 
         String id = String.valueOf(userService.findUserByEmail("smart.wallet.app1@gmail.com").getId());
@@ -499,6 +590,40 @@ public class IntegrationTests {
 
         assertEquals("Not found expense", result.getResolvedException().getMessage());
         assertEquals( 400, result.getResponse().getStatus());
+
+    }
+
+    @Test
+    public void testSuccessGetBalance() throws Exception{
+
+        String id = String.valueOf(userService.findUserByEmail("smart.wallet.app1@gmail.com").getId());
+
+        MvcResult result = mockMvc.perform(get("/balance/" + id)
+                .header("Authorization", smart1Token)
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        Long idLong = userService.findUserByEmail("smart.wallet.app1@gmail.com").getId();
+        double actual = userService.getBalance(idLong);
+        double expected = 70000.0;
+
+        assertEquals( 200, result.getResponse().getStatus());
+        assertTrue(expected == actual);
+
+    }
+
+    @Test
+    public void testNotFoundUserToGetBalance() throws Exception{
+
+        String idRandom = "20";
+
+        MvcResult result = mockMvc.perform(get("/balance/" + idRandom)
+                .header("Authorization", smart1Token)
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        assertEquals("Access Denied", result.getResponse().getErrorMessage());
+        assertEquals( 403, result.getResponse().getStatus());
 
     }
 

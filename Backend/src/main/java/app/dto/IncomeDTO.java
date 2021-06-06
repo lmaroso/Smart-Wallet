@@ -1,6 +1,5 @@
 package app.dto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class IncomeDTO {
@@ -13,6 +12,8 @@ public class IncomeDTO {
     public LocalDateTime date;
     public Boolean programmed;
 
+    public IncomeDTO(){}
+
     public IncomeDTO(Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
         this.userId = userId;
         this.name = name;
@@ -23,7 +24,22 @@ public class IncomeDTO {
 
     }
 
+    public IncomeDTO(long id, Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
+        this.id = id;
+        this.userId = userId;
+        this.name = name;
+        this.description = description;
+        this.amount = amount;
+        this.date = date;
+        this.programmed = programmed;
+
+    }
+
     public long getId() { return id; }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public Long getUserId() {
         return userId;
