@@ -12,6 +12,18 @@ public class ExpenseDTO {
     public LocalDateTime date;
     public Boolean programmed;
 
+    public ExpenseDTO(){}
+
+    public ExpenseDTO(long id, Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
+        this.id = id;
+        this.userId = userId;
+        this.name = name;
+        this.description = description;
+        this.amount = amount;
+        this.date = date;
+        this.programmed = programmed;
+
+    }
     public ExpenseDTO(Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
         this.userId = userId;
         this.name = name;

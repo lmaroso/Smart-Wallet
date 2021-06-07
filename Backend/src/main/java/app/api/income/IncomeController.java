@@ -44,6 +44,8 @@ public class IncomeController {
     @PostMapping(value = "/editIncome")
     public HttpStatus editIncome(@RequestBody IncomeDTO incomeDTO){
 
+        incomeService.existIncome(incomeDTO.getId());
+
         Income income = new Income (incomeDTO.getId(), incomeDTO.getUserId(),
                 incomeDTO.getName(), incomeDTO.getDescription(),
                 incomeDTO.getAmount(), incomeDTO.getDate(),
@@ -52,8 +54,8 @@ public class IncomeController {
         userService.updateAccountCredit(income.getUserId(), incomeService.checkAmount(income.getId(), income.getAmount()));
 
         incomeService.saveIncome(income);
-
         return HttpStatus.OK;
+
     }
 
     @GetMapping(value = "/getIncomeHistory/{id}")

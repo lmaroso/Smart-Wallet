@@ -1,7 +1,10 @@
 package app.api.expense;
 
 import app.model.Exceptions.InvalidAmountException;
+import app.model.Exceptions.NotFoundExpense;
+import app.model.Exceptions.NotFoundIncome;
 import app.model.Expense.Expense;
+import app.model.Income.Income;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -56,4 +59,11 @@ public class ExpenseService {
         return finalAmount;
     }
 
+    public NotFoundExpense existExpense(long id) {
+        Expense expense = expenseRepository.findById(id);
+        if(expense == null){
+            throw new NotFoundExpense();
+        }
+        return null;
+    }
 }

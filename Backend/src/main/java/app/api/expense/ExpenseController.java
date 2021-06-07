@@ -35,6 +35,9 @@ public class ExpenseController {
 
     @PostMapping(value = "/editExpense")
     public HttpStatus editExpense(@RequestBody ExpenseDTO expenseDTO){
+
+        expenseService.existExpense(expenseDTO.getId());
+
         Expense expense = new Expense(expenseDTO.getId(), expenseDTO.getUserId(),
                 expenseDTO.getName(), expenseDTO.getDescription(),
                 expenseDTO.getAmount(), expenseDTO.getDate(),
@@ -55,5 +58,3 @@ public class ExpenseController {
         return new ResponseEntity<>(expenses , HttpStatus.OK);
     }
 }
-
-
