@@ -11,7 +11,6 @@ import app.model.Expense.Expense;
 import app.model.Income.Income;
 import app.model.User.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hibernate.mapping.Array;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -627,8 +626,9 @@ public class IntegrationTests {
 
     }
 
+
     @Test
-    public void testRegisterLoginAndIncome() throws Exception{
+    public void testRegisterLoginAddIncomeAndAddExpense() throws Exception{
 
         UserDTO smart4RegisterUser  = new UserDTO("Smart4", "smart.wallet.app4@gmail.com", "sw");
         String smart4RegisterJsonRequest  = mapper.writeValueAsString(smart4RegisterUser);
@@ -753,6 +753,232 @@ public class IntegrationTests {
 
         assertEquals(editProfileUser.getUsername() , "smart.wallet.app@gmail.com");
         assertEquals(editProfileUser.getName(), "S2");
+
+    }
+
+    @Test
+    public void testRegisterLoginAddIncomeAddExpenseAndGetBalance() throws Exception{
+        UserDTO smart4RegisterUser  = new UserDTO("Smart4", "smart.wallet.app4@gmail.com", "sw");
+        String smart4RegisterJsonRequest  = mapper.writeValueAsString(smart4RegisterUser);
+
+        //El usuario se registra.
+        mockMvc.perform(post("/register").content(smart4RegisterJsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        User user = userService.findUserByEmail("smart.wallet.app4@gmail.com");
+        String userToken = confirmationTokenService.getTokenByUser(user);
+
+        //El usuario confirma su token.
+        mockMvc.perform(get("/register/confirm?token=" + userToken)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        LoginDTO loginUser = new LoginDTO();
+        loginUser.setUsername("smart.wallet.app4@gmail.com");
+        loginUser.setPassword("sw");
+
+        String loginJsonRequest = mapper.writeValueAsString(loginUser);
+
+        //El usuario se loguea
+        String smart4Token = mockMvc.perform(post("/login").content(loginJsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getHeader("Authorization");
+
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        String incomeJsonRequest = mapper.writeValueAsString(income);
+
+        //El usuario agrega un ingreso.
+        mockMvc.perform(post("/addIncome")
+                .header("Authorization", smart4Token)
+                .content(incomeJsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        User updatedUser = userService.findUserById(user.getId());
+
+        assertEquals(35000, updatedUser.getAccountCredit(), 0);
+
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000, LocalDateTime.now(), true);
+        String expenseJsonRequest = mapper.writeValueAsString(expense);
+
+        //El usuario agrega un gasto.
+        mockMvc.perform(post("/addExpense")
+                .header("Authorization", smart4Token)
+                .content(expenseJsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        updatedUser = userService.findUserById(user.getId());
+
+        double expectedBalance = 15000.0;
+        double actualBalance = userService.getBalance(user.getId());
+
+        assertEquals(20000, updatedUser.getAccountExpense(), 0);
+
+        assertTrue(expectedBalance == actualBalance);
+    }
+
+    @Test
+    public void testRegisterLoginAddIncomeAdd2ExpensesAndGetBalance() throws Exception{
+        UserDTO smart4RegisterUser  = new UserDTO("Smart4", "smart.wallet.app4@gmail.com", "sw");
+        String smart4RegisterJsonRequest  = mapper.writeValueAsString(smart4RegisterUser);
+
+        //El usuario se registra.
+        mockMvc.perform(post("/register").content(smart4RegisterJsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        User user = userService.findUserByEmail("smart.wallet.app4@gmail.com");
+        String userToken = confirmationTokenService.getTokenByUser(user);
+
+        //El usuario confirma su token.
+        mockMvc.perform(get("/register/confirm?token=" + userToken)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        LoginDTO loginUser = new LoginDTO();
+        loginUser.setUsername("smart.wallet.app4@gmail.com");
+        loginUser.setPassword("sw");
+
+        String loginJsonRequest = mapper.writeValueAsString(loginUser);
+
+        //El usuario se loguea
+        String smart4Token = mockMvc.perform(post("/login").content(loginJsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getHeader("Authorization");
+
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        String incomeJsonRequest = mapper.writeValueAsString(income);
+
+        //El usuario agrega un ingreso.
+        mockMvc.perform(post("/addIncome")
+                .header("Authorization", smart4Token)
+                .content(incomeJsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        User updatedUser = userService.findUserById(user.getId());
+
+        assertEquals(35000, updatedUser.getAccountCredit(), 0);
+
+        //El usuario agrega un gasto.
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000, LocalDateTime.now(), true);
+        String expenseJsonRequest = mapper.writeValueAsString(expense);
+
+        mockMvc.perform(post("/addExpense")
+                .header("Authorization", smart4Token)
+                .content(expenseJsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        //El usuario agrega un segundo gasto.
+        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Luz", "Luz mensual", 1200, LocalDateTime.now(), true);
+        String expense2JsonRequest = mapper.writeValueAsString(expense2);
+
+        mockMvc.perform(post("/addExpense")
+                .header("Authorization", smart4Token)
+                .content(expense2JsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        updatedUser = userService.findUserById(user.getId());
+
+        double expectedBalance = 13800.0;
+        double actualBalance = userService.getBalance(user.getId());
+
+        assertEquals(21200, updatedUser.getAccountExpense(), 0);
+
+        assertTrue(expectedBalance == actualBalance);
+
+    }
+
+    @Test
+    public void testRegisterLoginAddIncomeAddExpensesEditExpenseAndGetBalance() throws Exception{
+        UserDTO smart4RegisterUser  = new UserDTO("Smart4", "smart.wallet.app4@gmail.com", "sw");
+        String smart4RegisterJsonRequest  = mapper.writeValueAsString(smart4RegisterUser);
+
+        //El usuario se registra.
+        mockMvc.perform(post("/register").content(smart4RegisterJsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        User user = userService.findUserByEmail("smart.wallet.app4@gmail.com");
+        String userToken = confirmationTokenService.getTokenByUser(user);
+
+        //El usuario confirma su token.
+        mockMvc.perform(get("/register/confirm?token=" + userToken)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        LoginDTO loginUser = new LoginDTO();
+        loginUser.setUsername("smart.wallet.app4@gmail.com");
+        loginUser.setPassword("sw");
+
+        String loginJsonRequest = mapper.writeValueAsString(loginUser);
+
+        //El usuario se loguea
+        String smart4Token = mockMvc.perform(post("/login").content(loginJsonRequest)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getHeader("Authorization");
+
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        String incomeJsonRequest = mapper.writeValueAsString(income);
+
+        //El usuario agrega un ingreso.
+        mockMvc.perform(post("/addIncome")
+                .header("Authorization", smart4Token)
+                .content(incomeJsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        User updatedUser = userService.findUserById(user.getId());
+
+        assertEquals(35000, updatedUser.getAccountCredit(), 0);
+
+        //El usuario agrega un gasto.
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000, LocalDateTime.now(), true);
+        String expenseJsonRequest = mapper.writeValueAsString(expense);
+
+        mockMvc.perform(post("/addExpense")
+                .header("Authorization", smart4Token)
+                .content(expenseJsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        //El usuario edita el gasto agregado anteriormente.
+        long idExpense  = expenseService.getExpenseHistory(String.valueOf(user.getId())).get(0).getId();
+        ExpenseDTO expenseEdit = new ExpenseDTO(idExpense, user.getId(),"Alquiler", "Alquiler mensual", 30000, LocalDateTime.now(), true);
+
+        String jsonRequest = mapper.writeValueAsString(expenseEdit);
+
+        mockMvc.perform(post("/editExpense")
+                .header("Authorization", smart1Token)
+                .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        updatedUser = userService.findUserById(user.getId());
+        List<Expense> actualExpense = expenseService.getExpenseHistory(String.valueOf(user.getId()));
+        long idExpenseEdit = actualExpense.get(0).getId();
+
+        double expectedBalance = 5000.0;
+        double actualBalance = userService.getBalance(user.getId());
+
+        assertEquals(30000, updatedUser.getAccountExpense(), 0);
+
+        assertTrue(expectedBalance == actualBalance);
+
+        assertTrue(actualExpense.size() == 1);
+
+        assertTrue(idExpenseEdit == idExpense);
 
     }
 
