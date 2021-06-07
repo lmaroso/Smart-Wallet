@@ -1,12 +1,13 @@
 package app.api.income;
 
 import app.model.Exceptions.InvalidAmountException;
+import app.model.Exceptions.InvalidDateException;
 import app.model.Income.Income;
-import app.model.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,9 +30,24 @@ public class IncomeService {
        return incomeRepository.save(income);
     }
 
+    public List<Income> getIncomeHistory(String id, LocalDateTime from, LocalDateTime to){
+
+        Long longID;
+
+        try {
+            longID = Long.parseLong(id);
+        }
+        catch (Exception e){
+            throw new UsernameNotFoundException(String.format(ID_NOT_FOUND, id));
+        }
+
+        return incomeRepository.getFiltered(longID, from, to);
+
+    }
+
     public List<Income> getIncomeHistory(String id){
 
-        Long longID = Long.parseLong(id);
+        Long longID = null;
 
         try {
             longID = Long.parseLong(id);

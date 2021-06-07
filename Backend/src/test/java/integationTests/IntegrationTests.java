@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -356,6 +357,65 @@ public class IntegrationTests {
 
         assertEquals(2, incomes.size());
         assertEquals(82000, updatedUser.getAccountCredit(), 0);
+
+    }
+
+    @Test
+    public void testFilteredIncomes() throws Exception{
+
+        User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
+        ExpenseDTO income1 = new ExpenseDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000, LocalDateTime.now(), true);
+        ExpenseDTO income2 = new ExpenseDTO(user.getId(),"Extra", "Horas extras", 2000, LocalDateTime.now().minusDays(1), false);
+        String jsonRequest1 = mapper.writeValueAsString(income1);
+        String jsonRequest2 = mapper.writeValueAsString(income2);
+
+        mockMvc.perform(post("/addIncome")
+                .header("Authorization", smart2Token)
+                .content(jsonRequest1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        mockMvc.perform(post("/addIncome")
+                .header("Authorization", smart2Token)
+                .content(jsonRequest2).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        List<Income> incomes = incomeService.getIncomeHistory(String.valueOf(user.getId()),
+                                                              LocalDateTime.now().minusMinutes(15),
+                                                              LocalDateTime.now().plusMinutes(15));
+
+        assertEquals(1, incomes.size());
+
+    }
+
+    @Test
+    public void testSuccessFilteredIncomesEndpoint() throws Exception{
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
+        ExpenseDTO income1 = new ExpenseDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000, LocalDateTime.now(), true);
+        ExpenseDTO income2 = new ExpenseDTO(user.getId(),"Extra", "Horas extras", 2000, LocalDateTime.now().minusDays(1), false);
+        String jsonRequest1 = mapper.writeValueAsString(income1);
+        String jsonRequest2 = mapper.writeValueAsString(income2);
+
+        mockMvc.perform(post("/addIncome")
+                .header("Authorization", smart1Token)
+                .content(jsonRequest1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        mockMvc.perform(post("/addIncome")
+                .header("Authorization", smart1Token)
+                .content(jsonRequest2).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        String from = LocalDateTime.now().minusDays(1).format(fmt);
+        String to = LocalDateTime.now().plusDays(2).format(fmt);
+        //MvcResult result = mockMvc.perform(get("/getIncomeHistory/" + String.valueOf(user.getId()) + "/2021-06-05T10:15:29/2021-06-07T10:15:29")
+        MvcResult result = mockMvc.perform(get("/getIncomeHistory/" + user.getId() + "/" + from + "/" + to)
+                .header("Authorization", smart1Token)
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        assertEquals( 200, result.getResponse().getStatus());
 
     }
 

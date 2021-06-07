@@ -33,7 +33,7 @@ public class ExpenseService {
 
     public List<Expense> getExpenseHistory(String id){
 
-        Long longID = Long.parseLong(id);
+        Long longID = null;
 
         try {
            longID = Long.parseLong(id);
