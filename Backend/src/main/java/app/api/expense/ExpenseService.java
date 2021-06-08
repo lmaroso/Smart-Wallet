@@ -1,10 +1,13 @@
 package app.api.expense;
 
 import app.model.Exceptions.InvalidAmountException;
+import app.model.Exceptions.NotFoundExpense;
 import app.model.Expense.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -31,9 +34,24 @@ public class ExpenseService {
 
     }
 
+    public List<Expense> getExpenseHistory(String id, LocalDateTime from, LocalDateTime to){
+
+        Long longID;
+
+        try {
+            longID = Long.parseLong(id);
+        }
+        catch (Exception e){
+            throw new UsernameNotFoundException(String.format(ID_NOT_FOUND, id));
+        }
+
+        return expenseRepository.getFiltered(longID, from, to);
+
+    }
+
     public List<Expense> getExpenseHistory(String id){
 
-        Long longID = Long.parseLong(id);
+        Long longID = null;
 
         try {
            longID = Long.parseLong(id);
@@ -44,5 +62,23 @@ public class ExpenseService {
 
        return expenseRepository.findByUserId(longID);
 
+    }
+
+    public long checkAmount(long id, Integer amount) {
+        Integer oldAmount = expenseRepository.findById(id).getAmount();
+        Integer finalAmount = 0;
+
+        if(!oldAmount.equals(amount)){
+            finalAmount =  amount - oldAmount;
+        }
+        return finalAmount;
+    }
+
+    public NotFoundExpense existExpense(long id) {
+        Expense expense = expenseRepository.findById(id);
+        if(expense == null){
+            throw new NotFoundExpense();
+        }
+        return null;
     }
 }

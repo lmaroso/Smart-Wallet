@@ -55,4 +55,18 @@ public class UserController {
         }
         userService.updateProfile(longID, profileDTO.getName(), profileDTO.getEmail());
     }
+
+    //Get
+    @GetMapping(value = "/balance/{id}")
+    public double balance(@PathVariable("id") String id){
+        Long longID = Long.valueOf(0);
+
+        try {
+            longID = Long.parseLong(id);
+        }
+        catch (Exception e){
+            new UsernameNotFoundException(String.format(ID_NOT_FOUND, id));
+        }
+        return userService.getBalance(longID);
+    }
 }
