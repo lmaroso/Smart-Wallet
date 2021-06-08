@@ -2,12 +2,17 @@ package app.api.expense;
 
 import app.api.user.UserService;
 import app.dto.ExpenseDTO;
+import app.model.Exceptions.InvalidDateException;
 import app.model.Exceptions.NotFoundExpense;
 import app.model.Expense.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @CrossOrigin
@@ -56,5 +61,23 @@ public class ExpenseController {
             throw new NotFoundExpense();
         }
         return new ResponseEntity<>(expenses , HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getExpenseHistory/{id}/{from}/{to}")
+    public ResponseEntity<List<Expense>> getIncomeFiltered(@PathVariable("id") String id,
+                                                          @PathVariable("from") String from,
+                                                          @PathVariable("to") String to){
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+        try{
+            List<Expense> expenses = expenseService.getExpenseHistory(id, LocalDateTime.parse(from, fmt), LocalDateTime.parse(to, fmt));
+            if(expenses.isEmpty()){
+                throw new NotFoundExpense();
+            }
+            return new ResponseEntity<>(expenses, HttpStatus.OK);
+        }catch(DateTimeParseException e){
+            throw new InvalidDateException();
+        }
     }
 }

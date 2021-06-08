@@ -2,12 +2,12 @@ package app.api.expense;
 
 import app.model.Exceptions.InvalidAmountException;
 import app.model.Exceptions.NotFoundExpense;
-import app.model.Exceptions.NotFoundIncome;
 import app.model.Expense.Expense;
-import app.model.Income.Income;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -31,6 +31,21 @@ public class ExpenseService {
             throw new InvalidAmountException();
         }
         expenseRepository.save(expense);
+
+    }
+
+    public List<Expense> getExpenseHistory(String id, LocalDateTime from, LocalDateTime to){
+
+        Long longID;
+
+        try {
+            longID = Long.parseLong(id);
+        }
+        catch (Exception e){
+            throw new UsernameNotFoundException(String.format(ID_NOT_FOUND, id));
+        }
+
+        return expenseRepository.getFiltered(longID, from, to);
 
     }
 
