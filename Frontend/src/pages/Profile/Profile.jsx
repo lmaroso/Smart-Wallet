@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useIonViewDidEnter } from "@ionic/react";
 
 import ProfileView from "./ProfileView";
 
@@ -14,7 +15,7 @@ const Profile = ({ history }) => {
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
 
-	useEffect(() => {
+	useIonViewDidEnter(() => {
 		setLoading(true);
 		if(getKey("token")) {
 			getProfile()

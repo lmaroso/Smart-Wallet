@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useIonViewDidEnter } from "@ionic/react";
 
 import HistoryView from "./HistoryView";
 
@@ -17,14 +18,20 @@ const History = ({ history }) => {
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
 
-	useEffect(() => {
+	useIonViewDidEnter(() => {
 		setLoading(true);
 		if(getKey("token")) {
 			getIncomeHistory()
 				.then(({ status, data }) => {
 					setTimeout(() => {
 						if (status === 200 || status === 201) {
-							setIncomes(data);
+							const incomes = data.map(movement => {
+								return {
+									...movement,
+									type: "income"
+								};
+							});
+							setIncomes(incomes);
 							setLoading(false);
 						} else {
 							setToastType("error");
@@ -38,7 +45,13 @@ const History = ({ history }) => {
 				.then(({ status, data }) => {
 					setTimeout(() => {
 						if (status === 200 || status === 201) {
-							setExpenses(data);
+							const expenses = data.map(movement => {
+								return {
+									...movement,
+									type: "expense"
+								};
+							});
+							setExpenses(expenses);
 							setLoading(false);
 						} else {
 							setToastType("error");
@@ -63,7 +76,15 @@ const History = ({ history }) => {
 	const onCloseModal = () => {
 		setIsModalOpen(false);
 	};
-    
+
+	const onEdit = () => {
+		setIsModalOpen(false);
+		history.push({
+			pathname: `/${selectedMovement.type}`,
+			state: selectedMovement
+		});
+	};
+
 	return (
 		<HistoryView
 			createModal={createModal}
@@ -80,6 +101,7 @@ const History = ({ history }) => {
 			toastType={toastType}
 			onChange={onChangeSegment}
 			onCloseModal={onCloseModal}
+			onEdit={onEdit}
 		/>
 	);
 };

@@ -23,13 +23,15 @@ const HistoryView = ({
 	toastText,
 	toastType,
 	onChange,
-	onCloseModal
+	onCloseModal,
+	onEdit
 }) => (
 	<PageWrapper>
 		<Loading isOpen={loading} />
 		<Modal
 			isOpen={isModalOpen}
 			onClickClose={onCloseModal}
+			onClickEdit={onEdit}
 		>
 			{selectedMovement && <HistoryItem movement={selectedMovement}/>}
 		</Modal>

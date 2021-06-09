@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React  from "react";
+import { useIonViewDidEnter } from "@ionic/react";
 
 import PageWrapper from "../../components/PageWrapper/PageWrapper";
 
@@ -6,7 +7,7 @@ import { getKey } from "../../utils/localStorage";
 
 const Dashboard = ({ history }) => {
 
-	useEffect(() => {
+	useIonViewDidEnter(() => {
 		if(!getKey("token")) {
 			history.push({ pathname: "/login" });
 		}

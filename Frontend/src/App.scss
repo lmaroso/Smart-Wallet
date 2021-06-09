@@ -84,3 +84,10 @@ ion-note {
 ion-item-group {
   padding-top: 20px;
 }
+
+.twoButtons {
+  display: flex;
+  justify-content: space-around;
+  margin-left: 10px;
+  margin-right: 10px;
+}

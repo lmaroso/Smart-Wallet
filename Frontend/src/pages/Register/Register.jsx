@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useIonViewDidEnter } from "@ionic/react";
 
 import RegisterView from "./RegisterView";
 
@@ -14,7 +15,7 @@ const Register = ({ history }) => {
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
 
-	useEffect(() => {
+	useIonViewDidEnter(() => {
 		if(getKey("token")) history.push({ pathname: "/dashboard" });
 	}, [history]);
 
