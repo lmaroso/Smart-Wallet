@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import ProfileView from "./ProfileView";
 
-import { getProfile } from "../../services/api";
+import { getProfile, editProfile } from "../../services/api";
 import { getKey } from "../../utils/localStorage";
 
 const Profile = ({ history }) => {
@@ -33,15 +33,23 @@ const Profile = ({ history }) => {
 					}, 1000);
 				});
 		} else {
-			history.push({ pathname: "/" });
+			history.push({ pathname: "/login" });
 		}
 	}, [history]);
 
 	const onSubmit = (event) => {
 		event.preventDefault();
-		setToastType("success");
-		setToastText("Cambios guardados exitosamente");
-		setShouldShowToast(true);
+		editProfile({ name, email })
+			.then(({ status, data }) => {
+				if (status === 200 || status === 201) {
+					setToastType("success");
+					setToastText("Cambios guardados exitosamente");
+				} else {
+					setToastType("error");
+					setToastText(data);
+				}
+				setShouldShowToast(true);
+			});
 	};
 
 	return (

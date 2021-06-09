@@ -70,3 +70,9 @@ export const getIncomeHistory = () => api.get(`/getIncomeHistory/${getKey("useri
 })
 	.then(handleResponse)
 	.catch(handleError);
+
+export const editProfile = body => api.post(`/edit/${getKey("userid")}`, body, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
