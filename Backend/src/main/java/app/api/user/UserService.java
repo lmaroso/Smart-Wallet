@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -122,16 +123,16 @@ public class UserService implements UserDetailsService {
             throw new InvalidEmailException(email);
         }
 
-        boolean userExists = userRepository.findByEmail(email).isPresent();
-        if(userExists){
+        Optional<User> user = userRepository.findByEmail(email);
+        if(user.isPresent() && user.get().getId() != id){
             throw new UsedEmailException(email);
         }
 
-        User user = findUserById(id);
-        user.setName(name);
-        user.setEmail(email);
+        User userEdit = findUserById(id);
+        userEdit.setName(name);
+        userEdit.setEmail(email);
 
-        userRepository.save(user);
+        userRepository.save(userEdit);
 
     }
 
