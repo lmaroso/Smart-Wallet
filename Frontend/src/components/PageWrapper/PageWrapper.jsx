@@ -9,9 +9,9 @@ import "./PageWrapper.scss";
 
 const PageWrapper = ({ children, showFooter, hideMenu }) => (
 	<>
-		<Menu disabled={hideMenu} />
+		<Menu />
 		<IonPage className="content" id="sw-page-content">
-			<Header />
+			<Header hideMenu={hideMenu} />
 			<IonContent className="marginSides">
 				{children}
 			</IonContent>

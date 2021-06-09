@@ -3,11 +3,11 @@ import React from "react";
 
 import "./Header.scss";
 
-const Header = ({ title }) => (
+const Header = ({ title, hideMenu }) => (
 	<IonHeader>
 		<IonToolbar color="primary">
 			<IonButtons slot="start">
-				<IonMenuButton />
+				{!hideMenu && <IonMenuButton />}
 			</IonButtons>
 			<IonTitle>{title ? title : "SmartWallet"}</IonTitle>
 		</IonToolbar>
