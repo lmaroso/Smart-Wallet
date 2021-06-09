@@ -4,43 +4,63 @@ import { useIonViewDidEnter } from "@ionic/react";
 
 import ExpenseView from "./ExpenseView";
 
-import { addExpense } from "../../services/api";
+import { addExpense, editExpense } from "../../services/api";
 import { getKey } from "../../utils/localStorage";
 
-const Expense = ({ history }) => {
+const Expense = ({ history, location }) => {
 
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 	const [amount, setAmount] = useState(0);
 	const [programmed, setProgrammed] = useState(null);
+	const [id, setId] = useState(null);
 	const [shouldShowToast, setShouldShowToast] = useState(false);
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
+	const [mode, setMode] = useState("creation");
 
 	useIonViewDidEnter(() => {
 		if(!getKey("token")) {
 			history.push({ pathname: "/login" });
+		} else {
+			if(location.state) {
+				const { name, description, amount, programmed, id } = location.state;
+				setName(name);
+				setDescription(description);
+				setAmount(amount);
+				setProgrammed(programmed);
+				setId(id);
+				setMode("edition");
+			}
 		}
-	}, [history]);
+	}, [history, location]);
 
 	const onSubmit = (event) => {
 		event.preventDefault();
 		const date = moment().format("YYYY-MM-DD[T]HH:mm:ss");
-		addExpense({ name, description, amount, date, programmed })
-			.then(({ status, data }) => {
-				if (status === 200 || status === 201) {
-					setToastType("success");
-					setToastText("Guardado exitosamente");
-					setTimeout(() => {
-						history.push({ pathname: "/dashboard" });
-					}, 4000);
-				} else if (status >= 400) {
-					setToastType("error");
-					setToastText(data);
-				}
-				setShouldShowToast(true);
-			});
+		if(mode === "creation") {
+			addExpense({ name, description, amount, date, programmed })
+				.then(onResolve);
+		} else {
+			editExpense({ id, name, description, amount, date, programmed })
+				.then(onResolve);
+		}
 	};
+
+	const onResolve = ({ status, data }) => {
+		if (status === 200 || status === 201) {
+			setToastType("success");
+			setToastText("Guardado exitosamente");
+			setTimeout(() => {
+				history.push({ pathname: "/history" });
+			},  1000);
+		} else if (status >= 400) {
+			setToastType("error");
+			setToastText(data);
+		}
+		setShouldShowToast(true);
+	};
+
 	return (
 		<ExpenseView
 			amount={amount}

@@ -53,7 +53,7 @@ const Income = ({ history, location }) => {
 			setToastText("Guardado exitosamente");
 			setTimeout(() => {
 				history.push({ pathname: "/history" });
-			}, 4000);
+			},  1000);
 		} else if (status >= 400) {
 			setToastType("error");
 			setToastText(data);

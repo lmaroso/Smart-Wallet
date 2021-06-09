@@ -29,7 +29,7 @@ const Login = ({ history }) => {
 					setKey("userid", headers.userid);
 					setTimeout(() => {
 						history.push({ pathname: "/dashboard" });
-					}, 4000);
+					},  1000);
 				} else if (status === 403) {
 					setToastType("error");
 					setToastText("La combinacion de usuario y contraseña ingresada no existe");

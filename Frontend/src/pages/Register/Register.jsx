@@ -28,7 +28,7 @@ const Register = ({ history }) => {
 					setToastText("Se registró exitosamente. Por favor verificá tu correo para activar el usuario");
 					setTimeout(() => {
 						history.push({ pathname: "/login" });
-					}, 4000);
+					},  1000);
 				} else if (status >= 400) {
 					setToastType("error");
 					setToastText(data);
