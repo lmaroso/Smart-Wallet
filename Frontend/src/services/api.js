@@ -41,13 +41,13 @@ export const login = body => api.post("/login", body)
 	.then(handleResponse)
 	.catch(handleError);
 
-export const addIncome = body => api.post("/addIncome", { userId: parseInt(getKey("userid")), ...body }, {
+export const getProfile = () => api.get(`/getProfile/${getKey("userid")}`, {
 	headers: { Authorization: getKey("token"), ...headers }
 })
 	.then(handleResponse)
 	.catch(handleError);
 
-export const getProfile = () => api.get(`/getProfile/${getKey("userid")}`, {
+export const editProfile = body => api.post(`/edit/${getKey("userid")}`, body, {
 	headers: { Authorization: getKey("token"), ...headers }
 })
 	.then(handleResponse)
@@ -59,7 +59,19 @@ export const addExpense = body => api.post("/addExpense", { userId: parseInt(get
 	.then(handleResponse)
 	.catch(handleError);
 
+export const editExpense = body => api.post("/editExpense", { userId: parseInt(getKey("userid")), ...body }, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
+
 export const getExpenseHistory = () => api.get(`/getExpenseHistory/${getKey("userid")}`, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
+
+export const addIncome = body => api.post("/addIncome", { userId: parseInt(getKey("userid")), ...body }, {
 	headers: { Authorization: getKey("token"), ...headers }
 })
 	.then(handleResponse)
@@ -71,7 +83,7 @@ export const getIncomeHistory = () => api.get(`/getIncomeHistory/${getKey("useri
 	.then(handleResponse)
 	.catch(handleError);
 
-export const editProfile = body => api.post(`/edit/${getKey("userid")}`, body, {
+export const editIncome = body => api.post("/editIncome", { userId: parseInt(getKey("userid")), ...body }, {
 	headers: { Authorization: getKey("token"), ...headers }
 })
 	.then(handleResponse)
