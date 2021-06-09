@@ -18,7 +18,7 @@ const Expense = ({ history }) => {
 
 	useEffect(() => {
 		if(!getKey("token")) {
-			history.push({ pathname: "/" });
+			history.push({ pathname: "/login" });
 		}
 	}, [history]);
 

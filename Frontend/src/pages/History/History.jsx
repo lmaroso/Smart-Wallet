@@ -49,7 +49,7 @@ const History = ({ history }) => {
 					}, 1000);
 				});
 		} else {
-			history.push({ pathname: "/" });
+			history.push({ pathname: "/login" });
 		}
 	}, [history]);
 

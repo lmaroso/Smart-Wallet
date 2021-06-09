@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import LoginView from "./LoginView";
 
 import { login } from "../../services/api";
-import { setKey } from "../../utils/localStorage";
+import { setKey, getKey } from "../../utils/localStorage";
 
 const Login = ({ history }) => {
 
@@ -12,6 +12,10 @@ const Login = ({ history }) => {
 	const [shouldShowToast, setShouldShowToast] = useState(false);
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
+
+	useEffect(() => {
+		if(getKey("token")) history.push({ pathname: "/dashboard" });
+	}, [history]);
 
 	const onSubmit = (event) => {
 		event.preventDefault();

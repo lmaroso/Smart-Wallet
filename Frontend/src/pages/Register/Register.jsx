@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import RegisterView from "./RegisterView";
 
 import { register } from "../../services/api";
+import { getKey } from "../../utils/localStorage";
 
 const Register = ({ history }) => {
 
@@ -12,6 +13,10 @@ const Register = ({ history }) => {
 	const [shouldShowToast, setShouldShowToast] = useState(false);
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
+
+	useEffect(() => {
+		if(getKey("token")) history.push({ pathname: "/dashboard" });
+	}, [history]);
 
 	const onSubmit = (event) => {
 		event.preventDefault();
