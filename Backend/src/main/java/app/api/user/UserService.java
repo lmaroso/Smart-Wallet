@@ -7,9 +7,11 @@ import app.model.Email.Sender;
 import app.model.Exceptions.*;
 import app.model.Expense.Expense;
 import app.model.Income.Income;
+import app.model.Task.Task;
 import app.model.Token.ConfirmationToken;
 import app.model.User.User;
 import app.model.Validators.EmailValidator;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +21,9 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Optional;
+import java.util.Timer;
 import java.util.UUID;
 
 @Service
@@ -104,8 +108,32 @@ public class UserService implements UserDetailsService {
         return email;
     }
 
-    public void updateAccountCredit(long userId, long amount){
-        userRepository.updateAccountCredit(amount, userId);
+    public void updateAccountCredit(long userId, long amount, LocalDateTime date, boolean programmed,
+                                    int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
+
+        Timer timer = new Timer();
+        Calendar calendar = Calendar.getInstance();
+        LocalDateTime now = LocalDateTime.now();
+
+        if (repetitionMilliSeconds == 0){
+            //Si no se especifican los segundos, la tarea se ejecuta cada 24 hs en caso de estar programada.
+            repetitionMilliSeconds = 86400000;
+        }
+
+        if(date.isAfter(now)) {
+            calendar.set(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(),
+                    date.getMinute(), date.getSecond());
+
+            timer.schedule(new Task(userId, amount, programmed, dayOfWeek, dayOfMonth, userRepository),
+                    calendar.getTime(),
+                    repetitionMilliSeconds);
+        }
+        else{
+            timer.schedule(new Task(userId, amount, programmed, dayOfWeek, dayOfMonth, userRepository),
+                    0,
+                    repetitionMilliSeconds);
+        }
+
     }
 
     public void updateAccountExpense(long userId, long amount){

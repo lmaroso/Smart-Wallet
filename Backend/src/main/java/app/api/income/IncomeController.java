@@ -31,9 +31,11 @@ public class IncomeController {
         Income income = new Income(incomeDTO.getUserId(),
                 incomeDTO.getName(), incomeDTO.getDescription(),
                 incomeDTO.getAmount(), incomeDTO.getDate(),
-                incomeDTO.getProgrammed());
+                incomeDTO.getProgrammed(), incomeDTO.getRepetitionMilliSeconds(),
+                incomeDTO.getDayOfWeek(), incomeDTO.getDayOfMonth());
 
-        userService.updateAccountCredit(income.getUserId(), income.getAmount());
+        userService.updateAccountCredit(income.getUserId(), income.getAmount(), income.getDate(), income.isProgrammed(),
+                                        income.getRepetitionMilliSeconds(), income.getDayOfWeek(), income.getDayOfMonth());
         incomeService.saveIncome(income);
 
         return HttpStatus.OK;
@@ -47,9 +49,12 @@ public class IncomeController {
         Income income = new Income (incomeDTO.getId(), incomeDTO.getUserId(),
                 incomeDTO.getName(), incomeDTO.getDescription(),
                 incomeDTO.getAmount(), incomeDTO.getDate(),
-                incomeDTO.getProgrammed());
+                incomeDTO.getProgrammed(), incomeDTO.getRepetitionMilliSeconds(),
+                incomeDTO.getDayOfWeek(), incomeDTO.getDayOfMonth());
 
-        userService.updateAccountCredit(income.getUserId(), incomeService.checkAmount(income.getId(), income.getAmount()));
+        userService.updateAccountCredit(income.getUserId(), incomeService.checkAmount(income.getId(), income.getAmount()),
+                                        income.getDate(), income.isProgrammed(), income.getRepetitionMilliSeconds(),
+                                        income.getDayOfWeek(), income.getDayOfMonth());
 
         incomeService.saveIncome(income);
         return HttpStatus.OK;

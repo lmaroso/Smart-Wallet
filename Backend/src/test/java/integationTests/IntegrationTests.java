@@ -143,7 +143,7 @@ public class IntegrationTests {
                 .andExpect(status().isOk()).andReturn();
 
         //Agrega un ingreso.
-        IncomeDTO income = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 90000, LocalDateTime.now(), true);
+        IncomeDTO income = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 90000, LocalDateTime.now(), false, 0, 0, 0);
         String jsonRequestIncome = mapper.writeValueAsString(income);
         mockMvc.perform(post("/addIncome")
                 .header("Authorization", smart1Token)
@@ -317,7 +317,7 @@ public class IntegrationTests {
     public void testSuccessAddIncome() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false, 0, 0, 0);
         String jsonRequest = mapper.writeValueAsString(income);
 
         mockMvc.perform(post("/addIncome")
@@ -335,8 +335,8 @@ public class IntegrationTests {
     public void testSuccessAdd2Incomes() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        ExpenseDTO income1 = new ExpenseDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000, LocalDateTime.now(), true);
-        ExpenseDTO income2 = new ExpenseDTO(user.getId(),"Extra", "Horas extras", 2000, LocalDateTime.now(), false);
+        IncomeDTO income1 = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000, LocalDateTime.now(), false, 0, 0, 0);
+        IncomeDTO income2 = new IncomeDTO(user.getId(),"Extra", "Horas extras", 2000, LocalDateTime.now(), false, 0, 0, 0);
         String jsonRequest1 = mapper.writeValueAsString(income1);
         String jsonRequest2 = mapper.writeValueAsString(income2);
 
@@ -363,7 +363,7 @@ public class IntegrationTests {
     public void testFilteredIncomes() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        ExpenseDTO income1 = new ExpenseDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000, LocalDateTime.now(), true);
+        ExpenseDTO income1 = new ExpenseDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000, LocalDateTime.now(), false);
         ExpenseDTO income2 = new ExpenseDTO(user.getId(),"Extra", "Horas extras", 2000, LocalDateTime.now().minusDays(1), false);
         String jsonRequest1 = mapper.writeValueAsString(income1);
         String jsonRequest2 = mapper.writeValueAsString(income2);
@@ -391,8 +391,8 @@ public class IntegrationTests {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
-        IncomeDTO income1 = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000, LocalDateTime.now(), true);
-        IncomeDTO income2 = new IncomeDTO(user.getId(),"Extra", "Horas extras", 2000, LocalDateTime.now().minusDays(1), false);
+        IncomeDTO income1 = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000, LocalDateTime.now(), false, 0, 0, 0);
+        IncomeDTO income2 = new IncomeDTO(user.getId(),"Extra", "Horas extras", 2000, LocalDateTime.now().minusDays(1), false, 0, 0, 0);
         String jsonRequest1 = mapper.writeValueAsString(income1);
         String jsonRequest2 = mapper.writeValueAsString(income2);
 
@@ -423,8 +423,8 @@ public class IntegrationTests {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
-        IncomeDTO income1 = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000, LocalDateTime.now(), true);
-        IncomeDTO income2 = new IncomeDTO(user.getId(),"Extra", "Horas extras", 2000, LocalDateTime.now().minusDays(1), false);
+        IncomeDTO income1 = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000, LocalDateTime.now(), false, 0, 0, 0);
+        IncomeDTO income2 = new IncomeDTO(user.getId(),"Extra", "Horas extras", 2000, LocalDateTime.now().minusDays(1), false, 0, 0, 0);
         String jsonRequest1 = mapper.writeValueAsString(income1);
         String jsonRequest2 = mapper.writeValueAsString(income2);
 
@@ -455,7 +455,7 @@ public class IntegrationTests {
     public void testIncorrectAddIncome() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 0, LocalDateTime.now(), false);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 0, LocalDateTime.now(), false, 0, 0, 0);
         String jsonRequest = mapper.writeValueAsString(income);
 
         MvcResult result = mockMvc.perform(post("/addIncome")
@@ -475,7 +475,7 @@ public class IntegrationTests {
         long idIncome  = incomeService.getIncomeHistory(String.valueOf(user.getId())).get(0).getId();
         IncomeDTO income = new IncomeDTO(idIncome, user.getId(),
                 "Sueldo", "Sueldo mensual", 40000, LocalDateTime.now(),
-                false);
+                false, 0, 0, 0);
 
         String jsonRequest = mapper.writeValueAsString(income);
 
@@ -500,8 +500,7 @@ public class IntegrationTests {
 
         IncomeDTO income = new IncomeDTO(idRandom, user.getId(),
                 "Sueldo", "Sueldo mensual", 40000, LocalDateTime.now(),
-                false);
-
+                false, 0, 0, 0);
 
         String jsonRequest = mapper.writeValueAsString(income);
 
@@ -848,7 +847,7 @@ public class IntegrationTests {
                 .getResponse()
                 .getHeader("Authorization");
 
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false, 0, 0, 0);
         String incomeJsonRequest = mapper.writeValueAsString(income);
 
         //El usuario agrega un ingreso.
@@ -856,6 +855,8 @@ public class IntegrationTests {
                 .header("Authorization", smart4Token)
                 .content(incomeJsonRequest).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
+
+        Thread.sleep(1000);
 
         User updatedUser = userService.findUserById(user.getId());
 
@@ -911,7 +912,7 @@ public class IntegrationTests {
                 .getResponse()
                 .getHeader("Authorization");
 
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false, 0, 0, 0);
         String incomeJsonRequest = mapper.writeValueAsString(income);
 
         //El usuario consulta su perfil
@@ -976,7 +977,7 @@ public class IntegrationTests {
                 .getResponse()
                 .getHeader("Authorization");
 
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false, 0, 0, 0);
         String incomeJsonRequest = mapper.writeValueAsString(income);
 
         //El usuario agrega un ingreso.
@@ -1042,7 +1043,7 @@ public class IntegrationTests {
                 .getResponse()
                 .getHeader("Authorization");
 
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false, 0, 0, 0);
         String incomeJsonRequest = mapper.writeValueAsString(income);
 
         //El usuario agrega un ingreso.
@@ -1118,7 +1119,7 @@ public class IntegrationTests {
                 .getResponse()
                 .getHeader("Authorization");
 
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false, 0, 0, 0);
         String incomeJsonRequest = mapper.writeValueAsString(income);
 
         //El usuario agrega un ingreso.

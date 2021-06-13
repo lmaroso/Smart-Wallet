@@ -33,19 +33,33 @@ public class Income {
     @NotNull
     private Boolean programmed;
 
+    @NotNull
+    private int repetitionMilliSeconds;
+
+    @NotNull
+    private int dayOfWeek;
+
+    @NotNull
+    private int dayOfMonth;
+
     //Constructor
     public Income() {}
 
-    public Income(Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed) {
+    public Income(Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed,
+                  int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
         this.userId = userId;
         this.name = name;
         this.description = description;
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
+        this.repetitionMilliSeconds = repetitionMilliSeconds;
+        this.dayOfWeek = dayOfWeek;
+        this.dayOfMonth = dayOfMonth;
     }
 
-    public Income( long id, Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed) {
+    public Income(long id, Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed,
+                  int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -53,6 +67,9 @@ public class Income {
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
+        this.repetitionMilliSeconds = repetitionMilliSeconds;
+        this.dayOfWeek = dayOfWeek;
+        this.dayOfMonth = dayOfMonth;
     }
 
     public long getId() {
@@ -109,6 +126,18 @@ public class Income {
 
     public Boolean isProgrammed(){
         return this.programmed;
+    }
+
+    public int getRepetitionMilliSeconds(){
+        return this.repetitionMilliSeconds;
+    }
+
+    public int getDayOfWeek(){
+        return this.dayOfWeek;
+    }
+
+    public int getDayOfMonth(){
+        return this.dayOfMonth;
     }
 
 }

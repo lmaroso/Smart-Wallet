@@ -15,7 +15,7 @@ public class IncomeTests {
 
         LocalDateTime now = LocalDateTime.now();
 
-        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, now, false);
+        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, now, false, 0, 0, 0);
 
         assertEquals(Long.valueOf(1), income.getUserId());
         assertEquals("Sueldo", income.getName());
@@ -29,7 +29,7 @@ public class IncomeTests {
     @Test
     public void setUserId(){
 
-        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false, 0, 0, 0);
 
         Long expect = Long.valueOf(2);
         income.setUserId(Long.valueOf(2));
@@ -41,7 +41,7 @@ public class IncomeTests {
     @Test
     public void setName(){
 
-        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false, 0, 0, 0);
 
         String expect = "Sueldo bruto";
         income.setName("Sueldo bruto");
@@ -53,7 +53,7 @@ public class IncomeTests {
     @Test
     public void setDescription(){
 
-        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false, 0, 0, 0);
 
         income.setDescription("Mensual");
         String expect = "Mensual";
@@ -65,7 +65,7 @@ public class IncomeTests {
     @Test
     public void setAmount(){
 
-        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false, 0, 0, 0);
 
         Integer expect = 40000;
         income.setAmount(40000);
@@ -76,7 +76,7 @@ public class IncomeTests {
 
     @Test
     public void setDate(){
-        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false, 0, 0, 0);
 
         LocalDateTime expect = LocalDateTime.of(2021, 05, 31, 17, 20, 00);
         income.setDate(LocalDateTime.of(2021, 05, 31, 17, 20, 00));
@@ -89,7 +89,7 @@ public class IncomeTests {
     @Test
     public void setProgrammedIncome(){
 
-        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false);
+        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 35000, LocalDateTime.now(), false, 0, 0, 0);
 
         income.setProgrammed(true);
 
@@ -100,7 +100,7 @@ public class IncomeTests {
     @Test
     public void setAvailableIncome(){
 
-        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 0, LocalDateTime.now(), false);
+        Income income = new Income(Long.valueOf(1), "Sueldo", "Sueldo mensual", 0, LocalDateTime.now(), false, 0, 0, 0);
 
         income.setAmount(20000);
 
