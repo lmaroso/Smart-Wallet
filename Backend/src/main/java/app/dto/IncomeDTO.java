@@ -8,7 +8,7 @@ public class IncomeDTO {
     private Long userId;
     private String name;
     private String description;
-    private Integer amount;
+    private Double amount;
     private LocalDateTime date;
     private Boolean programmed;
     private int repetitionMilliSeconds;
@@ -17,7 +17,7 @@ public class IncomeDTO {
 
     public IncomeDTO(){}
 
-    public IncomeDTO(Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed,
+    public IncomeDTO(Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
                      int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
         this.userId = userId;
         this.name = name;
@@ -30,7 +30,7 @@ public class IncomeDTO {
         this.dayOfMonth = dayOfMonth;
     }
 
-    public IncomeDTO(long id, Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed,
+    public IncomeDTO(long id, Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
                      int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
         this.id = id;
         this.userId = userId;
@@ -74,11 +74,11 @@ public class IncomeDTO {
         this.description = description;
     }
 
-    public Integer getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

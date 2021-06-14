@@ -60,9 +60,9 @@ public class IncomeService {
 
     }
 
-    public long checkAmount(long id, Integer amount) {
-        Integer oldAmount = incomeRepository.findById(id).getAmount();
-        Integer finalAmount = 0;
+    public Double checkAmount(long id, Double amount) {
+        Double oldAmount = incomeRepository.findById(id).getAmount();
+        Double finalAmount = 0.0;
 
         if(!oldAmount.equals(amount)){
             finalAmount =  amount - oldAmount;

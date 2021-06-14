@@ -8,13 +8,16 @@ public class ExpenseDTO {
     public Long userId;
     public String name;
     public String description;
-    public Integer amount;
+    public Double amount;
     public LocalDateTime date;
     public Boolean programmed;
+    private int repetitionMilliSeconds;
+    private int dayOfWeek;
+    private int dayOfMonth;
 
     public ExpenseDTO(){}
 
-    public ExpenseDTO(long id, Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
+    public ExpenseDTO(long id, Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed){
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -24,7 +27,7 @@ public class ExpenseDTO {
         this.programmed = programmed;
 
     }
-    public ExpenseDTO(Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
+    public ExpenseDTO(Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed){
         this.userId = userId;
         this.name = name;
         this.description = description;
@@ -59,11 +62,11 @@ public class ExpenseDTO {
         this.description = description;
     }
 
-    public Integer getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -81,5 +84,17 @@ public class ExpenseDTO {
 
     public void setProgrammed(Boolean programmed) {
         this.programmed = programmed;
+    }
+
+    public int getRepetitionMilliSeconds(){
+        return this.repetitionMilliSeconds;
+    }
+
+    public int getDayOfWeek(){
+        return this.dayOfWeek;
+    }
+
+    public int getDayOfMonth(){
+        return this.dayOfMonth;
     }
 }

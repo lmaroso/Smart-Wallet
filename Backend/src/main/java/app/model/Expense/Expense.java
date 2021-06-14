@@ -25,7 +25,7 @@ public class Expense {
     private String description;
 
     @NotNull
-    private Integer amount;
+    private Double amount;
 
     @NotNull
     private LocalDateTime date;
@@ -33,19 +33,35 @@ public class Expense {
     @NotNull
     private Boolean programmed;
 
+    @NotNull
+    private int repetitionMilliSeconds;
+
+    @NotNull
+    private int dayOfWeek;
+
+    @NotNull
+    private int dayOfMonth;
+
     //Constructor
     public Expense() {}
 
-    public Expense(Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed) {
+    public Expense(Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
+                   int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth) {
+
         this.userId = userId;
         this.name = name;
         this.description = description;
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
+        this.repetitionMilliSeconds = repetitionMilliSeconds;
+        this.dayOfWeek = dayOfWeek;
+        this.dayOfMonth = dayOfMonth;
     }
 
-    public Expense(long id, Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed) {
+    public Expense(long id, Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
+                   int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth) {
+
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -53,6 +69,9 @@ public class Expense {
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
+        this.repetitionMilliSeconds = repetitionMilliSeconds;
+        this.dayOfWeek = dayOfWeek;
+        this.dayOfMonth = dayOfMonth;
     }
 
     public long getId() { return id; }
@@ -77,11 +96,11 @@ public class Expense {
         this.description = description;
     }
 
-    public Integer getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -103,6 +122,18 @@ public class Expense {
 
     public Boolean isProgrammed(){
         return this.programmed;
+    }
+
+    public int getRepetitionMilliSeconds(){
+        return this.repetitionMilliSeconds;
+    }
+
+    public int getDayOfWeek(){
+        return this.dayOfWeek;
+    }
+
+    public int getDayOfMonth(){
+        return this.dayOfMonth;
     }
 
 }

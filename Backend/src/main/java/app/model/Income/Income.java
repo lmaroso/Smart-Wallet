@@ -25,7 +25,7 @@ public class Income {
     private String description;
 
     @NotNull
-    private Integer amount;
+    private Double amount;
 
     @NotNull
     private LocalDateTime date;
@@ -45,7 +45,7 @@ public class Income {
     //Constructor
     public Income() {}
 
-    public Income(Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed,
+    public Income(Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
                   int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
         this.userId = userId;
         this.name = name;
@@ -58,7 +58,7 @@ public class Income {
         this.dayOfMonth = dayOfMonth;
     }
 
-    public Income(long id, Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed,
+    public Income(long id, Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
                   int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
         this.id = id;
         this.userId = userId;
@@ -100,11 +100,11 @@ public class Income {
         this.description = description;
     }
 
-    public Integer getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

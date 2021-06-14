@@ -34,9 +34,8 @@ public class IncomeController {
                 incomeDTO.getProgrammed(), incomeDTO.getRepetitionMilliSeconds(),
                 incomeDTO.getDayOfWeek(), incomeDTO.getDayOfMonth());
 
-        userService.updateAccountCredit(income.getUserId(), income.getAmount(), income.getDate(), income.isProgrammed(),
-                                        income.getRepetitionMilliSeconds(), income.getDayOfWeek(), income.getDayOfMonth());
         incomeService.saveIncome(income);
+        userService.createIncomeTask(income);
 
         return HttpStatus.OK;
     }
@@ -52,9 +51,7 @@ public class IncomeController {
                 incomeDTO.getProgrammed(), incomeDTO.getRepetitionMilliSeconds(),
                 incomeDTO.getDayOfWeek(), incomeDTO.getDayOfMonth());
 
-        userService.updateAccountCredit(income.getUserId(), incomeService.checkAmount(income.getId(), income.getAmount()),
-                                        income.getDate(), income.isProgrammed(), income.getRepetitionMilliSeconds(),
-                                        income.getDayOfWeek(), income.getDayOfMonth());
+        userService.updateAccountCredit(income.getUserId(), incomeService.checkAmount(income.getId(), income.getAmount()));
 
         incomeService.saveIncome(income);
         return HttpStatus.OK;

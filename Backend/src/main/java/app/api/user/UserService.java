@@ -1,5 +1,6 @@
 package app.api.user;
 
+import app.api.income.IncomeRepository;
 import app.api.token.ConfirmationTokenRepository;
 import app.api.token.ConfirmationTokenService;
 import app.model.Email.Email;
@@ -34,13 +35,17 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private final IncomeRepository incomeRepository;
     private final EmailValidator emailValidator;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
 
     //Constructor
-    public UserService(UserRepository userRepository, ConfirmationTokenRepository confirmationTokenRepository) {
+    public UserService(UserRepository userRepository, ConfirmationTokenRepository confirmationTokenRepository,
+                       IncomeRepository incomeRepository) {
         this.userRepository = userRepository;
+        this.incomeRepository = incomeRepository;
         this.emailValidator = new EmailValidator();
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.confirmationTokenService = new ConfirmationTokenService(confirmationTokenRepository, userRepository);
@@ -108,12 +113,13 @@ public class UserService implements UserDetailsService {
         return email;
     }
 
-    public void updateAccountCredit(long userId, long amount, LocalDateTime date, boolean programmed,
-                                    int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
+    public void createIncomeTask(Income income){
 
         Timer timer = new Timer();
         Calendar calendar = Calendar.getInstance();
         LocalDateTime now = LocalDateTime.now();
+        int repetitionMilliSeconds = income.getRepetitionMilliSeconds();
+        LocalDateTime date = income.getDate();
 
         if (repetitionMilliSeconds == 0){
             //Si no se especifican los segundos, la tarea se ejecuta cada 24 hs en caso de estar programada.
@@ -124,19 +130,23 @@ public class UserService implements UserDetailsService {
             calendar.set(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(),
                     date.getMinute(), date.getSecond());
 
-            timer.schedule(new Task(userId, amount, programmed, dayOfWeek, dayOfMonth, userRepository),
+            timer.schedule(new Task(income.getId(), incomeRepository, userRepository),
                     calendar.getTime(),
                     repetitionMilliSeconds);
         }
         else{
-            timer.schedule(new Task(userId, amount, programmed, dayOfWeek, dayOfMonth, userRepository),
+            timer.schedule(new Task(income.getId(), incomeRepository, userRepository),
                     0,
                     repetitionMilliSeconds);
         }
 
     }
 
-    public void updateAccountExpense(long userId, long amount){
+    public void updateAccountCredit(long userId, Double amount){
+        userRepository.updateAccountCredit(amount, userId);
+    }
+
+    public void updateAccountExpense(long userId, Double amount){
         userRepository.updateAccountExpense(amount, userId);
     }
 

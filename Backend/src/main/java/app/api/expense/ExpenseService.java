@@ -64,9 +64,9 @@ public class ExpenseService {
 
     }
 
-    public long checkAmount(long id, Integer amount) {
-        Integer oldAmount = expenseRepository.findById(id).getAmount();
-        Integer finalAmount = 0;
+    public Double checkAmount(long id, Double amount) {
+        Double oldAmount = expenseRepository.findById(id).getAmount();
+        Double finalAmount = 0.0;
 
         if(!oldAmount.equals(amount)){
             finalAmount =  amount - oldAmount;
