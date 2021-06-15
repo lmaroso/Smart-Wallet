@@ -564,6 +564,45 @@ public class IntegrationTests {
     }
 
     @Test
+    public void testSuccessDeleteIncome() throws Exception{
+        User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 40000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        String jsonRequest = mapper.writeValueAsString(income);
+
+        mockMvc.perform(post("/addIncome")
+                .header("Authorization", smart2Token)
+                .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        Income addIncome = incomeService.getIncomeHistory(Long.toString(user.getId())).get(0);
+        String incomeId = Long.toString(addIncome.getId());
+
+        mockMvc.perform(get("/deleteIncome/" + incomeId)
+                .header("Authorization", smart2Token)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        Integer expected = 0;
+        Integer actual = incomeService.getIncomeHistory(Long.toString(user.getId())).size();
+
+        assertTrue(expected == actual);
+
+    }
+
+    @Test
+    public void testIncorrectIdIncomeToDelete() throws Exception{
+        String idRandom = "105";
+
+        MvcResult result = mockMvc.perform(get("/deleteIncome/" + idRandom)
+                .header("Authorization", smart2Token)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        assertEquals(result.getResolvedException().getMessage(), "Not found expense");
+        assertEquals(result.getResponse().getStatus(),  400);
+    }
+
+    @Test
     public void testSuccessGetIncomeHistory() throws Exception{
 
         String id = String.valueOf(userService.findUserByEmail("smart.wallet.app1@gmail.com").getId());
@@ -754,6 +793,45 @@ public class IntegrationTests {
         assertEquals("Not found expense", result.getResolvedException().getMessage());
         assertEquals( 400, result.getResponse().getStatus());
 
+    }
+
+    @Test
+    public void testSuccessDeleteExpense() throws Exception{
+        User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        String jsonRequest = mapper.writeValueAsString(expense);
+
+        mockMvc.perform(post("/addExpense")
+                .header("Authorization", smart2Token)
+                .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        Expense addExpense = expenseService.getExpenseHistory(Long.toString(user.getId())).get(0);
+        String expenseId = Long.toString(addExpense.getId());
+
+        mockMvc.perform(get("/deleteExpense/" + expenseId)
+                .header("Authorization", smart2Token)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        Integer expected = 0;
+        Integer actual = expenseService.getExpenseHistory(Long.toString(user.getId())).size();
+
+        assertTrue(expected == actual);
+
+    }
+
+    @Test
+    public void testIncorrectIdExpenseToDelete() throws Exception{
+       String idRandom = "105";
+
+        MvcResult result = mockMvc.perform(get("/deleteExpense/" + idRandom)
+                .header("Authorization", smart2Token)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        assertEquals(result.getResolvedException().getMessage(), "Not found expense");
+        assertEquals(result.getResponse().getStatus(),  400);
     }
 
     @Test
