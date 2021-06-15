@@ -58,6 +58,14 @@ public class ExpenseController {
         return HttpStatus.OK;
     }
 
+    @GetMapping(value = "/deleteExpense/{id}")
+    public HttpStatus deleteExpense(@PathVariable ("id") String id){
+
+        expenseService.deleteExpense(id);
+
+        return HttpStatus.OK;
+    }
+
     @GetMapping(value = "/getExpenseHistory/{id}")
     public ResponseEntity<List<Expense>> getExpense(@PathVariable("id") String id){
         List<Expense> expenses = expenseService.getExpenseHistory(id);

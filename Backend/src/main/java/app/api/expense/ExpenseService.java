@@ -21,22 +21,17 @@ public class ExpenseService {
 
     //Constructor
     public ExpenseService(ExpenseRepository expenseRepository) {
-
         this.expenseRepository = expenseRepository;
-
     }
 
     public void saveExpense (Expense expense){
-
         if(!expense.isAvailable()) {
             throw new InvalidAmountException();
         }
         expenseRepository.save(expense);
-
     }
 
     public List<Expense> getExpenseHistory(String id, LocalDateTime from, LocalDateTime to){
-
         Long longID;
 
         try {
@@ -47,11 +42,9 @@ public class ExpenseService {
         }
 
         return expenseRepository.getFiltered(longID, from, to);
-
     }
 
     public List<Expense> getExpenseHistory(String id){
-
         Long longID = null;
 
         try {
@@ -62,7 +55,6 @@ public class ExpenseService {
         }
 
        return expenseRepository.findByUserId(longID);
-
     }
 
     public Double checkAmount(long id, Double amount) {
@@ -84,7 +76,6 @@ public class ExpenseService {
     }
 
     public void checkValidProgrammedValues(Expense expense){
-
         if(expense.isProgrammed() &&
            expense.getRepetitionMilliSeconds() == 0 &&
            expense.getDayOfWeek() == 0 &&
@@ -92,6 +83,20 @@ public class ExpenseService {
            !expense.isCancelled()) {
             throw new InvalidProgrammedValuesException();
         }
-
     }
+
+    public void deleteExpense(String id) {
+        Long longID = null;
+
+        try {
+            longID = Long.parseLong(id);
+        }
+        catch (Exception e){
+            new UsernameNotFoundException(String.format(ID_NOT_FOUND, id));
+        }
+
+        this.existExpense(longID);
+        expenseRepository.deleteById(longID);
+    }
+
 }
