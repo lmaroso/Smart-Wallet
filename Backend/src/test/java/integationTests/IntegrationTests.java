@@ -598,7 +598,7 @@ public class IntegrationTests {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        assertEquals(result.getResolvedException().getMessage(), "Not found expense");
+        assertEquals(result.getResolvedException().getMessage(), "Not found income");
         assertEquals(result.getResponse().getStatus(),  400);
     }
 
