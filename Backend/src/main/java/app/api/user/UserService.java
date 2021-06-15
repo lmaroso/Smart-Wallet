@@ -1,5 +1,6 @@
 package app.api.user;
 
+import app.api.expense.ExpenseRepository;
 import app.api.income.IncomeRepository;
 import app.api.token.ConfirmationTokenRepository;
 import app.api.token.ConfirmationTokenService;
@@ -8,11 +9,11 @@ import app.model.Email.Sender;
 import app.model.Exceptions.*;
 import app.model.Expense.Expense;
 import app.model.Income.Income;
-import app.model.Task.Task;
+import app.model.Task.ExpenseTask;
+import app.model.Task.IncomeTask;
 import app.model.Token.ConfirmationToken;
 import app.model.User.User;
 import app.model.Validators.EmailValidator;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +21,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Optional;
@@ -37,15 +37,18 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     @Autowired
     private final IncomeRepository incomeRepository;
+    @Autowired
+    private final ExpenseRepository expenseRepository;
     private final EmailValidator emailValidator;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
 
     //Constructor
     public UserService(UserRepository userRepository, ConfirmationTokenRepository confirmationTokenRepository,
-                       IncomeRepository incomeRepository) {
+                       IncomeRepository incomeRepository, ExpenseRepository expenseRepository) {
         this.userRepository = userRepository;
         this.incomeRepository = incomeRepository;
+        this.expenseRepository = expenseRepository;
         this.emailValidator = new EmailValidator();
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.confirmationTokenService = new ConfirmationTokenService(confirmationTokenRepository, userRepository);
@@ -113,6 +116,35 @@ public class UserService implements UserDetailsService {
         return email;
     }
 
+    public void createExpenseTask(Expense expense){
+
+        Timer timer = new Timer();
+        Calendar calendar = Calendar.getInstance();
+        LocalDateTime now = LocalDateTime.now();
+        int repetitionMilliSeconds = expense.getRepetitionMilliSeconds();
+        LocalDateTime date = expense.getDate();
+
+        if (repetitionMilliSeconds == 0){
+            //Si no se especifican los segundos, la tarea se ejecuta cada 24 hs en caso de estar programada.
+            repetitionMilliSeconds = 86400000;
+        }
+
+        if(date.isAfter(now)) {
+            calendar.set(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(),
+                    date.getMinute(), date.getSecond());
+
+            timer.schedule(new ExpenseTask(expense.getId(), expenseRepository, userRepository),
+                    calendar.getTime(),
+                    repetitionMilliSeconds);
+        }
+        else{
+            timer.schedule(new ExpenseTask(expense.getId(), expenseRepository, userRepository),
+                    0,
+                    repetitionMilliSeconds);
+        }
+
+    }
+
     public void createIncomeTask(Income income){
 
         Timer timer = new Timer();
@@ -130,12 +162,12 @@ public class UserService implements UserDetailsService {
             calendar.set(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(),
                     date.getMinute(), date.getSecond());
 
-            timer.schedule(new Task(income.getId(), incomeRepository, userRepository),
+            timer.schedule(new IncomeTask(income.getId(), incomeRepository, userRepository),
                     calendar.getTime(),
                     repetitionMilliSeconds);
         }
         else{
-            timer.schedule(new Task(income.getId(), incomeRepository, userRepository),
+            timer.schedule(new IncomeTask(income.getId(), incomeRepository, userRepository),
                     0,
                     repetitionMilliSeconds);
         }

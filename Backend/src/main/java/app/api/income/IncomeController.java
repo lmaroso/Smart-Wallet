@@ -28,12 +28,12 @@ public class IncomeController {
     @PostMapping(value = "/addIncome")
     public HttpStatus addIncome(@RequestBody IncomeDTO incomeDTO) {
 
-        Income income = new Income(incomeDTO.getUserId(),
-                incomeDTO.getName(), incomeDTO.getDescription(),
-                incomeDTO.getAmount(), incomeDTO.getDate(),
-                incomeDTO.getProgrammed(), incomeDTO.getRepetitionMilliSeconds(),
-                incomeDTO.getDayOfWeek(), incomeDTO.getDayOfMonth());
+        Income income = new Income (incomeDTO.getId(), incomeDTO.getUserId(),
+                incomeDTO.getName(), incomeDTO.getDescription(), incomeDTO.getAmount(),
+                incomeDTO.getDate(), incomeDTO.getProgrammed(), incomeDTO.getCancelled(),
+                incomeDTO.getRepetitionMilliSeconds(), incomeDTO.getDayOfWeek(), incomeDTO.getDayOfMonth());
 
+        incomeService.checkValidProgrammedValues(income);
         incomeService.saveIncome(income);
         userService.createIncomeTask(income);
 
@@ -46,14 +46,14 @@ public class IncomeController {
         incomeService.existIncome(incomeDTO.getId());
 
         Income income = new Income (incomeDTO.getId(), incomeDTO.getUserId(),
-                incomeDTO.getName(), incomeDTO.getDescription(),
-                incomeDTO.getAmount(), incomeDTO.getDate(),
-                incomeDTO.getProgrammed(), incomeDTO.getRepetitionMilliSeconds(),
-                incomeDTO.getDayOfWeek(), incomeDTO.getDayOfMonth());
+                incomeDTO.getName(), incomeDTO.getDescription(), incomeDTO.getAmount(),
+                incomeDTO.getDate(), incomeDTO.getProgrammed(), incomeDTO.getCancelled(),
+                incomeDTO.getRepetitionMilliSeconds(), incomeDTO.getDayOfWeek(), incomeDTO.getDayOfMonth());
 
+        incomeService.checkValidProgrammedValues(income);
         userService.updateAccountCredit(income.getUserId(), incomeService.checkAmount(income.getId(), income.getAmount()));
-
         incomeService.saveIncome(income);
+
         return HttpStatus.OK;
 
     }

@@ -1,6 +1,7 @@
 package app.api.expense;
 
 import app.model.Exceptions.InvalidAmountException;
+import app.model.Exceptions.InvalidProgrammedValuesException;
 import app.model.Exceptions.NotFoundExpense;
 import app.model.Expense.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,5 +81,17 @@ public class ExpenseService {
             throw new NotFoundExpense();
         }
         return null;
+    }
+
+    public void checkValidProgrammedValues(Expense expense){
+
+        if(expense.isProgrammed() &&
+           expense.getRepetitionMilliSeconds() == 0 &&
+           expense.getDayOfWeek() == 0 &&
+           expense.getDayOfMonth() == 0 &&
+           !expense.isCancelled()) {
+            throw new InvalidProgrammedValuesException();
+        }
+
     }
 }

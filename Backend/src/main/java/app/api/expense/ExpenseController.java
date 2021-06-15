@@ -27,14 +27,15 @@ public class ExpenseController {
 
     @PostMapping(value = "/addExpense")
     public HttpStatus addExpense(@RequestBody ExpenseDTO expenseDTO) {
-        Expense expense = new Expense(expenseDTO.getUserId(),
+        Expense expense = new Expense(expenseDTO.getId(), expenseDTO.getUserId(),
                 expenseDTO.getName(), expenseDTO.getDescription(),
-                expenseDTO.getAmount(), expenseDTO.getDate(),
-                expenseDTO.getProgrammed(), expenseDTO.getRepetitionMilliSeconds(),
+                expenseDTO.getAmount(), expenseDTO.getDate(), expenseDTO.getProgrammed(),
+                expenseDTO.getCancelled(), expenseDTO.getRepetitionMilliSeconds(),
                 expenseDTO.getDayOfWeek(), expenseDTO.getDayOfMonth());
 
-        userService.updateAccountExpense(expense.getUserId(), expense.getAmount());
+        expenseService.checkValidProgrammedValues(expense);
         expenseService.saveExpense(expense);
+        userService.createExpenseTask(expense);
 
         return HttpStatus.OK;
     }
@@ -46,10 +47,11 @@ public class ExpenseController {
 
         Expense expense = new Expense(expenseDTO.getId(), expenseDTO.getUserId(),
                 expenseDTO.getName(), expenseDTO.getDescription(),
-                expenseDTO.getAmount(), expenseDTO.getDate(),
-                expenseDTO.getProgrammed(), expenseDTO.getRepetitionMilliSeconds(),
+                expenseDTO.getAmount(), expenseDTO.getDate(), expenseDTO.getProgrammed(),
+                expenseDTO.getCancelled(), expenseDTO.getRepetitionMilliSeconds(),
                 expenseDTO.getDayOfWeek(), expenseDTO.getDayOfMonth());
 
+        expenseService.checkValidProgrammedValues(expense);
         userService.updateAccountExpense(expense.getUserId(), expenseService.checkAmount(expense.getId(), expense.getAmount()));
         expenseService.saveExpense(expense);
 

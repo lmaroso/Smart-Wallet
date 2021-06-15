@@ -34,6 +34,9 @@ public class Income {
     private Boolean programmed;
 
     @NotNull
+    private Boolean cancelled;
+
+    @NotNull
     private int repetitionMilliSeconds;
 
     @NotNull
@@ -46,12 +49,13 @@ public class Income {
     public Income() {}
 
     public Income(Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
-                  int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
+                  Boolean cancelled, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
         this.userId = userId;
         this.name = name;
         this.description = description;
         this.amount = amount;
         this.date = date;
+        this.cancelled = cancelled;
         this.programmed = programmed;
         this.repetitionMilliSeconds = repetitionMilliSeconds;
         this.dayOfWeek = dayOfWeek;
@@ -59,7 +63,7 @@ public class Income {
     }
 
     public Income(long id, Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
-                  int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
+                  Boolean cancelled, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -67,6 +71,7 @@ public class Income {
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
+        this.cancelled = cancelled;
         this.repetitionMilliSeconds = repetitionMilliSeconds;
         this.dayOfWeek = dayOfWeek;
         this.dayOfMonth = dayOfMonth;
@@ -120,6 +125,10 @@ public class Income {
         this.programmed = programmed;
     }
 
+    public void setCancelled(Boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
     public Boolean isAvailable(){
         return this.amount > 0;
     }
@@ -127,6 +136,8 @@ public class Income {
     public Boolean isProgrammed(){
         return this.programmed;
     }
+
+    public Boolean isCancelled(){ return this.cancelled; }
 
     public int getRepetitionMilliSeconds(){
         return this.repetitionMilliSeconds;

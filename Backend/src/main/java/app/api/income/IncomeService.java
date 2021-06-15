@@ -1,6 +1,7 @@
 package app.api.income;
 
 import app.model.Exceptions.InvalidAmountException;
+import app.model.Exceptions.InvalidProgrammedValuesException;
 import app.model.Exceptions.NotFoundIncome;
 import app.model.Income.Income;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,18 @@ public class IncomeService {
             throw new NotFoundIncome();
         }
         return null;
+    }
+
+    public void checkValidProgrammedValues(Income income){
+
+        if(income.isProgrammed() &&
+           income.getRepetitionMilliSeconds() == 0 &&
+           income.getDayOfWeek() == 0 &&
+           income.getDayOfMonth() == 0 &&
+           !income.isCancelled()){
+            throw new InvalidProgrammedValuesException();
+        }
+
     }
 
 }

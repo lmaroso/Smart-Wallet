@@ -34,6 +34,9 @@ public class Expense {
     private Boolean programmed;
 
     @NotNull
+    private Boolean cancelled;
+
+    @NotNull
     private int repetitionMilliSeconds;
 
     @NotNull
@@ -46,7 +49,7 @@ public class Expense {
     public Expense() {}
 
     public Expense(Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
-                   int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth) {
+                   Boolean cancelled, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
 
         this.userId = userId;
         this.name = name;
@@ -54,13 +57,14 @@ public class Expense {
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
+        this.cancelled = cancelled;
         this.repetitionMilliSeconds = repetitionMilliSeconds;
         this.dayOfWeek = dayOfWeek;
         this.dayOfMonth = dayOfMonth;
     }
 
     public Expense(long id, Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
-                   int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth) {
+                   Boolean cancelled, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth) {
 
         this.id = id;
         this.userId = userId;
@@ -69,6 +73,7 @@ public class Expense {
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
+        this.cancelled = cancelled;
         this.repetitionMilliSeconds = repetitionMilliSeconds;
         this.dayOfWeek = dayOfWeek;
         this.dayOfMonth = dayOfMonth;
@@ -123,6 +128,8 @@ public class Expense {
     public Boolean isProgrammed(){
         return this.programmed;
     }
+
+    public Boolean isCancelled(){ return this.cancelled; }
 
     public int getRepetitionMilliSeconds(){
         return this.repetitionMilliSeconds;
