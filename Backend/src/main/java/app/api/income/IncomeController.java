@@ -58,6 +58,14 @@ public class IncomeController {
 
     }
 
+    @GetMapping(value = "/deleteIncome/{id}")
+    public HttpStatus deleteIncome(@PathVariable ("id") String id){
+
+        incomeService.deleteIncome(id);
+
+        return HttpStatus.OK;
+    }
+
     @GetMapping(value = "/getIncomeHistory/{id}")
     public ResponseEntity<List<Income>> getIncome(@PathVariable("id") String id){
 

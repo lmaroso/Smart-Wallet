@@ -91,4 +91,18 @@ public class IncomeService {
 
     }
 
+    public void deleteIncome(String id) {
+        Long longID = null;
+
+        try {
+            longID = Long.parseLong(id);
+        }
+        catch (Exception e){
+            new UsernameNotFoundException(String.format(ID_NOT_FOUND, id));
+        }
+
+        this.existIncome(longID);
+        incomeRepository.deleteById(longID);
+    }
+
 }
