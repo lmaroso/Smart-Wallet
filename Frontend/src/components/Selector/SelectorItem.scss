@@ -1,0 +1,20 @@
+.action-sheet-group::-webkit-scrollbar,
+.alert-radio-group::-webkit-scrollbar,
+.alert-checkbox-group::-webkit-scrollbar {
+  width: 0.5em;
+  display: block !important;
+}
+
+.action-sheet-group::-webkit-scrollbar-track,
+.alert-radio-group::-webkit-scrollbar-track,
+.alert-checkbox-group::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+.action-sheet-group::-webkit-scrollbar-thumb,
+.alert-radio-group::-webkit-scrollbar-thumb,
+.alert-checkbox-group::-webkit-scrollbar-thumb {
+  background-color: rgb(189, 187, 187);
+  border-radius: 40%;
+}

@@ -39,7 +39,7 @@ const History = ({ history }) => {
 							setToastText(data);
 							setLoading(false);
 							setShouldShowToast(true);
-						}
+						} else setLoading(false);
 					}, 1000);
 				});
 			getExpenseHistory()
@@ -59,13 +59,13 @@ const History = ({ history }) => {
 							setToastText(data);
 							setLoading(false);
 							setShouldShowToast(true);
-						}
+						} else setLoading(false);
 					}, 1000);
 				});
 		} else {
 			history.push({ pathname: "/login" });
 		}
-	}, [history]);
+	}, []);
 
 	const onChangeSegment = event => setSegmentSelected(event.detail.value);
 
@@ -99,25 +99,44 @@ const History = ({ history }) => {
 
 	const deleteIncomeMovement = () =>
 		deleteIncome(selectedMovement.id)
-			.then(onResolveMovementDeletion);
+			.then(({ status, data }) => {
+				if (status === 200 || status === 201) {
+					setToastType("success");
+					setToastText("Se eliminó el registro exitosamente");
+					setLoading(false);
+					setShouldShowToast(true);
+					let updatedIncomes = incomes;
+					updatedIncomes.filter(income => income.id !== selectedMovement.id);
+					setIncomes(updatedIncomes);
+					setIsModalOpen(false);
+				} else {
+					setToastType("error");
+					setToastText(data);
+					setLoading(false);
+					setShouldShowToast(true);
+				}
+			});
+
 
 	const deleteExpenseMovement = () => 
 		deleteExpense(selectedMovement.id)
-			.then(onResolveMovementDeletion);
-
-	const onResolveMovementDeletion = ({ status, data }) => {
-		if (status === 200 || status === 201) {
-			setToastType("success");
-			setToastText(data);
-			setLoading(false);
-			setShouldShowToast(true);
-		} else {
-			setToastType("error");
-			setToastText(data);
-			setLoading(false);
-			setShouldShowToast(true);
-		}
-	};
+			.then(({ status, data }) => {
+				if (status === 200 || status === 201) {
+					setToastType("success");
+					setToastText("Se eliminó el registro exitosamente");
+					setLoading(false);
+					setShouldShowToast(true);
+					let updatedExpenses = expenses;
+					updatedExpenses.filter(expense => expense.id !== selectedMovement.id);
+					setExpenses(updatedExpenses);
+					setIsModalOpen(false);
+				} else {
+					setToastType("error");
+					setToastText(data);
+					setLoading(false);
+					setShouldShowToast(true);
+				}
+			});
 
 	return (
 		<HistoryView

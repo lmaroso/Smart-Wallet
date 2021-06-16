@@ -71,7 +71,7 @@ export const getExpenseHistory = () => api.get(`/getExpenseHistory/${getKey("use
 	.then(handleResponse)
 	.catch(handleError);
 
-export const deleteExpense = id => api.delete(`/deleteExpense/${id}`, { userId: parseInt(getKey("userid")) }, {
+export const deleteExpense = id => api.delete(`/deleteExpense/${id}`, /*{ userId: parseInt(getKey("userid")) }, */{
 	headers: { Authorization: getKey("token"), ...headers }
 })
 	.then(handleResponse)
@@ -95,7 +95,7 @@ export const editIncome = body => api.post("/editIncome", { userId: parseInt(get
 	.then(handleResponse)
 	.catch(handleError);
 
-export const deleteIncome = id => api.delete(`/deleteIncome/${id}`, { userId: parseInt(getKey("userid")) }, {
+export const deleteIncome = id => api.delete(`/deleteIncome/${id}`, /*{ userId: parseInt(getKey("userid")) }, */{
 	headers: { Authorization: getKey("token"), ...headers }
 })
 	.then(handleResponse)
