@@ -23,14 +23,16 @@ public class IncomeTask extends TimerTask {
     public void run() {
 
         Income income = incomeRepository.findById(this.incomeId);
-        Calendar calendar = Calendar.getInstance();
-        int dayOfWeek = income.getDayOfWeek();
-        int dayOfMonth = income.getDayOfMonth();
 
-        if(income.isCancelled()) {
+        if(income == null || income.isCancelled()){
             this.cancel();
         }
+
         else {
+            Calendar calendar = Calendar.getInstance();
+            int dayOfWeek = income.getDayOfWeek();
+            int dayOfMonth = income.getDayOfMonth();
+
             if ((dayOfWeek != 0 && calendar.get(Calendar.DAY_OF_WEEK) == dayOfWeek) ||
                     (dayOfMonth != 0 && calendar.get(Calendar.DAY_OF_MONTH) == dayOfMonth) ||
                     (dayOfWeek == 0 && dayOfMonth == 0)) {
@@ -40,7 +42,6 @@ public class IncomeTask extends TimerTask {
                 this.cancel();
             }
         }
-
     }
 
 }

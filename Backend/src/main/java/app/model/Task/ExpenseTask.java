@@ -24,14 +24,15 @@ public class ExpenseTask extends TimerTask {
     public void run() {
 
         Expense expense = expenseRepository.findById(this.expenseId);
-        Calendar calendar = Calendar.getInstance();
-        int dayOfWeek = expense.getDayOfWeek();
-        int dayOfMonth = expense.getDayOfMonth();
 
-        if(expense.isCancelled()) {
+        if(expense == null || expense.isCancelled()){
             this.cancel();
         }
         else {
+            Calendar calendar = Calendar.getInstance();
+            int dayOfWeek = expense.getDayOfWeek();
+            int dayOfMonth = expense.getDayOfMonth();
+
             if ((dayOfWeek != 0 && calendar.get(Calendar.DAY_OF_WEEK) == dayOfWeek) ||
                     (dayOfMonth != 0 && calendar.get(Calendar.DAY_OF_MONTH) == dayOfMonth) ||
                     (dayOfWeek == 0 && dayOfMonth == 0)) {
@@ -41,7 +42,6 @@ public class ExpenseTask extends TimerTask {
                 this.cancel();
             }
         }
-
     }
 
 }
