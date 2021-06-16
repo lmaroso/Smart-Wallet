@@ -58,7 +58,7 @@ public class IncomeController {
 
     }
 
-    @GetMapping(value = "/deleteIncome/{id}")
+    @DeleteMapping(value = "/deleteIncome/{id}")
     public HttpStatus deleteIncome(@PathVariable ("id") String id){
 
         incomeService.deleteIncome(id);
