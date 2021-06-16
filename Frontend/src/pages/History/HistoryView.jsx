@@ -6,6 +6,7 @@ import Segment from "../../components/Segment/Segment";
 import Toast from "../../components/Toast/Toast";
 import Loading from "../../components/Loading/Loading";
 import Modal from "../../components/Modal/Modal";
+import Alert from "../../components/Alert/Alert";
 import HistoryItem from "./HistoryItem";
 import HistoryList from "./HistoryList";
 
@@ -22,15 +23,26 @@ const HistoryView = ({
 	shouldShowToast,
 	toastText,
 	toastType,
+	onAcceptAlert,
 	onChange,
 	onCloseModal,
-	onEdit
+	onDelete,
+	onEdit,
+	showAlert,
+	onDismissAlert
 }) => (
 	<PageWrapper>
 		<Loading isOpen={loading} />
+		<Alert
+			isOpen={showAlert}
+			message="¿Está seguro que desea eliminar el registro?"
+			onAccept={onAcceptAlert}
+			onDismiss={onDismissAlert}
+		/>
 		<Modal
 			isOpen={isModalOpen}
 			onClickClose={onCloseModal}
+			onClickDelete={onDelete}
 			onClickEdit={onEdit}
 		>
 			{selectedMovement && <HistoryItem movement={selectedMovement}/>}

@@ -39,10 +39,10 @@ const Expense = ({ history, location }) => {
 		event.preventDefault();
 		const date = moment().format("YYYY-MM-DD[T]HH:mm:ss");
 		if(mode === "creation") {
-			addExpense({ name, description, amount, date, programmed })
+			addExpense({ name, description, amount, date, programmed, cancelled: false  })
 				.then(onResolve);
 		} else {
-			editExpense({ id, name, description, amount, date, programmed })
+			editExpense({ id, name, description, amount, date, programmed, cancelled: false  })
 				.then(onResolve);
 		}
 	};

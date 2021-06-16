@@ -1,5 +1,13 @@
 .modal {
-    --height: 60%;
+    --height: 65%;
     --border-radius: 2%;
     --width: 95%;
+}
+
+.closeButton {
+    width: fit-content !important;
+    align-self: flex-end;
+    margin-right: 10px;
+    --background: transparent;
+    --color: black;
 }

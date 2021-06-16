@@ -39,10 +39,10 @@ const Income = ({ history, location }) => {
 		event.preventDefault();
 		const date = moment().format("YYYY-MM-DD[T]HH:mm:ss");
 		if(mode === "creation") {
-			addIncome({ name, description, amount, date, programmed })
+			addIncome({ name, description, amount, date, programmed, cancelled: false })
 				.then(onResolve);
 		} else {
-			editIncome({ id, name, description, amount, date, programmed })
+			editIncome({ id, name, description, amount, date, programmed, cancelled: false  })
 				.then(onResolve);
 		}
 	};

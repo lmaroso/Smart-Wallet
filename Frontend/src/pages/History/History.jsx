@@ -3,7 +3,7 @@ import { useIonViewDidEnter } from "@ionic/react";
 
 import HistoryView from "./HistoryView";
 
-import { getIncomeHistory, getExpenseHistory } from "../../services/api";
+import { getIncomeHistory, getExpenseHistory, deleteIncome , deleteExpense} from "../../services/api";
 import { getKey } from "../../utils/localStorage";
 import { SEGMENTS } from "./constants";
 
@@ -17,6 +17,7 @@ const History = ({ history }) => {
 	const [shouldShowToast, setShouldShowToast] = useState(false);
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
+	const [showAlert, setShowAlert] = useState(false);
 
 	useIonViewDidEnter(() => {
 		setLoading(true);
@@ -33,7 +34,7 @@ const History = ({ history }) => {
 							});
 							setIncomes(incomes);
 							setLoading(false);
-						} else {
+						} else if (status !== 400) {
 							setToastType("error");
 							setToastText(data);
 							setLoading(false);
@@ -53,7 +54,7 @@ const History = ({ history }) => {
 							});
 							setExpenses(expenses);
 							setLoading(false);
-						} else {
+						} else if (status !== 400) {
 							setToastType("error");
 							setToastText(data);
 							setLoading(false);
@@ -84,6 +85,39 @@ const History = ({ history }) => {
 			state: selectedMovement
 		});
 	};
+	const onDelete = () => {
+		setShowAlert(true);
+	};
+
+	const onDismissAlert = () => setShowAlert(false);
+
+	const onAcceptAlert = () => {
+		if (selectedMovement.type === "income") deleteIncomeMovement();
+		else deleteExpenseMovement();
+		setShowAlert(false);
+	};
+
+	const deleteIncomeMovement = () =>
+		deleteIncome(selectedMovement.id)
+			.then(onResolveMovementDeletion);
+
+	const deleteExpenseMovement = () => 
+		deleteExpense(selectedMovement.id)
+			.then(onResolveMovementDeletion);
+
+	const onResolveMovementDeletion = ({ status, data }) => {
+		if (status === 200 || status === 201) {
+			setToastType("success");
+			setToastText(data);
+			setLoading(false);
+			setShouldShowToast(true);
+		} else {
+			setToastType("error");
+			setToastText(data);
+			setLoading(false);
+			setShouldShowToast(true);
+		}
+	};
 
 	return (
 		<HistoryView
@@ -97,10 +131,14 @@ const History = ({ history }) => {
 			selectedMovement={selectedMovement}
 			setShouldShowToast={setShouldShowToast}
 			shouldShowToast={shouldShowToast}
+			showAlert={showAlert}
 			toastText={toastText}
 			toastType={toastType}
+			onAcceptAlert={onAcceptAlert}
 			onChange={onChangeSegment}
 			onCloseModal={onCloseModal}
+			onDelete={onDelete}
+			onDismissAlert={onDismissAlert}
 			onEdit={onEdit}
 		/>
 	);
