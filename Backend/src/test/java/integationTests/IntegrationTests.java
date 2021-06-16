@@ -22,6 +22,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
@@ -577,7 +578,7 @@ public class IntegrationTests {
         Income addIncome = incomeService.getIncomeHistory(Long.toString(user.getId())).get(0);
         String incomeId = Long.toString(addIncome.getId());
 
-        mockMvc.perform(get("/deleteIncome/" + incomeId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteIncome/" + incomeId)
                 .header("Authorization", smart2Token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -585,7 +586,41 @@ public class IntegrationTests {
         Integer expected = 0;
         Integer actual = incomeService.getIncomeHistory(Long.toString(user.getId())).size();
 
-        assertTrue(expected == actual);
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
+    public void testSuccessDeleteIncomeBetween2() throws Exception{
+        User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 40000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        String jsonRequest = mapper.writeValueAsString(income);
+
+        mockMvc.perform(post("/addIncome")
+                .header("Authorization", smart2Token)
+                .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        IncomeDTO income2 = new IncomeDTO(user.getId(), "Hs Extras", "6 hs", 4000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        String jsonRequest2 = mapper.writeValueAsString(income2);
+
+        mockMvc.perform(post("/addIncome")
+                .header("Authorization", smart2Token)
+                .content(jsonRequest2).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        Income addIncome = incomeService.getIncomeHistory(Long.toString(user.getId())).get(0);
+        String incomeId = Long.toString(addIncome.getId());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteIncome/" + incomeId)
+                .header("Authorization", smart2Token)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        Integer expected = 1;
+        Integer actual = incomeService.getIncomeHistory(Long.toString(user.getId())).size();
+
+        assertEquals(expected, actual);
 
     }
 
@@ -593,7 +628,7 @@ public class IntegrationTests {
     public void testIncorrectIdIncomeToDelete() throws Exception{
         String idRandom = "105";
 
-        MvcResult result = mockMvc.perform(get("/deleteIncome/" + idRandom)
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/deleteIncome/" + idRandom)
                 .header("Authorization", smart2Token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
@@ -809,7 +844,7 @@ public class IntegrationTests {
         Expense addExpense = expenseService.getExpenseHistory(Long.toString(user.getId())).get(0);
         String expenseId = Long.toString(addExpense.getId());
 
-        mockMvc.perform(get("/deleteExpense/" + expenseId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteExpense/" + expenseId)
                 .header("Authorization", smart2Token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -817,7 +852,41 @@ public class IntegrationTests {
         Integer expected = 0;
         Integer actual = expenseService.getExpenseHistory(Long.toString(user.getId())).size();
 
-        assertTrue(expected == actual);
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
+    public void testSuccessDeleteExpenseBetween2() throws Exception{
+        User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        String jsonRequest = mapper.writeValueAsString(expense);
+
+        mockMvc.perform(post("/addExpense")
+                .header("Authorization", smart2Token)
+                .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Luz", "Luz eléctrica", 1000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        String jsonRequest2 = mapper.writeValueAsString(expense2);
+
+        mockMvc.perform(post("/addExpense")
+                .header("Authorization", smart2Token)
+                .content(jsonRequest2).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        Expense addExpense = expenseService.getExpenseHistory(Long.toString(user.getId())).get(0);
+        String expenseId = Long.toString(addExpense.getId());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteExpense/" + expenseId)
+                .header("Authorization", smart2Token)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        Integer expected = 1;
+        Integer actual = expenseService.getExpenseHistory(Long.toString(user.getId())).size();
+
+        assertEquals(expected, actual);
 
     }
 
@@ -825,7 +894,7 @@ public class IntegrationTests {
     public void testIncorrectIdExpenseToDelete() throws Exception{
        String idRandom = "105";
 
-        MvcResult result = mockMvc.perform(get("/deleteExpense/" + idRandom)
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/deleteExpense/" + idRandom)
                 .header("Authorization", smart2Token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
@@ -955,7 +1024,6 @@ public class IntegrationTests {
 
     }
 
-
     @Test
     public void testSuccessGetBalance() throws Exception{
 
@@ -989,7 +1057,6 @@ public class IntegrationTests {
         assertEquals( 403, result.getResponse().getStatus());
 
     }
-
 
     @Test
     public void testRegisterLoginAddIncomeAndAddExpense() throws Exception{
