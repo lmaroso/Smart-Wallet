@@ -12,7 +12,7 @@ const Dashboard = ({ history }) => {
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
 	const [shouldShowToast, setShouldShowToast] = useState(false);
-	const [balance, setBalance] = useState(null);
+	const [balance, setBalance] = useState(0);
 
 	useIonViewDidEnter(() => {
 		setLoading(true);
