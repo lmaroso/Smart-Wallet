@@ -73,17 +73,9 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(ID_NOT_FOUND, id)));
     }
 
-    public User findUserNamed(String name) {
-        return userRepository.findByName(name);
-    }
-
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, email)));
-    }
-
-    public boolean userExists(String username){
-        return false;
     }
 
     public void signUpUser(User user){
@@ -178,9 +170,7 @@ public class UserService implements UserDetailsService {
         userRepository.updateAccountCredit(amount, userId);
     }
 
-    public void updateAccountExpense(long userId, Double amount){
-        userRepository.updateAccountExpense(amount, userId);
-    }
+    public void updateAccountExpense(long userId, Double amount){ userRepository.updateAccountExpense(amount, userId); }
 
     public void enableUser(String email){
         userRepository.enableAppUser(email);
