@@ -89,3 +89,11 @@ export const monthlySelectorOptions = () => {
 		option => <SelectorItem key={option.name} name={option.name} value={option.value} />
 	);
 };
+
+export const numberToPesos = number => number.toLocaleString(
+	"es-AR",
+	{
+		style: "currency",
+		currency: "ARS"
+	}
+);

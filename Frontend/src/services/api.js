@@ -100,3 +100,9 @@ export const deleteIncome = id => api.delete(`/deleteIncome/${id}`, /*{ userId: 
 })
 	.then(handleResponse)
 	.catch(handleError);
+
+export const getBalance = () => api.get(`/balance/${getKey("userid")}`, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
