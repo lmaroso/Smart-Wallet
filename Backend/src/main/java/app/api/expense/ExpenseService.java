@@ -67,12 +67,12 @@ public class ExpenseService {
         return finalAmount;
     }
 
-    public NotFoundExpense existExpense(long id) {
+    public Expense existExpense(long id) {
         Expense expense = expenseRepository.findById(id);
         if(expense == null){
             throw new NotFoundExpense();
         }
-        return null;
+        return expense;
     }
 
     public void checkValidProgrammedValues(Expense expense){
@@ -97,6 +97,23 @@ public class ExpenseService {
 
         this.existExpense(longID);
         expenseRepository.deleteById(longID);
+    }
+
+    public void cancelExpense(long id){
+        Expense expense = expenseRepository.findById(id);
+        Expense canceledExpense;
+        long creatorId = expense.getCreatorId();
+        if(creatorId != 0){
+            canceledExpense = expenseRepository.findById(creatorId);
+        }
+        else{
+            canceledExpense = expense;
+        }
+        if(canceledExpense == null){
+            throw new NotFoundExpense();
+        }
+        canceledExpense.setCancelled(true);
+        expenseRepository.save(canceledExpense);
     }
 
 }

@@ -30,7 +30,7 @@ public class ExpenseController {
         Expense expense = new Expense(expenseDTO.getId(), expenseDTO.getUserId(),
                 expenseDTO.getName(), expenseDTO.getDescription(),
                 expenseDTO.getAmount(), expenseDTO.getDate(), expenseDTO.getProgrammed(),
-                expenseDTO.getCancelled(), expenseDTO.getRepetitionMilliSeconds(),
+                false, true, expenseDTO.getRepetitionMilliSeconds(),
                 expenseDTO.getDayOfWeek(), expenseDTO.getDayOfMonth());
 
         expenseService.checkValidProgrammedValues(expense);
@@ -43,12 +43,12 @@ public class ExpenseController {
     @PostMapping(value = "/editExpense")
     public HttpStatus editExpense(@RequestBody ExpenseDTO expenseDTO){
 
-        expenseService.existExpense(expenseDTO.getId());
+        Expense e = expenseService.existExpense(expenseDTO.getId());
 
         Expense expense = new Expense(expenseDTO.getId(), expenseDTO.getUserId(),
                 expenseDTO.getName(), expenseDTO.getDescription(),
                 expenseDTO.getAmount(), expenseDTO.getDate(), expenseDTO.getProgrammed(),
-                expenseDTO.getCancelled(), expenseDTO.getRepetitionMilliSeconds(),
+                e.isCancelled(), false,  expenseDTO.getRepetitionMilliSeconds(),
                 expenseDTO.getDayOfWeek(), expenseDTO.getDayOfMonth());
 
         expenseService.checkValidProgrammedValues(expense);
@@ -56,6 +56,24 @@ public class ExpenseController {
         expenseService.saveExpense(expense);
 
         return HttpStatus.OK;
+    }
+
+    @PostMapping(value = "/cancelExpense/{id}")
+    public HttpStatus cancelExpense(@PathVariable ("id") String id){
+
+        Long longID = null;
+
+        try {
+            longID = Long.parseLong(id);
+        }
+        catch (Exception e){
+            throw new NotFoundExpense();
+        }
+
+        expenseService.cancelExpense(longID);
+
+        return HttpStatus.OK;
+
     }
 
     @DeleteMapping(value = "/deleteExpense/{id}")

@@ -14,8 +14,8 @@ public class ExpenseTask extends TimerTask {
     private UserRepository userRepository;
 
 
-    public ExpenseTask(long incomeId, ExpenseRepository expenseRepository, UserRepository userRepository){
-        this.expenseId = incomeId;
+    public ExpenseTask(long expenseId, ExpenseRepository expenseRepository, UserRepository userRepository){
+        this.expenseId = expenseId;
         this.expenseRepository = expenseRepository;
         this.userRepository = userRepository;
     }
@@ -37,6 +37,18 @@ public class ExpenseTask extends TimerTask {
                     (dayOfMonth != 0 && calendar.get(Calendar.DAY_OF_MONTH) == dayOfMonth) ||
                     (dayOfWeek == 0 && dayOfMonth == 0)) {
                 userRepository.updateAccountExpense(expense.getAmount(), expense.getUserId());
+                if(expense.isFirstTask()){
+                    expense.setFirstTask(false);
+                    expenseRepository.save(expense);
+                }
+                else{
+                    Expense newExpense = new Expense(expense.getUserId(), expense.getName(), expense.getDescription(),
+                            expense.getAmount(), expense.getDate(), true, false, false,
+                            expense.getRepetitionMilliSeconds(), expense.getDayOfWeek(),
+                            expense.getDayOfMonth());
+                    newExpense.setCreatorId(expense.getId());
+                    expenseRepository.save(newExpense);
+                }
             }
             if (!expense.isProgrammed()) { //Si la tarea no está programada se ejecuta solo una vez.
                 this.cancel();

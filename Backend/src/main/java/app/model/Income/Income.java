@@ -1,5 +1,7 @@
 package app.model.Income;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -17,6 +19,9 @@ public class Income {
 
     @NotNull
     private Long userId;
+
+    @NotNull
+    private Long creatorId;
 
     @NotEmpty
     private String name;
@@ -37,6 +42,9 @@ public class Income {
     private Boolean cancelled;
 
     @NotNull
+    private Boolean firstTask;
+
+    @NotNull
     private int repetitionMilliSeconds;
 
     @NotNull
@@ -48,8 +56,9 @@ public class Income {
     //Constructor
     public Income() {}
 
-    public Income(Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
-                  Boolean cancelled, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
+    public Income(Long userId, String name, String description, Double amount, LocalDateTime date,
+                  Boolean programmed, Boolean cancelled, Boolean firstTask, int repetitionMilliSeconds, int dayOfWeek,
+                  int dayOfMonth){
         this.userId = userId;
         this.name = name;
         this.description = description;
@@ -57,13 +66,15 @@ public class Income {
         this.date = date;
         this.cancelled = cancelled;
         this.programmed = programmed;
+        this.firstTask = firstTask;
         this.repetitionMilliSeconds = repetitionMilliSeconds;
         this.dayOfWeek = dayOfWeek;
         this.dayOfMonth = dayOfMonth;
+        this.creatorId = Long.valueOf(0);
     }
 
     public Income(long id, Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
-                  Boolean cancelled, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
+                  Boolean cancelled, Boolean firstTask, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -72,9 +83,11 @@ public class Income {
         this.date = date;
         this.programmed = programmed;
         this.cancelled = cancelled;
+        this.firstTask = firstTask;
         this.repetitionMilliSeconds = repetitionMilliSeconds;
         this.dayOfWeek = dayOfWeek;
         this.dayOfMonth = dayOfMonth;
+        this.creatorId = Long.valueOf(0);
     }
 
     public long getId() {
@@ -138,6 +151,14 @@ public class Income {
     }
 
     public Boolean isCancelled(){ return this.cancelled; }
+
+    public Boolean isFirstTask(){ return this.firstTask; }
+
+    public Long getCreatorId(){ return this.creatorId; }
+
+    public void setCreatorId(long creatorId){ this.creatorId = creatorId; }
+
+    public void setFirstTask(Boolean firstTask){ this.firstTask = firstTask; }
 
     public int getRepetitionMilliSeconds(){
         return this.repetitionMilliSeconds;

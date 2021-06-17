@@ -135,7 +135,7 @@ public class IntegrationTests {
         User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
 
         //Agrega un gasto.
-        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false,  0, 0, 0);
         String jsonRequestExpense = mapper.writeValueAsString(expense);
 
         mockMvc.perform(post("/addExpense")
@@ -144,7 +144,7 @@ public class IntegrationTests {
                 .andExpect(status().isOk()).andReturn();
 
         //Agrega un ingreso.
-        IncomeDTO income = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 90000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        IncomeDTO income = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 90000.0, LocalDateTime.now(), false,  0, 0, 0);
         String jsonRequestIncome = mapper.writeValueAsString(income);
         mockMvc.perform(post("/addIncome")
                 .header("Authorization", smart1Token)
@@ -318,7 +318,7 @@ public class IntegrationTests {
     public void testSuccessAddIncome() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, 0, 0, 0);
         String jsonRequest = mapper.writeValueAsString(income);
 
         mockMvc.perform(post("/addIncome")
@@ -336,7 +336,7 @@ public class IntegrationTests {
     public void testInvalidProgrammedIncome() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, true, 0, 0, 0);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(),  true, 0, 0, 0);
         String jsonRequest = mapper.writeValueAsString(income);
 
         MvcResult result = mockMvc.perform(post("/addIncome")
@@ -348,10 +348,11 @@ public class IntegrationTests {
 
     }
 
+    @Test
     public void testSuccessAddProgrammedIncome() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, true, 2000, 0, 0);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(),  true, 2000, 0, 0);
         String jsonRequest = mapper.writeValueAsString(income);
 
         mockMvc.perform(post("/addIncome")
@@ -359,22 +360,20 @@ public class IntegrationTests {
                 .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
-        List<Income> incomes = incomeService.getIncomeHistory(String.valueOf(user.getId()));
-
         Thread.sleep(2500);
 
-        long idIncome  = incomeService.getIncomeHistory(String.valueOf(user.getId())).get(0).getId();
-        income = new IncomeDTO(idIncome, user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, true, 2000, 0, 0);
-        jsonRequest = mapper.writeValueAsString(income);
+        List<Income> incomes = incomeService.getIncomeHistory(String.valueOf(user.getId()));
 
-        mockMvc.perform(post("/editIncome")
+        long idIncome  = incomes.get(0).getId();
+
+        mockMvc.perform(post("/cancelIncome/" + idIncome)
                 .header("Authorization", smart2Token)
-                .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
         User updatedUser = userService.findUserById(user.getId());
 
-        assertEquals(1, incomes.size());
+        assertEquals(2, incomes.size());
         assertEquals(70000.0, updatedUser.getAccountCredit(), 0);
 
     }
@@ -383,8 +382,8 @@ public class IntegrationTests {
     public void testSuccessAdd2Incomes() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        IncomeDTO income1 = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000.0, LocalDateTime.now(), false, false, 0, 0, 0);
-        IncomeDTO income2 = new IncomeDTO(user.getId(),"Extra", "Horas extras", 2000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        IncomeDTO income1 = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000.0, LocalDateTime.now(), false,  0, 0, 0);
+        IncomeDTO income2 = new IncomeDTO(user.getId(),"Extra", "Horas extras", 2000.0, LocalDateTime.now(), false, 0, 0, 0);
         String jsonRequest1 = mapper.writeValueAsString(income1);
         String jsonRequest2 = mapper.writeValueAsString(income2);
 
@@ -413,8 +412,8 @@ public class IntegrationTests {
     public void testFilteredIncomes() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        ExpenseDTO income1 = new ExpenseDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000.0, LocalDateTime.now(), false, false, 0, 0, 0);
-        ExpenseDTO income2 = new ExpenseDTO(user.getId(),"Extra", "Horas extras", 2000.0, LocalDateTime.now().minusDays(1), false, false, 0, 0, 0);
+        ExpenseDTO income1 = new ExpenseDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000.0, LocalDateTime.now(), false,  0, 0, 0);
+        ExpenseDTO income2 = new ExpenseDTO(user.getId(),"Extra", "Horas extras", 2000.0, LocalDateTime.now().minusDays(1), false, 0, 0, 0);
         String jsonRequest1 = mapper.writeValueAsString(income1);
         String jsonRequest2 = mapper.writeValueAsString(income2);
 
@@ -441,8 +440,8 @@ public class IntegrationTests {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
-        IncomeDTO income1 = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000.0, LocalDateTime.now(), false, false, 0, 0, 0);
-        IncomeDTO income2 = new IncomeDTO(user.getId(),"Extra", "Horas extras", 2000.0, LocalDateTime.now().minusDays(1), false, false, 0, 0, 0);
+        IncomeDTO income1 = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000.0, LocalDateTime.now(), false, 0, 0, 0);
+        IncomeDTO income2 = new IncomeDTO(user.getId(),"Extra", "Horas extras", 2000.0, LocalDateTime.now().minusDays(1), false,  0, 0, 0);
         String jsonRequest1 = mapper.writeValueAsString(income1);
         String jsonRequest2 = mapper.writeValueAsString(income2);
 
@@ -473,8 +472,8 @@ public class IntegrationTests {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
-        IncomeDTO income1 = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000.0, LocalDateTime.now(), false, false, 0, 0, 0);
-        IncomeDTO income2 = new IncomeDTO(user.getId(),"Extra", "Horas extras", 2000.0, LocalDateTime.now().minusDays(1), false, false, 0, 0, 0);
+        IncomeDTO income1 = new IncomeDTO(user.getId(),"Sueldo", "Sueldo mensual", 80000.0, LocalDateTime.now(), false, 0, 0, 0);
+        IncomeDTO income2 = new IncomeDTO(user.getId(),"Extra", "Horas extras", 2000.0, LocalDateTime.now().minusDays(1), false, 0, 0, 0);
         String jsonRequest1 = mapper.writeValueAsString(income1);
         String jsonRequest2 = mapper.writeValueAsString(income2);
 
@@ -505,7 +504,7 @@ public class IntegrationTests {
     public void testIncorrectAddIncome() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 0.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 0.0, LocalDateTime.now(), false,  0, 0, 0);
         String jsonRequest = mapper.writeValueAsString(income);
 
         MvcResult result = mockMvc.perform(post("/addIncome")
@@ -525,7 +524,7 @@ public class IntegrationTests {
         long idIncome  = incomeService.getIncomeHistory(String.valueOf(user.getId())).get(0).getId();
         IncomeDTO income = new IncomeDTO(idIncome, user.getId(),
                 "Sueldo", "Sueldo mensual", 40000.0, LocalDateTime.now(),
-                false, false,0, 0, 0);
+                false, 0, 0, 0);
 
         String jsonRequest = mapper.writeValueAsString(income);
 
@@ -552,7 +551,7 @@ public class IntegrationTests {
 
         IncomeDTO income = new IncomeDTO(idRandom, user.getId(),
                 "Sueldo", "Sueldo mensual", 40000.0, LocalDateTime.now(),
-                false, false, 0, 0, 0);
+                false,  0, 0, 0);
 
         String jsonRequest = mapper.writeValueAsString(income);
 
@@ -567,7 +566,7 @@ public class IntegrationTests {
     @Test
     public void testSuccessDeleteIncome() throws Exception{
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 40000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 40000.0, LocalDateTime.now(), false, 0, 0, 0);
         String jsonRequest = mapper.writeValueAsString(income);
 
         mockMvc.perform(post("/addIncome")
@@ -593,7 +592,7 @@ public class IntegrationTests {
     @Test
     public void testSuccessDeleteIncomeBetween2() throws Exception{
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 40000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 40000.0, LocalDateTime.now(), false,  0, 0, 0);
         String jsonRequest = mapper.writeValueAsString(income);
 
         mockMvc.perform(post("/addIncome")
@@ -601,7 +600,7 @@ public class IntegrationTests {
                 .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
-        IncomeDTO income2 = new IncomeDTO(user.getId(), "Hs Extras", "6 hs", 4000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        IncomeDTO income2 = new IncomeDTO(user.getId(), "Hs Extras", "6 hs", 4000.0, LocalDateTime.now(), false,  0, 0, 0);
         String jsonRequest2 = mapper.writeValueAsString(income2);
 
         mockMvc.perform(post("/addIncome")
@@ -669,7 +668,7 @@ public class IntegrationTests {
     public void testSuccessAddExpense() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, 0, 0, 0);
         String jsonRequest = mapper.writeValueAsString(expense);
 
         mockMvc.perform(post("/addExpense")
@@ -687,7 +686,7 @@ public class IntegrationTests {
     public void testInvalidProgrammedExpense() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        ExpenseDTO expense = new ExpenseDTO(user.getId(), "Alquiler", "Alquiler mensual", 35000.0, LocalDateTime.now(), false, true, 0, 0, 0);
+        ExpenseDTO expense = new ExpenseDTO(user.getId(), "Alquiler", "Alquiler mensual", 35000.0, LocalDateTime.now(), true, 0, 0, 0);
         String jsonRequest = mapper.writeValueAsString(expense);
 
         MvcResult result = mockMvc.perform(post("/addExpense")
@@ -703,7 +702,7 @@ public class IntegrationTests {
     public void testSuccessAddProgrammedExpense() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        ExpenseDTO expense = new ExpenseDTO(user.getId(), "Alquiler", "Alquiler mensual", 35000.0, LocalDateTime.now(), false, true, 2000, 0, 0);
+        ExpenseDTO expense = new ExpenseDTO(user.getId(), "Alquiler", "Alquiler mensual", 35000.0, LocalDateTime.now(),  true, 2000, 0, 0);
         String jsonRequest = mapper.writeValueAsString(expense);
 
         mockMvc.perform(post("/addExpense")
@@ -711,22 +710,20 @@ public class IntegrationTests {
                 .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
-        List<Expense> expenses = expenseService.getExpenseHistory(String.valueOf(user.getId()));
-
         Thread.sleep(2500);
 
-        long idExpense  = expenseService.getExpenseHistory(String.valueOf(user.getId())).get(0).getId();
-        expense = new ExpenseDTO(idExpense, user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, true, 2000, 0, 0);
-        jsonRequest = mapper.writeValueAsString(expense);
+        List<Expense> expenses = expenseService.getExpenseHistory(String.valueOf(user.getId()));
 
-        mockMvc.perform(post("/editExpense")
+        long idExpense  = expenses.get(0).getId();
+
+        mockMvc.perform(post("/cancelExpense/" + idExpense)
                 .header("Authorization", smart2Token)
-                .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
         User updatedUser = userService.findUserById(user.getId());
 
-        assertEquals(1, expenses.size());
+        assertEquals(2, expenses.size());
         assertEquals(70000.0, updatedUser.getAccountExpense(), 0);
 
     }
@@ -735,9 +732,9 @@ public class IntegrationTests {
     public void testSuccessAdd3Expenses() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        ExpenseDTO expense1 = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, false, 0, 0, 0);
-        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Supermercado", "Compra mensual", 7000.0, LocalDateTime.now(), false, false, 0, 0, 0);
-        ExpenseDTO expense3 = new ExpenseDTO(user.getId(),"Club", "Cuota social", 3500.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expense1 = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false,  0, 0, 0);
+        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Supermercado", "Compra mensual", 7000.0, LocalDateTime.now(), false,  0, 0, 0);
+        ExpenseDTO expense3 = new ExpenseDTO(user.getId(),"Club", "Cuota social", 3500.0, LocalDateTime.now(), false, 0, 0, 0);
         String jsonRequest1 = mapper.writeValueAsString(expense1);
         String jsonRequest2 = mapper.writeValueAsString(expense2);
         String jsonRequest3 = mapper.writeValueAsString(expense3);
@@ -772,7 +769,7 @@ public class IntegrationTests {
     public void testAddExpenseWithIncorrectAmount() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 0.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 0.0, LocalDateTime.now(), false,  0, 0, 0);
         String jsonRequest = mapper.writeValueAsString(expense);
 
         MvcResult result = mockMvc.perform(post("/addExpense")
@@ -790,7 +787,7 @@ public class IntegrationTests {
         User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
 
         long idExpense  = expenseService.getExpenseHistory(String.valueOf(user.getId())).get(0).getId();
-        ExpenseDTO expense = new ExpenseDTO(idExpense, user.getId(),"Alquiler", "Alquiler mensual", 30000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expense = new ExpenseDTO(idExpense, user.getId(),"Alquiler", "Alquiler mensual", 30000.0, LocalDateTime.now(), false,  0, 0, 0);
 
         String jsonRequest = mapper.writeValueAsString(expense);
 
@@ -816,7 +813,7 @@ public class IntegrationTests {
 
         ExpenseDTO expense = new ExpenseDTO(idRandom, user.getId(),
                 "Sueldo", "Sueldo mensual", 40000.0, LocalDateTime.now(),
-                false, false, 0, 0, 0);
+                false, 0, 0, 0);
 
         String jsonRequest = mapper.writeValueAsString(expense);
 
@@ -833,7 +830,7 @@ public class IntegrationTests {
     @Test
     public void testSuccessDeleteExpense() throws Exception{
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false,  0, 0, 0);
         String jsonRequest = mapper.writeValueAsString(expense);
 
         mockMvc.perform(post("/addExpense")
@@ -859,7 +856,7 @@ public class IntegrationTests {
     @Test
     public void testSuccessDeleteExpenseBetween2() throws Exception{
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, 0, 0, 0);
         String jsonRequest = mapper.writeValueAsString(expense);
 
         mockMvc.perform(post("/addExpense")
@@ -867,7 +864,7 @@ public class IntegrationTests {
                 .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
-        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Luz", "Luz eléctrica", 1000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Luz", "Luz eléctrica", 1000.0, LocalDateTime.now(), false, 0, 0, 0);
         String jsonRequest2 = mapper.writeValueAsString(expense2);
 
         mockMvc.perform(post("/addExpense")
@@ -936,8 +933,8 @@ public class IntegrationTests {
     public void testFilteredExpenses() throws Exception{
 
         User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
-        ExpenseDTO expense1 = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 80000.0, LocalDateTime.now(), false, false, 0, 0, 0);
-        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Supermercado", "Compra mensual", 2000.0, LocalDateTime.now().minusDays(1), false, false, 0, 0, 0);
+        ExpenseDTO expense1 = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 80000.0, LocalDateTime.now(), false,  0, 0, 0);
+        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Supermercado", "Compra mensual", 2000.0, LocalDateTime.now().minusDays(1), false, 0, 0, 0);
         String jsonRequest1 = mapper.writeValueAsString(expense1);
         String jsonRequest2 = mapper.writeValueAsString(expense2);
 
@@ -964,8 +961,8 @@ public class IntegrationTests {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
-        ExpenseDTO expense1 = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 80000.0, LocalDateTime.now(), false, false, 0, 0, 0);
-        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Supermercado", "Compra mensual", 2000.0, LocalDateTime.now().minusDays(1), false, false, 0, 0, 0);
+        ExpenseDTO expense1 = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 80000.0, LocalDateTime.now(), false, 0, 0, 0);
+        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Supermercado", "Compra mensual", 2000.0, LocalDateTime.now().minusDays(1), false,  0, 0, 0);
         String jsonRequest1 = mapper.writeValueAsString(expense1);
         String jsonRequest2 = mapper.writeValueAsString(expense2);
 
@@ -996,8 +993,8 @@ public class IntegrationTests {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
-        ExpenseDTO expense1 = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 80000.0, LocalDateTime.now(), false, false, 0, 0, 0);
-        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Supermercado", "Compra mensual", 2000.0, LocalDateTime.now().minusDays(1), false, false, 0, 0, 0);
+        ExpenseDTO expense1 = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 80000.0, LocalDateTime.now(), false, 0, 0, 0);
+        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Supermercado", "Compra mensual", 2000.0, LocalDateTime.now().minusDays(1), false,  0, 0, 0);
         String jsonRequest1 = mapper.writeValueAsString(expense1);
         String jsonRequest2 = mapper.writeValueAsString(expense2);
 
@@ -1093,7 +1090,7 @@ public class IntegrationTests {
                 .getResponse()
                 .getHeader("Authorization");
 
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, 0, 0, 0);
         String incomeJsonRequest = mapper.writeValueAsString(income);
 
         //El usuario agrega un ingreso.
@@ -1108,7 +1105,7 @@ public class IntegrationTests {
 
         assertEquals(35000, updatedUser.getAccountCredit(), 0);
 
-        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, 0, 0, 0);
         String expenseJsonRequest = mapper.writeValueAsString(expense);
 
         //El usuario agrega un gasto.
@@ -1160,7 +1157,7 @@ public class IntegrationTests {
                 .getResponse()
                 .getHeader("Authorization");
 
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, 0, 0, 0);
         String incomeJsonRequest = mapper.writeValueAsString(income);
 
         //El usuario consulta su perfil
@@ -1225,7 +1222,7 @@ public class IntegrationTests {
                 .getResponse()
                 .getHeader("Authorization");
 
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, 0, 0, 0);
         String incomeJsonRequest = mapper.writeValueAsString(income);
 
         //El usuario agrega un ingreso.
@@ -1240,7 +1237,7 @@ public class IntegrationTests {
 
         assertEquals(35000, updatedUser.getAccountCredit(), 0);
 
-        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, 0, 0, 0);
         String expenseJsonRequest = mapper.writeValueAsString(expense);
 
         //El usuario agrega un gasto.
@@ -1295,7 +1292,7 @@ public class IntegrationTests {
                 .getResponse()
                 .getHeader("Authorization");
 
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, 0, 0, 0);
         String incomeJsonRequest = mapper.writeValueAsString(income);
 
         //El usuario agrega un ingreso.
@@ -1311,7 +1308,7 @@ public class IntegrationTests {
         assertEquals(35000, updatedUser.getAccountCredit(), 0);
 
         //El usuario agrega un gasto.
-        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, 0, 0, 0);
         String expenseJsonRequest = mapper.writeValueAsString(expense);
 
         mockMvc.perform(post("/addExpense")
@@ -1320,7 +1317,7 @@ public class IntegrationTests {
                 .andExpect(status().isOk()).andReturn();
 
         //El usuario agrega un segundo gasto.
-        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Luz", "Luz mensual", 1200.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expense2 = new ExpenseDTO(user.getId(),"Luz", "Luz mensual", 1200.0, LocalDateTime.now(), false, 0, 0, 0);
         String expense2JsonRequest = mapper.writeValueAsString(expense2);
 
         mockMvc.perform(post("/addExpense")
@@ -1375,7 +1372,7 @@ public class IntegrationTests {
                 .getResponse()
                 .getHeader("Authorization");
 
-        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        IncomeDTO income = new IncomeDTO(user.getId(), "Sueldo", "Sueldo mensual", 35000.0, LocalDateTime.now(), false, 0, 0, 0);
         String incomeJsonRequest = mapper.writeValueAsString(income);
 
         //El usuario agrega un ingreso.
@@ -1391,7 +1388,7 @@ public class IntegrationTests {
         assertEquals(35000, updatedUser.getAccountCredit(), 0);
 
         //El usuario agrega un gasto.
-        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expense = new ExpenseDTO(user.getId(),"Alquiler", "Alquiler mensual", 20000.0, LocalDateTime.now(), false, 0, 0, 0);
         String expenseJsonRequest = mapper.writeValueAsString(expense);
 
         mockMvc.perform(post("/addExpense")
@@ -1401,7 +1398,7 @@ public class IntegrationTests {
 
         //El usuario edita el gasto agregado anteriormente.
         long idExpense  = expenseService.getExpenseHistory(String.valueOf(user.getId())).get(0).getId();
-        ExpenseDTO expenseEdit = new ExpenseDTO(idExpense, user.getId(),"Alquiler", "Alquiler mensual", 30000.0, LocalDateTime.now(), false, false, 0, 0, 0);
+        ExpenseDTO expenseEdit = new ExpenseDTO(idExpense, user.getId(),"Alquiler", "Alquiler mensual", 30000.0, LocalDateTime.now(), false, 0, 0, 0);
 
         String jsonRequest = mapper.writeValueAsString(expenseEdit);
 

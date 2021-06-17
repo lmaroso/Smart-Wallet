@@ -71,12 +71,29 @@ public class IncomeService {
         return finalAmount;
     }
 
-    public NotFoundIncome existIncome(long id) {
+    public Income existIncome(long id) {
         Income income = incomeRepository.findById(id);
         if(income == null){
             throw new NotFoundIncome();
         }
-        return null;
+        return income;
+    }
+
+    public void cancelIncome(long id){
+        Income income = incomeRepository.findById(id);
+        Income canceledIncome;
+        long creatorId = income.getCreatorId();
+        if(creatorId != 0){
+            canceledIncome = incomeRepository.findById(creatorId);
+        }
+        else{
+            canceledIncome = income;
+        }
+        if(canceledIncome == null){
+            throw new NotFoundIncome();
+        }
+        canceledIncome.setCancelled(true);
+        incomeRepository.save(canceledIncome);
     }
 
     public void checkValidProgrammedValues(Income income){

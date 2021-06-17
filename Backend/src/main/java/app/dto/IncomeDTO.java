@@ -11,7 +11,6 @@ public class IncomeDTO {
     private Double amount;
     private LocalDateTime date;
     private Boolean programmed;
-    private Boolean cancelled;
     private int repetitionMilliSeconds;
     private int dayOfWeek;
     private int dayOfMonth;
@@ -19,21 +18,20 @@ public class IncomeDTO {
     public IncomeDTO(){}
 
     public IncomeDTO(Long userId, String name, String description, Double amount, LocalDateTime date,
-                     Boolean cancelled, Boolean programmed, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
+                     Boolean programmed, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
         this.userId = userId;
         this.name = name;
         this.description = description;
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
-        this.cancelled  = cancelled;
         this.repetitionMilliSeconds = repetitionMilliSeconds;
         this.dayOfWeek = dayOfWeek;
         this.dayOfMonth = dayOfMonth;
     }
 
     public IncomeDTO(long id, Long userId, String name, String description, Double amount, LocalDateTime date,
-                     Boolean programmed, Boolean cancelled, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
+                     Boolean programmed, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -41,7 +39,6 @@ public class IncomeDTO {
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
-        this.cancelled  = cancelled;
         this.repetitionMilliSeconds = repetitionMilliSeconds;
         this.dayOfWeek = dayOfWeek;
         this.dayOfMonth = dayOfMonth;
@@ -97,14 +94,8 @@ public class IncomeDTO {
         return programmed;
     }
 
-    public Boolean getCancelled(){ return cancelled; }
-
     public void setProgrammed(Boolean programmed) {
         this.programmed = programmed;
-    }
-
-    public void setCancelled(Boolean cancelled) {
-        this.cancelled = cancelled;
     }
 
     public int getRepetitionMilliSeconds(){

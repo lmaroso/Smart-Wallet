@@ -29,9 +29,9 @@ public class IncomeController {
     public HttpStatus addIncome(@RequestBody IncomeDTO incomeDTO) {
 
         Income income = new Income (incomeDTO.getId(), incomeDTO.getUserId(),
-                incomeDTO.getName(), incomeDTO.getDescription(), incomeDTO.getAmount(),
-                incomeDTO.getDate(), incomeDTO.getProgrammed(), incomeDTO.getCancelled(),
-                incomeDTO.getRepetitionMilliSeconds(), incomeDTO.getDayOfWeek(), incomeDTO.getDayOfMonth());
+                    incomeDTO.getName(), incomeDTO.getDescription(), incomeDTO.getAmount(),
+                    incomeDTO.getDate(), incomeDTO.getProgrammed(), false, true,
+                    incomeDTO.getRepetitionMilliSeconds(), incomeDTO.getDayOfWeek(), incomeDTO.getDayOfMonth());
 
         incomeService.checkValidProgrammedValues(income);
         incomeService.saveIncome(income);
@@ -43,16 +43,34 @@ public class IncomeController {
     @PostMapping(value = "/editIncome")
     public HttpStatus editIncome(@RequestBody IncomeDTO incomeDTO){
 
-        incomeService.existIncome(incomeDTO.getId());
+        Income i = incomeService.existIncome(incomeDTO.getId());
 
         Income income = new Income (incomeDTO.getId(), incomeDTO.getUserId(),
                 incomeDTO.getName(), incomeDTO.getDescription(), incomeDTO.getAmount(),
-                incomeDTO.getDate(), incomeDTO.getProgrammed(), incomeDTO.getCancelled(),
+                incomeDTO.getDate(), incomeDTO.getProgrammed(), i.isCancelled(), false,
                 incomeDTO.getRepetitionMilliSeconds(), incomeDTO.getDayOfWeek(), incomeDTO.getDayOfMonth());
 
         incomeService.checkValidProgrammedValues(income);
         userService.updateAccountCredit(income.getUserId(), incomeService.checkAmount(income.getId(), income.getAmount()));
         incomeService.saveIncome(income);
+
+        return HttpStatus.OK;
+
+    }
+
+    @PostMapping(value = "/cancelIncome/{id}")
+    public HttpStatus cancelIncome(@PathVariable ("id") String id){
+
+        Long longID = null;
+
+        try {
+            longID = Long.parseLong(id);
+        }
+        catch (Exception e){
+            throw new NotFoundIncome();
+        }
+
+        incomeService.cancelIncome(longID);
 
         return HttpStatus.OK;
 

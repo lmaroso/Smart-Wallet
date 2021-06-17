@@ -18,6 +18,9 @@ public class Expense {
     @NotNull
     private Long userId;
 
+    @NotNull
+    private Long creatorId;
+
     @NotEmpty
     private String name;
 
@@ -37,6 +40,9 @@ public class Expense {
     private Boolean cancelled;
 
     @NotNull
+    private Boolean firstTask;
+
+    @NotNull
     private int repetitionMilliSeconds;
 
     @NotNull
@@ -48,8 +54,9 @@ public class Expense {
     //Constructor
     public Expense() {}
 
-    public Expense(Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
-                   Boolean cancelled, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
+    public Expense(Long userId, String name, String description, Double amount, LocalDateTime date,
+                   Boolean programmed, Boolean cancelled, Boolean firstTask, int repetitionMilliSeconds, int dayOfWeek,
+                   int dayOfMonth){
 
         this.userId = userId;
         this.name = name;
@@ -58,13 +65,16 @@ public class Expense {
         this.date = date;
         this.programmed = programmed;
         this.cancelled = cancelled;
+        this.firstTask = firstTask;
         this.repetitionMilliSeconds = repetitionMilliSeconds;
         this.dayOfWeek = dayOfWeek;
         this.dayOfMonth = dayOfMonth;
+        this.creatorId = Long.valueOf(0);
     }
 
-    public Expense(long id, Long userId, String name, String description, Double amount, LocalDateTime date, Boolean programmed,
-                   Boolean cancelled, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth) {
+    public Expense(long id, Long userId, String name, String description, Double amount, LocalDateTime date,
+                   Boolean programmed, Boolean cancelled, Boolean firstTask, int repetitionMilliSeconds, int dayOfWeek,
+                   int dayOfMonth) {
 
         this.id = id;
         this.userId = userId;
@@ -74,9 +84,11 @@ public class Expense {
         this.date = date;
         this.programmed = programmed;
         this.cancelled = cancelled;
+        this.firstTask = firstTask;
         this.repetitionMilliSeconds = repetitionMilliSeconds;
         this.dayOfWeek = dayOfWeek;
         this.dayOfMonth = dayOfMonth;
+        this.creatorId = Long.valueOf(0);
     }
 
     public long getId() { return id; }
@@ -121,6 +133,10 @@ public class Expense {
         this.programmed = programmed;
     }
 
+    public void setCancelled(Boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
     public Boolean isAvailable(){
         return this.amount > 0;
     }
@@ -130,6 +146,14 @@ public class Expense {
     }
 
     public Boolean isCancelled(){ return this.cancelled; }
+
+    public Boolean isFirstTask(){ return this.firstTask; }
+
+    public void setCreatorId(long creatorId){ this.creatorId = creatorId; }
+
+    public Long getCreatorId(){ return this.creatorId; }
+
+    public void setFirstTask(Boolean firstTask){ this.firstTask = firstTask; }
 
     public int getRepetitionMilliSeconds(){
         return this.repetitionMilliSeconds;
