@@ -11,6 +11,7 @@ import HistoryItem from "./HistoryItem";
 import HistoryList from "./HistoryList";
 
 const HistoryView = ({
+	alertMessage,
 	createModal,
 	expenses,
 	incomes,
@@ -29,18 +30,20 @@ const HistoryView = ({
 	onDelete,
 	onEdit,
 	showAlert,
-	onDismissAlert
+	onDismissAlert,
+	onClickCancel
 }) => (
 	<PageWrapper>
 		<Loading isOpen={loading} />
 		<Alert
 			isOpen={showAlert}
-			message="¿Está seguro que desea eliminar el registro?"
+			message={alertMessage}
 			onAccept={onAcceptAlert}
 			onDismiss={onDismissAlert}
 		/>
 		<Modal
 			isOpen={isModalOpen}
+			onClickCancel={onClickCancel}
 			onClickClose={onCloseModal}
 			onClickDelete={onDelete}
 			onClickEdit={onEdit}

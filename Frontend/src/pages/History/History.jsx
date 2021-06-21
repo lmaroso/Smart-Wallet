@@ -18,6 +18,8 @@ const History = ({ history }) => {
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
 	const [showAlert, setShowAlert] = useState(false);
+	const [alertMessage, setAlertMessage] = useState("");
+	const [alertType, setAlertType] = useState(null);
 
 	useIonViewDidEnter(() => {
 		setLoading(true);
@@ -86,15 +88,27 @@ const History = ({ history }) => {
 		});
 	};
 	const onDelete = () => {
+		setAlertMessage("¿Está seguro que desea eliminar el registro?");
+		setAlertType("delete");
 		setShowAlert(true);
 	};
 
 	const onDismissAlert = () => setShowAlert(false);
 
 	const onAcceptAlert = () => {
-		if (selectedMovement.type === "income") deleteIncomeMovement();
-		else deleteExpenseMovement();
+		if (alertType === "delete") {
+			if (selectedMovement.type === "income") deleteIncomeMovement();
+			else deleteExpenseMovement();
+		} else {
+			//cancel logic
+		}
 		setShowAlert(false);
+	};
+
+	const onClickCancel = () => {
+		setAlertMessage("¿Está seguro que desea cancelar el movimiento programado?");
+		setAlertType("cancel");
+		setShowAlert(true);
 	};
 
 	const deleteIncomeMovement = () =>
@@ -140,6 +154,7 @@ const History = ({ history }) => {
 
 	return (
 		<HistoryView
+			alertMessage={alertMessage}
 			createModal={createModal}
 			expenses={expenses}
 			incomes={incomes}
@@ -155,6 +170,7 @@ const History = ({ history }) => {
 			toastType={toastType}
 			onAcceptAlert={onAcceptAlert}
 			onChange={onChangeSegment}
+			onClickCancel={onClickCancel}
 			onCloseModal={onCloseModal}
 			onDelete={onDelete}
 			onDismissAlert={onDismissAlert}
