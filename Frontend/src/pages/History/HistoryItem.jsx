@@ -3,7 +3,7 @@ import { IonLabel, IonItem, IonNote, IonItemGroup } from "@ionic/react";
 import moment from "moment";
 
 import { PROGRAMMED } from "./constants";
-import { getDayOfWeek } from "../../utils/utils";
+import { getDayOfWeek, numberToPesos } from "../../utils/utils";
 
 const HistoryItem = ({ movement }) => {
 	const [selectedMovement, setSelectedMovement] = useState(null);
@@ -12,7 +12,7 @@ const HistoryItem = ({ movement }) => {
 		let formattedMovement = [
 			["Nombre", movement.name],
 			["Descripción", movement.description],
-			["Monto", `$${movement.amount}`],
+			["Monto", numberToPesos(movement.amount)],
 			["Fecha", moment(movement.date,"YYYY-MM-DD[T]HH:mm:ss").format("DD-MM-YYYY HH:mm:ss")],
 			["Es programado", PROGRAMMED[movement.programmed.toString()]]
 		];

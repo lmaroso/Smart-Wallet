@@ -106,3 +106,15 @@ export const getBalance = () => api.get(`/balance/${getKey("userid")}`, {
 })
 	.then(handleResponse)
 	.catch(handleError);
+
+export const getIncomeHistoryWithDates = (initialDate, endDate) => api.get(`/getIncomeHistory/${getKey("userid")}/${initialDate}/${endDate}`, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
+
+export const getExpenseHistoryWithDates = (initialDate, endDate) => api.get(`/getExpenseHistory/${getKey("userid")}/${initialDate}/${endDate}`, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);

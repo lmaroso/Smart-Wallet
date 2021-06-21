@@ -1,15 +1,15 @@
 import React from "react";
-import { IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle } from "@ionic/react";
 
 import PageWrapper from "../../components/PageWrapper/PageWrapper";
 import Toast from "../../components/Toast/Toast";
 import Loading from "../../components/Loading/Loading";
-
-import { numberToPesos } from "../../utils/utils";
+import Balance from "./Balance";
+import HistoryResume from "./HistoryResume";
 
 const DashboardView = ({
 	balance,
 	loading,
+	movements,
 	setShouldShowToast,
 	shouldShowToast,
 	toastText,
@@ -17,18 +17,8 @@ const DashboardView = ({
 }) => (
 	<PageWrapper>
 		<Loading isOpen={loading} />
-		<IonContent>
-			<IonCard color="tertiary">
-				<IonCardHeader>
-					<IonCardSubtitle>Dinero actual</IonCardSubtitle>
-					<IonCardTitle className="ion-text-end">
-						<h1>    
-							{numberToPesos(balance)}
-						</h1>
-					</IonCardTitle>
-				</IonCardHeader>
-			</IonCard>
-		</IonContent>
+		<Balance balance={balance} />
+		<HistoryResume movements={movements} />
 		<Toast isOpen={shouldShowToast} message={toastText} type={toastType} onDidDismiss={() => setShouldShowToast(false)} />
 	</PageWrapper>
 );

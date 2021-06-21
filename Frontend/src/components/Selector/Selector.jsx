@@ -4,8 +4,6 @@ import { IonSelect, IonItem, IonLabel } from "@ionic/react";
 import "./Selector.scss";
 
 const Selector = ({ disabled, children, label, placeholder, value, onChange }) => {
-	// eslint-disable-next-line no-console
-	console.log(value);
 	return (
 		<IonItem className="SelectorContainer">
 			{label && <IonLabel>{label}</IonLabel>}

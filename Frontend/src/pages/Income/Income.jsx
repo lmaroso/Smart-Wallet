@@ -69,7 +69,7 @@ const Income = ({ history, location }) => {
 	const onSubmit = (event) => {
 		event.preventDefault();
 		const date = moment().format("YYYY-MM-DD[T]HH:mm:ss");
-		let dataToSend = { name, description, amount, date, programmed, cancelled: false };
+		let dataToSend = { name, description, amount, date, programmed };
 		if (programmed) {
 			switch (frecuence) {
 			case "weekly":

@@ -50,8 +50,8 @@ const HistoryView = ({
 		<Segment defaultValue={segmentSelected} values={segments} onChange={onChange} />
 		<IonList>
 			{segmentSelected === "Ingresos"
-				? <HistoryList historyColor="success" historySelected={incomes} onSelectItem={createModal} />
-				: <HistoryList historyColor="danger" historySelected={expenses} onSelectItem={createModal} />
+				? <HistoryList historySelected={incomes} onSelectItem={createModal} />
+				: <HistoryList historySelected={expenses} onSelectItem={createModal} />
 			}
 		</IonList>
 		<Toast isOpen={shouldShowToast} message={toastText} type={toastType} onDidDismiss={() => setShouldShowToast(false)} />
