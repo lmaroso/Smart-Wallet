@@ -118,3 +118,15 @@ export const getExpenseHistoryWithDates = (initialDate, endDate) => api.get(`/ge
 })
 	.then(handleResponse)
 	.catch(handleError);
+
+export const cancelIncome = id => api.post(`/cancelIncome/${id}`, { userId: parseInt(getKey("userid")) }, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
+
+export const cancelExpense = id => api.post(`/cancelExpense/${id}`, { userId: parseInt(getKey("userid")) }, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);

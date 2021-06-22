@@ -3,7 +3,7 @@ import { useIonViewDidEnter } from "@ionic/react";
 
 import HistoryView from "./HistoryView";
 
-import { getIncomeHistory, getExpenseHistory, deleteIncome , deleteExpense} from "../../services/api";
+import { getIncomeHistory, getExpenseHistory, deleteIncome , deleteExpense, cancelExpense, cancelIncome } from "../../services/api";
 import { getKey } from "../../utils/localStorage";
 import { SEGMENTS } from "./constants";
 
@@ -100,10 +100,45 @@ const History = ({ history }) => {
 			if (selectedMovement.type === "income") deleteIncomeMovement();
 			else deleteExpenseMovement();
 		} else {
-			//cancel logic
+			if (selectedMovement.type === "income") cancelIncomeMovement();
+			else cancelExpenseMovement();
 		}
 		setShowAlert(false);
 	};
+
+	const cancelIncomeMovement = () => 
+		cancelIncome(selectedMovement.id)
+			.then(({ status, data }) => {
+				if (status === 200 || status === 201) {
+					setToastType("success");
+					setToastText("Se canceló el movimiento programado exitosamente");
+					setLoading(false);
+					setShouldShowToast(true);
+					setIsModalOpen(false);
+				} else {
+					setToastType("error");
+					setToastText(data);
+					setLoading(false);
+					setShouldShowToast(true);
+				}
+			});
+
+	const cancelExpenseMovement = () => 
+		cancelExpense(selectedMovement.id)
+			.then(({ status, data }) => {
+				if (status === 200 || status === 201) {
+					setToastType("success");
+					setToastText("Se canceló el movimiento programado exitosamente");
+					setLoading(false);
+					setShouldShowToast(true);
+					setIsModalOpen(false);
+				} else {
+					setToastType("error");
+					setToastText(data);
+					setLoading(false);
+					setShouldShowToast(true);
+				}
+			});
 
 	const onClickCancel = () => {
 		setAlertMessage("¿Está seguro que desea cancelar el movimiento programado?");
