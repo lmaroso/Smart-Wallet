@@ -71,6 +71,12 @@ export const getExpenseHistory = () => api.get(`/getExpenseHistory/${getKey("use
 	.then(handleResponse)
 	.catch(handleError);
 
+export const deleteExpense = id => api.delete(`/deleteExpense/${id}`, /*{ userId: parseInt(getKey("userid")) }, */{
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
+
 export const addIncome = body => api.post("/addIncome", { userId: parseInt(getKey("userid")), ...body }, {
 	headers: { Authorization: getKey("token"), ...headers }
 })
@@ -84,6 +90,30 @@ export const getIncomeHistory = () => api.get(`/getIncomeHistory/${getKey("useri
 	.catch(handleError);
 
 export const editIncome = body => api.post("/editIncome", { userId: parseInt(getKey("userid")), ...body }, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
+
+export const deleteIncome = id => api.delete(`/deleteIncome/${id}`, /*{ userId: parseInt(getKey("userid")) }, */{
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
+
+export const getBalance = () => api.get(`/balance/${getKey("userid")}`, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
+
+export const getIncomeHistoryWithDates = (initialDate, endDate) => api.get(`/getIncomeHistory/${getKey("userid")}/${initialDate}/${endDate}`, {
+	headers: { Authorization: getKey("token"), ...headers }
+})
+	.then(handleResponse)
+	.catch(handleError);
+
+export const getExpenseHistoryWithDates = (initialDate, endDate) => api.get(`/getExpenseHistory/${getKey("userid")}/${initialDate}/${endDate}`, {
 	headers: { Authorization: getKey("token"), ...headers }
 })
 	.then(handleResponse)

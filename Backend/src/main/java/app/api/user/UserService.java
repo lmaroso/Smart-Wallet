@@ -1,5 +1,7 @@
 package app.api.user;
 
+import app.api.expense.ExpenseRepository;
+import app.api.income.IncomeRepository;
 import app.api.token.ConfirmationTokenRepository;
 import app.api.token.ConfirmationTokenService;
 import app.model.Email.Email;
@@ -7,6 +9,8 @@ import app.model.Email.Sender;
 import app.model.Exceptions.*;
 import app.model.Expense.Expense;
 import app.model.Income.Income;
+import app.model.Task.ExpenseTask;
+import app.model.Task.IncomeTask;
 import app.model.Token.ConfirmationToken;
 import app.model.User.User;
 import app.model.Validators.EmailValidator;
@@ -17,9 +21,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Optional;
+import java.util.Timer;
 import java.util.UUID;
 
 @Service
@@ -30,13 +35,20 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private final IncomeRepository incomeRepository;
+    @Autowired
+    private final ExpenseRepository expenseRepository;
     private final EmailValidator emailValidator;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
 
     //Constructor
-    public UserService(UserRepository userRepository, ConfirmationTokenRepository confirmationTokenRepository) {
+    public UserService(UserRepository userRepository, ConfirmationTokenRepository confirmationTokenRepository,
+                       IncomeRepository incomeRepository, ExpenseRepository expenseRepository) {
         this.userRepository = userRepository;
+        this.incomeRepository = incomeRepository;
+        this.expenseRepository = expenseRepository;
         this.emailValidator = new EmailValidator();
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.confirmationTokenService = new ConfirmationTokenService(confirmationTokenRepository, userRepository);
@@ -61,17 +73,9 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(ID_NOT_FOUND, id)));
     }
 
-    public User findUserNamed(String name) {
-        return userRepository.findByName(name);
-    }
-
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, email)));
-    }
-
-    public boolean userExists(String username){
-        return false;
     }
 
     public void signUpUser(User user){
@@ -104,13 +108,69 @@ public class UserService implements UserDetailsService {
         return email;
     }
 
-    public void updateAccountCredit(long userId, long amount){
+    public void createExpenseTask(Expense expense){
+
+        Timer timer = new Timer();
+        Calendar calendar = Calendar.getInstance();
+        LocalDateTime now = LocalDateTime.now();
+        int repetitionMilliSeconds = expense.getRepetitionMilliSeconds();
+        LocalDateTime date = expense.getDate();
+
+        if (repetitionMilliSeconds == 0){
+            //Si no se especifican los segundos, la tarea se ejecuta cada 24 hs en caso de estar programada.
+            repetitionMilliSeconds = 86400000;
+        }
+
+        if(date.isAfter(now)) {
+            calendar.set(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(),
+                    date.getMinute(), date.getSecond());
+
+            timer.schedule(new ExpenseTask(expense.getId(), expenseRepository, userRepository),
+                    calendar.getTime(),
+                    repetitionMilliSeconds);
+        }
+        else{
+            timer.schedule(new ExpenseTask(expense.getId(), expenseRepository, userRepository),
+                    0,
+                    repetitionMilliSeconds);
+        }
+
+    }
+
+    public void createIncomeTask(Income income){
+
+        Timer timer = new Timer();
+        Calendar calendar = Calendar.getInstance();
+        LocalDateTime now = LocalDateTime.now();
+        int repetitionMilliSeconds = income.getRepetitionMilliSeconds();
+        LocalDateTime date = income.getDate();
+
+        if (repetitionMilliSeconds == 0){
+            //Si no se especifican los segundos, la tarea se ejecuta cada 24 hs en caso de estar programada.
+            repetitionMilliSeconds = 86400000;
+        }
+
+        if(date.isAfter(now)) {
+            calendar.set(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), date.getHour(),
+                    date.getMinute(), date.getSecond());
+
+            timer.schedule(new IncomeTask(income.getId(), incomeRepository, userRepository),
+                    calendar.getTime(),
+                    repetitionMilliSeconds);
+        }
+        else{
+            timer.schedule(new IncomeTask(income.getId(), incomeRepository, userRepository),
+                    0,
+                    repetitionMilliSeconds);
+        }
+
+    }
+
+    public void updateAccountCredit(long userId, Double amount){
         userRepository.updateAccountCredit(amount, userId);
     }
 
-    public void updateAccountExpense(long userId, long amount){
-        userRepository.updateAccountExpense(amount, userId);
-    }
+    public void updateAccountExpense(long userId, Double amount){ userRepository.updateAccountExpense(amount, userId); }
 
     public void enableUser(String email){
         userRepository.enableAppUser(email);

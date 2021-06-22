@@ -4,33 +4,28 @@ import PageWrapper from "../../components/PageWrapper/PageWrapper";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import Selector from "../../components/Selector/Selector";
-import SelectorItem from "../../components/Selector/SelectorItem";
 import Toast from "../../components/Toast/Toast";
 
-const selectorOptions = () => {
-	const options = [
-		{
-			name: "Sí",
-			value: true
-		}, {
-			name: "No",
-			value: false
-		}
-	];
-	return options.map(
-		option => <SelectorItem key={option.name} name={option.name} value={option.value} />
-	);
-};
+import { isProgrammedSelectorOptions, frecuenceSelectorOptions, monthlySelectorOptions, weeklySelectorOptions } from "../../utils/utils";
 
 const IncomeView = ({
 	amount,
+	dayOfMonth,
+	dayOfWeek,
 	description,
+	frecuence,
+	mode,
 	name,
 	programmed,
+	seconds,
 	setAmount,
+	setDayOfMonth,
+	setDayOfWeek,
 	setDescription,
+	setFrecuence,
 	setName,
 	setProgrammed,
+	setSeconds,
 	setShouldShowToast,
 	shouldShowToast,
 	toastText,
@@ -67,12 +62,54 @@ const IncomeView = ({
 				onChange={event => setAmount(parseInt(event.detail.value))}
 			/>
 			<Selector
+				disabled={mode === "edition"}
 				placeholder="¿Es un ingreso programado?"
 				value={programmed}
 				onChange={event => setProgrammed(event.detail.value)}
 			>
-				{selectorOptions()}
+				{isProgrammedSelectorOptions()}
 			</Selector>
+			{programmed && (
+				<>
+					<Selector
+						disabled={mode === "edition"}
+						placeholder="¿Con qué frecuencia se deberá realizar el movimiento?"
+						value={frecuence}
+						onChange={event => setFrecuence(event.detail.value)}
+					>
+						{frecuenceSelectorOptions()}
+					</Selector>
+					{frecuence === "monthly" && (
+						<Selector
+							label="Se repite cada mes el día"
+							value={dayOfMonth}
+							onChange={event => setDayOfMonth(event.detail.value)}
+						>
+							{monthlySelectorOptions()}
+						</Selector>
+					)}
+					{frecuence === "weekly" && (
+						<Selector
+							label="Se repite cada semana el"
+							value={dayOfWeek}
+							onChange={event => setDayOfWeek(event.detail.value)}
+						>
+							{weeklySelectorOptions()}
+						</Selector>
+					)}
+					{frecuence === "custom" && (
+						<Input
+							disabled={mode === "edition"}
+							inputmode="numeric"
+							label="Se repite cada X segundos"
+							placeholder="Ingrese una cantidad de segundos"
+							type="number"
+							value={seconds}
+							onChange={event => setSeconds(parseInt(event.detail.value))}
+						/>
+					)}
+				</>
+			)}
 			<Button type="submit">
                 Guardar
 			</Button>

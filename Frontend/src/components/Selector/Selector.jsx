@@ -1,10 +1,14 @@
 import React from "react";
-import { IonSelect } from "@ionic/react";
+import { IonSelect, IonItem, IonLabel } from "@ionic/react";
 
-const Selector = ({ children, placeholder, value, onChange }) => {
+import "./Selector.scss";
+
+const Selector = ({ disabled, children, label, placeholder, value, onChange }) => {
 	return (
-		<>
+		<IonItem className="SelectorContainer">
+			{label && <IonLabel>{label}</IonLabel>}
 			<IonSelect
+				disabled={disabled}
 				interface="ion-action-sheet"
 				placeholder={placeholder}
 				value={value}
@@ -12,7 +16,7 @@ const Selector = ({ children, placeholder, value, onChange }) => {
 			>
 				{children}
 			</IonSelect>
-		</>
+		</IonItem>
 	);
 };
 

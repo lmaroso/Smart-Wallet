@@ -4,27 +4,34 @@ import java.time.LocalDateTime;
 
 public class IncomeDTO {
 
-    public long id;
-    public Long userId;
-    public String name;
-    public String description;
-    public Integer amount;
-    public LocalDateTime date;
-    public Boolean programmed;
+    private long id;
+    private Long userId;
+    private String name;
+    private String description;
+    private Double amount;
+    private LocalDateTime date;
+    private Boolean programmed;
+    private int repetitionMilliSeconds;
+    private int dayOfWeek;
+    private int dayOfMonth;
 
     public IncomeDTO(){}
 
-    public IncomeDTO(Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
+    public IncomeDTO(Long userId, String name, String description, Double amount, LocalDateTime date,
+                     Boolean programmed, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
         this.userId = userId;
         this.name = name;
         this.description = description;
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
-
+        this.repetitionMilliSeconds = repetitionMilliSeconds;
+        this.dayOfWeek = dayOfWeek;
+        this.dayOfMonth = dayOfMonth;
     }
 
-    public IncomeDTO(long id, Long userId, String name, String description, Integer amount, LocalDateTime date, Boolean programmed){
+    public IncomeDTO(long id, Long userId, String name, String description, Double amount, LocalDateTime date,
+                     Boolean programmed, int repetitionMilliSeconds, int dayOfWeek, int dayOfMonth){
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -32,7 +39,9 @@ public class IncomeDTO {
         this.amount = amount;
         this.date = date;
         this.programmed = programmed;
-
+        this.repetitionMilliSeconds = repetitionMilliSeconds;
+        this.dayOfWeek = dayOfWeek;
+        this.dayOfMonth = dayOfMonth;
     }
 
     public long getId() { return id; }
@@ -65,11 +74,11 @@ public class IncomeDTO {
         this.description = description;
     }
 
-    public Integer getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -87,6 +96,18 @@ public class IncomeDTO {
 
     public void setProgrammed(Boolean programmed) {
         this.programmed = programmed;
+    }
+
+    public int getRepetitionMilliSeconds(){
+        return this.repetitionMilliSeconds;
+    }
+
+    public int getDayOfWeek(){
+        return this.dayOfWeek;
+    }
+
+    public int getDayOfMonth(){
+        return this.dayOfMonth;
     }
 }
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import moment from "moment";
-import { useIonViewDidEnter } from "@ionic/react";
+import { useIonViewDidEnter, useIonViewWillLeave } from "@ionic/react";
 
 import IncomeView from "./IncomeView";
 
@@ -18,31 +18,77 @@ const Income = ({ history, location }) => {
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
 	const [mode, setMode] = useState("creation");
+	const [frecuence, setFrecuence] = useState(null);
+	const [dayOfMonth, setDayOfMonth] = useState(null);
+	const [dayOfWeek, setDayOfWeek] = useState(null);
+	const [seconds, setSeconds] = useState(null);
 
 	useIonViewDidEnter(() => {
 		if(!getKey("token")) {
 			history.push({ pathname: "/login" });
 		} else {
 			if(location.state) {
-				const { name, description, amount, programmed, id } = location.state;
+				const { name, description, amount, programmed, id, repetitionMilliSeconds, dayOfWeek, dayOfMonth } = location.state;
 				setName(name);
 				setDescription(description);
 				setAmount(amount);
 				setProgrammed(programmed);
 				setId(id);
+				if(repetitionMilliSeconds) {
+					setFrecuence("custom");
+					setSeconds(repetitionMilliSeconds / 1000);
+				}
+				if(dayOfWeek) {
+					setFrecuence("weekly");
+					setDayOfWeek(dayOfWeek);
+				}
+				if(dayOfMonth) {
+					setFrecuence("monthly");
+					setDayOfMonth(dayOfMonth);
+				}
 				setMode("edition");
 			}
 		}
-	}, [history, location]);
+	});
+
+	useIonViewWillLeave(() => cleanup());
+
+	const cleanup = () => {
+		setName("");
+		setDescription("");
+		setAmount(0);
+		setProgrammed(null);
+		setId(null);
+		setMode("creation");
+		setFrecuence(null);
+		setSeconds(null);
+		setDayOfWeek(null);
+		setDayOfMonth(null);
+	};
 
 	const onSubmit = (event) => {
 		event.preventDefault();
 		const date = moment().format("YYYY-MM-DD[T]HH:mm:ss");
+		let dataToSend = { name, description, amount, date, programmed };
+		if (programmed) {
+			switch (frecuence) {
+			case "weekly":
+				dataToSend.dayOfWeek = dayOfWeek;
+				break;
+			case "monthly":
+				dataToSend.dayOfMonth = dayOfMonth;
+				break;
+			case "custom":
+				dataToSend.repetitionMilliSeconds = seconds * 1000;
+				break;
+			}
+		}
 		if(mode === "creation") {
-			addIncome({ name, description, amount, date, programmed })
+			addIncome(dataToSend)
 				.then(onResolve);
 		} else {
-			editIncome({ id, name, description, amount, date, programmed })
+			dataToSend.id = id;
+			editIncome(dataToSend)
 				.then(onResolve);
 		}
 	};
@@ -64,13 +110,22 @@ const Income = ({ history, location }) => {
 	return (
 		<IncomeView
 			amount={amount}
+			dayOfMonth={dayOfMonth}
+			dayOfWeek={dayOfWeek}
 			description={description}
+			frecuence={frecuence}
+			mode={mode}
 			name={name}
 			programmed={programmed}
+			seconds={seconds}
 			setAmount={setAmount}
+			setDayOfMonth={setDayOfMonth}
+			setDayOfWeek={setDayOfWeek}
 			setDescription={setDescription}
+			setFrecuence={setFrecuence}
 			setName={setName}
 			setProgrammed={setProgrammed}
+			setSeconds={setSeconds}
 			setShouldShowToast={setShouldShowToast}
 			shouldShowToast={shouldShowToast}
 			toastText={toastText}

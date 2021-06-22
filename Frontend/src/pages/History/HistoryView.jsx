@@ -6,10 +6,12 @@ import Segment from "../../components/Segment/Segment";
 import Toast from "../../components/Toast/Toast";
 import Loading from "../../components/Loading/Loading";
 import Modal from "../../components/Modal/Modal";
+import Alert from "../../components/Alert/Alert";
 import HistoryItem from "./HistoryItem";
 import HistoryList from "./HistoryList";
 
 const HistoryView = ({
+	alertMessage,
 	createModal,
 	expenses,
 	incomes,
@@ -22,15 +24,28 @@ const HistoryView = ({
 	shouldShowToast,
 	toastText,
 	toastType,
+	onAcceptAlert,
 	onChange,
 	onCloseModal,
-	onEdit
+	onDelete,
+	onEdit,
+	showAlert,
+	onDismissAlert,
+	onClickCancel
 }) => (
 	<PageWrapper>
 		<Loading isOpen={loading} />
+		<Alert
+			isOpen={showAlert}
+			message={alertMessage}
+			onAccept={onAcceptAlert}
+			onDismiss={onDismissAlert}
+		/>
 		<Modal
 			isOpen={isModalOpen}
+			onClickCancel={onClickCancel}
 			onClickClose={onCloseModal}
+			onClickDelete={onDelete}
 			onClickEdit={onEdit}
 		>
 			{selectedMovement && <HistoryItem movement={selectedMovement}/>}
@@ -38,8 +53,8 @@ const HistoryView = ({
 		<Segment defaultValue={segmentSelected} values={segments} onChange={onChange} />
 		<IonList>
 			{segmentSelected === "Ingresos"
-				? <HistoryList historyColor="success" historySelected={incomes} onSelectItem={createModal} />
-				: <HistoryList historyColor="danger" historySelected={expenses} onSelectItem={createModal} />
+				? <HistoryList historySelected={incomes} onSelectItem={createModal} />
+				: <HistoryList historySelected={expenses} onSelectItem={createModal} />
 			}
 		</IonList>
 		<Toast isOpen={shouldShowToast} message={toastText} type={toastType} onDidDismiss={() => setShouldShowToast(false)} />

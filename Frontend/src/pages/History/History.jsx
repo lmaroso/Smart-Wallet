@@ -3,7 +3,7 @@ import { useIonViewDidEnter } from "@ionic/react";
 
 import HistoryView from "./HistoryView";
 
-import { getIncomeHistory, getExpenseHistory } from "../../services/api";
+import { getIncomeHistory, getExpenseHistory, deleteIncome , deleteExpense} from "../../services/api";
 import { getKey } from "../../utils/localStorage";
 import { SEGMENTS } from "./constants";
 
@@ -17,6 +17,9 @@ const History = ({ history }) => {
 	const [shouldShowToast, setShouldShowToast] = useState(false);
 	const [toastType, setToastType] = useState("success");
 	const [toastText, setToastText] = useState("");
+	const [showAlert, setShowAlert] = useState(false);
+	const [alertMessage, setAlertMessage] = useState("");
+	const [alertType, setAlertType] = useState(null);
 
 	useIonViewDidEnter(() => {
 		setLoading(true);
@@ -33,12 +36,12 @@ const History = ({ history }) => {
 							});
 							setIncomes(incomes);
 							setLoading(false);
-						} else {
+						} else if (status !== 400) {
 							setToastType("error");
 							setToastText(data);
 							setLoading(false);
 							setShouldShowToast(true);
-						}
+						} else setLoading(false);
 					}, 1000);
 				});
 			getExpenseHistory()
@@ -53,18 +56,18 @@ const History = ({ history }) => {
 							});
 							setExpenses(expenses);
 							setLoading(false);
-						} else {
+						} else if (status !== 400) {
 							setToastType("error");
 							setToastText(data);
 							setLoading(false);
 							setShouldShowToast(true);
-						}
+						} else setLoading(false);
 					}, 1000);
 				});
 		} else {
 			history.push({ pathname: "/login" });
 		}
-	}, [history]);
+	}, []);
 
 	const onChangeSegment = event => setSegmentSelected(event.detail.value);
 
@@ -84,9 +87,74 @@ const History = ({ history }) => {
 			state: selectedMovement
 		});
 	};
+	const onDelete = () => {
+		setAlertMessage("¿Está seguro que desea eliminar el registro?");
+		setAlertType("delete");
+		setShowAlert(true);
+	};
+
+	const onDismissAlert = () => setShowAlert(false);
+
+	const onAcceptAlert = () => {
+		if (alertType === "delete") {
+			if (selectedMovement.type === "income") deleteIncomeMovement();
+			else deleteExpenseMovement();
+		} else {
+			//cancel logic
+		}
+		setShowAlert(false);
+	};
+
+	const onClickCancel = () => {
+		setAlertMessage("¿Está seguro que desea cancelar el movimiento programado?");
+		setAlertType("cancel");
+		setShowAlert(true);
+	};
+
+	const deleteIncomeMovement = () =>
+		deleteIncome(selectedMovement.id)
+			.then(({ status, data }) => {
+				if (status === 200 || status === 201) {
+					setToastType("success");
+					setToastText("Se eliminó el registro exitosamente");
+					setLoading(false);
+					setShouldShowToast(true);
+					let updatedIncomes = incomes;
+					updatedIncomes.filter(income => income.id !== selectedMovement.id);
+					setIncomes(updatedIncomes);
+					setIsModalOpen(false);
+				} else {
+					setToastType("error");
+					setToastText(data);
+					setLoading(false);
+					setShouldShowToast(true);
+				}
+			});
+
+
+	const deleteExpenseMovement = () => 
+		deleteExpense(selectedMovement.id)
+			.then(({ status, data }) => {
+				if (status === 200 || status === 201) {
+					setToastType("success");
+					setToastText("Se eliminó el registro exitosamente");
+					setLoading(false);
+					setShouldShowToast(true);
+					let updatedExpenses = expenses;
+					updatedExpenses.filter(expense => expense.id !== selectedMovement.id);
+					setExpenses(updatedExpenses);
+					setIsModalOpen(false);
+				} else {
+					setToastType("error");
+					setToastText(data);
+					setLoading(false);
+					setShouldShowToast(true);
+				}
+			});
 
 	return (
 		<HistoryView
+			alertMessage={alertMessage}
 			createModal={createModal}
 			expenses={expenses}
 			incomes={incomes}
@@ -97,10 +165,15 @@ const History = ({ history }) => {
 			selectedMovement={selectedMovement}
 			setShouldShowToast={setShouldShowToast}
 			shouldShowToast={shouldShowToast}
+			showAlert={showAlert}
 			toastText={toastText}
 			toastType={toastType}
+			onAcceptAlert={onAcceptAlert}
 			onChange={onChangeSegment}
+			onClickCancel={onClickCancel}
 			onCloseModal={onCloseModal}
+			onDelete={onDelete}
+			onDismissAlert={onDismissAlert}
 			onEdit={onEdit}
 		/>
 	);

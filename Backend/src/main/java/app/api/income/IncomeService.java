@@ -1,6 +1,7 @@
 package app.api.income;
 
 import app.model.Exceptions.InvalidAmountException;
+import app.model.Exceptions.InvalidProgrammedValuesException;
 import app.model.Exceptions.NotFoundIncome;
 import app.model.Income.Income;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +61,9 @@ public class IncomeService {
 
     }
 
-    public long checkAmount(long id, Integer amount) {
-        Integer oldAmount = incomeRepository.findById(id).getAmount();
-        Integer finalAmount = 0;
+    public Double checkAmount(long id, Double amount) {
+        Double oldAmount = incomeRepository.findById(id).getAmount();
+        Double finalAmount = 0.0;
 
         if(!oldAmount.equals(amount)){
             finalAmount =  amount - oldAmount;
@@ -70,12 +71,55 @@ public class IncomeService {
         return finalAmount;
     }
 
-    public NotFoundIncome existIncome(long id) {
+    public Income existIncome(long id) {
         Income income = incomeRepository.findById(id);
         if(income == null){
             throw new NotFoundIncome();
         }
-        return null;
+        return income;
+    }
+
+    public void cancelIncome(long id){
+        Income income = incomeRepository.findById(id);
+        Income canceledIncome;
+        long creatorId = income.getCreatorId();
+        if(creatorId != 0){
+            canceledIncome = incomeRepository.findById(creatorId);
+        }
+        else{
+            canceledIncome = income;
+        }
+        if(canceledIncome == null){
+            throw new NotFoundIncome();
+        }
+        canceledIncome.setCancelled(true);
+        incomeRepository.save(canceledIncome);
+    }
+
+    public void checkValidProgrammedValues(Income income){
+
+        if(income.isProgrammed() &&
+           income.getRepetitionMilliSeconds() == 0 &&
+           income.getDayOfWeek() == 0 &&
+           income.getDayOfMonth() == 0 &&
+           !income.isCancelled()){
+            throw new InvalidProgrammedValuesException();
+        }
+
+    }
+
+    public void deleteIncome(String id) {
+        Long longID = null;
+
+        try {
+            longID = Long.parseLong(id);
+        }
+        catch (Exception e){
+            new UsernameNotFoundException(String.format(ID_NOT_FOUND, id));
+        }
+
+        this.existIncome(longID);
+        incomeRepository.deleteById(longID);
     }
 
 }
