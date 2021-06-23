@@ -29,6 +29,7 @@ const LoginView = ({
 				<Input
 					required
 					custom="name"
+					id="name"
 					value={name}
 					onChange={event => setName(event.detail.value)}
 				/>
@@ -36,12 +37,14 @@ const LoginView = ({
 			<Input
 				required
 				custom="email"
+				id="email"
 				value={username}
 				onChange={event => setUsername(event.detail.value)}
 			/>
 			<Input
 				required
 				custom="password"
+				id="password"
 				value={password}
 				onChange={event => setPassword(event.detail.value)}
 			/>
@@ -49,7 +52,7 @@ const LoginView = ({
 				{segmentSelected}
 			</Button>
 		</form>
-		<Toast isOpen={shouldShowToast} message={toastText} type={toastType} onDidDismiss={() => setShouldShowToast(false)} />
+		<Toast id="toast-login" isOpen={shouldShowToast} message={toastText} type={toastType} onDidDismiss={() => setShouldShowToast(false)} />
 	</PageWrapper>
 );
 
