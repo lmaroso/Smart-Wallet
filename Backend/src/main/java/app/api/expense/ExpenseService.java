@@ -71,8 +71,8 @@ public class ExpenseService {
         return finalAmount;
     }
 
-    public Expense existExpense(Long id) {
-        Expense expense = expenseRepository.findById(id).get();
+    public Expense existExpense(long id) {
+        Expense expense = expenseRepository.findById(id);
         if(expense == null){
             throw new NotFoundExpense();
         }

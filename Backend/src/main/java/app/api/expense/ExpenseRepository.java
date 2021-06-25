@@ -14,6 +14,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
+    Expense findById(long id);
+
     List<Expense> findByUserId(long userId);
 
     @Transactional
@@ -23,5 +25,4 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             "e.date <= ?3")
     List<Expense> getFiltered(Long id, LocalDateTime from, LocalDateTime to);
 
-    Expense findById(long id);
 }

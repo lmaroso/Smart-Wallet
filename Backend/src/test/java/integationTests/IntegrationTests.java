@@ -575,9 +575,10 @@ public class IntegrationTests {
                 .andExpect(status().isOk()).andReturn();
 
         Income addIncome = incomeService.getIncomeHistory(Long.toString(user.getId())).get(0);
+        String userId =  Long.toString(user.getId());
         String incomeId = Long.toString(addIncome.getId());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteIncome/" + incomeId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteIncome/" + userId + "/" + incomeId)
                 .header("Authorization", smart2Token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -609,9 +610,10 @@ public class IntegrationTests {
                 .andExpect(status().isOk()).andReturn();
 
         Income addIncome = incomeService.getIncomeHistory(Long.toString(user.getId())).get(0);
+        String userId = Long.toString(user.getId());
         String incomeId = Long.toString(addIncome.getId());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteIncome/" + incomeId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteIncome/" + userId + "/" + incomeId)
                 .header("Authorization", smart2Token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -625,9 +627,11 @@ public class IntegrationTests {
 
     @Test
     public void testIncorrectIdIncomeToDelete() throws Exception{
+        User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
+        String userId = Long.toString(user.getId());
         String idRandom = "105";
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/deleteIncome/" + idRandom)
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/deleteIncome/" + userId + "/" + idRandom)
                 .header("Authorization", smart2Token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
@@ -840,8 +844,9 @@ public class IntegrationTests {
 
         Expense addExpense = expenseService.getExpenseHistory(Long.toString(user.getId())).get(0);
         String expenseId = Long.toString(addExpense.getId());
+        String userId = Long.toString(user.getId());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteExpense/" + expenseId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteExpense/" +  userId + "/" + expenseId)
                 .header("Authorization", smart2Token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -873,9 +878,10 @@ public class IntegrationTests {
                 .andExpect(status().isOk()).andReturn();
 
         Expense addExpense = expenseService.getExpenseHistory(Long.toString(user.getId())).get(0);
+        String userId = Long.toString(user.getId());
         String expenseId = Long.toString(addExpense.getId());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteExpense/" + expenseId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteExpense/" + userId + "/" + expenseId)
                 .header("Authorization", smart2Token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -889,9 +895,11 @@ public class IntegrationTests {
 
     @Test
     public void testIncorrectIdExpenseToDelete() throws Exception{
+        User user = userService.findUserByEmail("smart.wallet.app2@gmail.com");
+        String userId = Long.toString(user.getId());
        String idRandom = "105";
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/deleteExpense/" + idRandom)
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/deleteExpense/" + userId+ "/" + idRandom)
                 .header("Authorization", smart2Token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
