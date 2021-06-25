@@ -1,7 +1,5 @@
 package app.model.Income;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

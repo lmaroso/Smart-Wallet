@@ -1,6 +1,7 @@
 package app.api.expense;
 
 import app.model.Expense.Expense;
+import app.model.Income.Income;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,8 +16,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
     List<Expense> findByUserId(long userId);
 
-    Expense findById(long id);
-
     @Transactional
     @Query("SELECT e FROM Expense e " +
             "WHERE e.userId = ?1 AND " +
@@ -24,4 +23,5 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             "e.date <= ?3")
     List<Expense> getFiltered(Long id, LocalDateTime from, LocalDateTime to);
 
+    Expense findById(long id);
 }

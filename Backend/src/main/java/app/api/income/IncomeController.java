@@ -8,8 +8,8 @@ import app.model.Income.Income;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -18,6 +18,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 public class IncomeController {
+    private final static String ID_NOT_FOUND = "Id %s not found";
 
     @Autowired
     private IncomeService incomeService;
@@ -70,16 +71,33 @@ public class IncomeController {
             throw new NotFoundIncome();
         }
 
+        incomeService.existIncome(longID);
         incomeService.cancelIncome(longID);
 
         return HttpStatus.OK;
 
     }
 
-    @DeleteMapping(value = "/deleteIncome/{id}")
-    public HttpStatus deleteIncome(@PathVariable ("id") String id){
+    @DeleteMapping(value = "/deleteIncome/{idUser}/{id}")
+    public HttpStatus deleteIncome(@PathVariable ("idUser") String idUser, @PathVariable ("id") String id){
+        Long longID = null;
+        Long longIDUser = Long.valueOf(0);
 
-        incomeService.deleteIncome(id);
+        try {
+            longID = Long.parseLong(id);
+        } catch (Exception e){
+            throw new NotFoundIncome();
+        }
+
+        try {
+            longIDUser = Long.parseLong(idUser);
+        } catch (Exception e){
+            new UsernameNotFoundException(String.format(ID_NOT_FOUND, idUser));
+        }
+
+        Long idReal = incomeService.existIncome(longID).getUserId();
+        userService.updateAccountCredit(idReal, longIDUser, incomeService.checkAmount(longID));
+        incomeService.deleteIncome(longID);
 
         return HttpStatus.OK;
     }

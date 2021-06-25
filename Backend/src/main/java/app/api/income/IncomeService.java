@@ -61,6 +61,10 @@ public class IncomeService {
 
     }
 
+    public Double checkAmount(long id) {
+        return -incomeRepository.findById(id).getAmount();
+    }
+
     public Double checkAmount(long id, Double amount) {
         Double oldAmount = incomeRepository.findById(id).getAmount();
         Double finalAmount = 0.0;
@@ -108,18 +112,8 @@ public class IncomeService {
 
     }
 
-    public void deleteIncome(String id) {
-        Long longID = null;
-
-        try {
-            longID = Long.parseLong(id);
-        }
-        catch (Exception e){
-            new UsernameNotFoundException(String.format(ID_NOT_FOUND, id));
-        }
-
-        this.existIncome(longID);
-        incomeRepository.deleteById(longID);
+    public void deleteIncome(Long id) {
+        incomeRepository.deleteById(id);
     }
 
 }

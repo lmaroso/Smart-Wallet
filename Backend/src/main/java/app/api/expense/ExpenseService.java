@@ -57,6 +57,10 @@ public class ExpenseService {
        return expenseRepository.findByUserId(longID);
     }
 
+    public Double checkAmount(long id) {
+        return -expenseRepository.findById(id).getAmount();
+    }
+
     public Double checkAmount(long id, Double amount) {
         Double oldAmount = expenseRepository.findById(id).getAmount();
         Double finalAmount = 0.0;
@@ -67,8 +71,8 @@ public class ExpenseService {
         return finalAmount;
     }
 
-    public Expense existExpense(long id) {
-        Expense expense = expenseRepository.findById(id);
+    public Expense existExpense(Long id) {
+        Expense expense = expenseRepository.findById(id).get();
         if(expense == null){
             throw new NotFoundExpense();
         }
@@ -85,18 +89,8 @@ public class ExpenseService {
         }
     }
 
-    public void deleteExpense(String id) {
-        Long longID = null;
-
-        try {
-            longID = Long.parseLong(id);
-        }
-        catch (Exception e){
-            new UsernameNotFoundException(String.format(ID_NOT_FOUND, id));
-        }
-
-        this.existExpense(longID);
-        expenseRepository.deleteById(longID);
+    public void deleteExpense(Long id) {
+        expenseRepository.deleteById(id);
     }
 
     public void cancelExpense(long id){

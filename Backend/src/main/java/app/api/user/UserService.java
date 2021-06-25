@@ -20,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Optional;
@@ -170,7 +169,25 @@ public class UserService implements UserDetailsService {
         userRepository.updateAccountCredit(amount, userId);
     }
 
-    public void updateAccountExpense(long userId, Double amount){ userRepository.updateAccountExpense(amount, userId); }
+    public void updateAccountCredit(long id, long userId, Double amount){
+        if(id == userId){
+            userRepository.updateAccountCredit(amount, userId);
+        }else {
+            throw new UsernameNotFoundException(String.format(ID_NOT_FOUND, userId));
+        }
+    }
+
+    public void updateAccountExpense(long userId, Double amount){
+        userRepository.updateAccountExpense(amount, userId);
+    }
+
+    public void updateAccountExpense(long id, long userId, Double amount){
+        if(id == userId){
+            userRepository.updateAccountExpense(amount, userId);
+        } else {
+            throw new UsernameNotFoundException(String.format(ID_NOT_FOUND, userId));
+        }
+    }
 
     public void enableUser(String email){
         userRepository.enableAppUser(email);
@@ -199,6 +216,7 @@ public class UserService implements UserDetailsService {
     public double getBalance(Long id) {
         User user = findUserById(id);
         return (user.getAccountCredit() - user.getAccountExpense());
+
     }
 
     private String buildConfirmEmailMessage(String name, String link) {

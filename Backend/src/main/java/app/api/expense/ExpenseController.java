@@ -4,12 +4,13 @@ import app.api.user.UserService;
 import app.dto.ExpenseDTO;
 import app.model.Exceptions.InvalidDateException;
 import app.model.Exceptions.NotFoundExpense;
+import app.model.Exceptions.NotFoundIncome;
 import app.model.Expense.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -18,6 +19,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 public class ExpenseController {
+    private final static String ID_NOT_FOUND = "Id %s not found";
 
     @Autowired
     private ExpenseService expenseService;
@@ -27,6 +29,7 @@ public class ExpenseController {
 
     @PostMapping(value = "/addExpense")
     public HttpStatus addExpense(@RequestBody ExpenseDTO expenseDTO) {
+
         Expense expense = new Expense(expenseDTO.getId(), expenseDTO.getUserId(),
                 expenseDTO.getName(), expenseDTO.getDescription(),
                 expenseDTO.getAmount(), expenseDTO.getDate(), expenseDTO.getProgrammed(),
@@ -70,16 +73,37 @@ public class ExpenseController {
             throw new NotFoundExpense();
         }
 
+        expenseService.existExpense(longID);
         expenseService.cancelExpense(longID);
 
         return HttpStatus.OK;
 
     }
 
-    @DeleteMapping(value = "/deleteExpense/{id}")
-    public HttpStatus deleteExpense(@PathVariable ("id") String id){
+    @DeleteMapping(value = "/deleteExpense/{idUser}/{id}")
+    public HttpStatus deleteExpense(@PathVariable ("idUser") String idUser, @PathVariable ("id") String id){
 
-        expenseService.deleteExpense(id);
+        Long longID = null;
+        Long longIDUser = Long.valueOf(0);
+
+        try {
+            longID = Long.parseLong(id);
+        }
+        catch (Exception e){
+            throw new NotFoundIncome();
+        }
+
+        try {
+            longIDUser = Long.parseLong(idUser);
+        }
+        catch (Exception e){
+            new UsernameNotFoundException(String.format(ID_NOT_FOUND, idUser));
+        }
+
+        Long idReal = expenseService.existExpense(longID).getUserId();
+
+        userService.updateAccountExpense(idReal, longIDUser, expenseService.checkAmount(longID));
+        expenseService.deleteExpense(longID);
 
         return HttpStatus.OK;
     }

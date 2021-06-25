@@ -1,6 +1,46 @@
-C:\Users\Fede\Desktop\Fede\UNQ\TPI\Materias\Elementos de ingeniería de software\Smart-Wallet\Backend\src\main\java\app\model\Validators\EmailValidation.java
-C:\Users\Fede\Desktop\Fede\UNQ\TPI\Materias\Elementos de ingeniería de software\Smart-Wallet\Backend\src\main\java\app\model\Validators\PhoneNumberValidator.java
-C:\Users\Fede\Desktop\Fede\UNQ\TPI\Materias\Elementos de ingeniería de software\Smart-Wallet\Backend\src\main\java\app\model\Validators\EmailValidator.java
-C:\Users\Fede\Desktop\Fede\UNQ\TPI\Materias\Elementos de ingeniería de software\Smart-Wallet\Backend\src\main\java\app\model\User\User.java
-C:\Users\Fede\Desktop\Fede\UNQ\TPI\Materias\Elementos de ingeniería de software\Smart-Wallet\Backend\src\main\java\app\model\Validators\PhoneNumberValidation.java
-C:\Users\Fede\Desktop\Fede\UNQ\TPI\Materias\Elementos de ingeniería de software\Smart-Wallet\Backend\src\main\java\app\SmartWalletApplication.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\dto\LoginDTO.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Exceptions\TokenExpiredException.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\api\user\UserService.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Task\ExpenseTask.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\security\LoginFilter.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\security\WebSecurityConfig.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\api\token\ConfirmationTokenRepository.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\dto\ExpenseDTO.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Exceptions\InvalidProgrammedValuesException.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Exceptions\TokenNotFoundException.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Email\Email.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\User\UserRole.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Income\Income.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\dto\IncomeDTO.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\dto\UserDTO.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Token\ConfirmationToken.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\SmartWalletApplication.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Exceptions\InvalidDateException.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\api\income\IncomeService.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Exceptions\InvalidAmountException.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Exceptions\InvalidEmailException.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\api\user\UserController.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\api\income\IncomeController.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Task\IncomeTask.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Expense\Expense.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\security\PasswordEncoder.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\security\CorsConfig.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\api\token\ConfirmationTokenService.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\security\JwtFilter.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\api\expense\ExpenseRepository.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Exceptions\InvalidUserPassException.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\User\User.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Exceptions\UsedEmailException.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Validators\EmailValidator.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\api\expense\ExpenseController.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\dto\ProfileDTO.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\api\expense\ExpenseService.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\api\income\IncomeRepository.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Exceptions\EmailAlreadyConfirmedException.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Exceptions\NotFoundExpense.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\security\JwtUtil.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Email\Sender.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Exceptions\NotFoundIncome.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\api\token\ConfirmationTokenController.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\model\Email\Controller.java
+C:\Users\Ama\Documents\02 EIS\Smart-Wallet\Backend\src\main\java\app\api\user\UserRepository.java
