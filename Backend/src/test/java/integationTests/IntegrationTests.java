@@ -326,9 +326,14 @@ public class IntegrationTests {
                 .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
-        List<Income> incomes = incomeService.getIncomeHistory(String.valueOf(user.getId()));
+        List<Income>incomes = incomeService.getIncomeHistory(String.valueOf(user.getId()));
+        int incomesTotal = incomes.size();
 
-        assertEquals(1, incomes.size());
+        Long userId = user.getId();
+        Long incomeUserId = incomes.get(0).getUserId();
+
+        assertEquals(1, incomesTotal);
+        assertEquals(userId, incomeUserId);
 
     }
 
@@ -345,6 +350,7 @@ public class IntegrationTests {
                                   .andExpect(status().isBadRequest()).andReturn();
 
         assertEquals("Programmed values are not valid", result.getResolvedException().getMessage());
+        assertEquals(400, result.getResponse().getStatus());
 
     }
 
@@ -587,6 +593,7 @@ public class IntegrationTests {
         Integer actual = incomeService.getIncomeHistory(Long.toString(user.getId())).size();
 
         assertEquals(expected, actual);
+        assertEquals(user.getAccountCredit(), 0.0, 0);
 
     }
 
@@ -621,7 +628,10 @@ public class IntegrationTests {
         Integer expected = 1;
         Integer actual = incomeService.getIncomeHistory(Long.toString(user.getId())).size();
 
+        User userFinal = userService.findUserByEmail("smart.wallet.app2@gmail.com");
+
         assertEquals(expected, actual);
+        assertEquals(userFinal.getAccountCredit(), 4000.0, 0);
 
     }
 
@@ -681,8 +691,10 @@ public class IntegrationTests {
                 .andExpect(status().isOk()).andReturn();
 
         List<Expense> expenses = expenseService.getExpenseHistory(String.valueOf(user.getId()));
+        User userFinal = userService.findUserByEmail("smart.wallet.app2@gmail.com");
 
         assertEquals(1, expenses.size());
+        assertEquals(userFinal.getAccountExpense(), 20000.0, 0);
 
     }
 
@@ -806,7 +818,7 @@ public class IntegrationTests {
         double finalAccountExpense = userService.findUserByEmail("smart.wallet.app1@gmail.com").getAccountExpense();
 
         assertEquals(expected, finalAmountExpense);
-        assertTrue(30000.0 == finalAccountExpense);
+        assertEquals(30000.0 , finalAccountExpense, 0);
     }
 
     @Test
@@ -854,7 +866,10 @@ public class IntegrationTests {
         Integer expected = 0;
         Integer actual = expenseService.getExpenseHistory(Long.toString(user.getId())).size();
 
+        User userFinal = userService.findUserByEmail("smart.wallet.app2@gmail.com");
+
         assertEquals(expected, actual);
+        assertEquals(0.0, userFinal.getAccountExpense(), 0);
 
     }
 
@@ -888,8 +903,10 @@ public class IntegrationTests {
 
         Integer expected = 1;
         Integer actual = expenseService.getExpenseHistory(Long.toString(user.getId())).size();
+        User userFinal = userService.findUserByEmail("smart.wallet.app2@gmail.com");
 
         assertEquals(expected, actual);
+        assertEquals(1000.0, userFinal.getAccountExpense(), 0 );
 
     }
 
@@ -1032,6 +1049,7 @@ public class IntegrationTests {
     @Test
     public void testSuccessGetBalance() throws Exception{
 
+        User user = userService.findUserByEmail("smart.wallet.app1@gmail.com");
         String id = String.valueOf(userService.findUserByEmail("smart.wallet.app1@gmail.com").getId());
 
         MvcResult result = mockMvc.perform(get("/balance/" + id)
@@ -1039,12 +1057,12 @@ public class IntegrationTests {
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        Long idLong = userService.findUserByEmail("smart.wallet.app1@gmail.com").getId();
-        double actual = userService.getBalance(idLong);
+
         double expected = 70000.0;
+        double actual = userService.getBalance(Long.valueOf(id));
 
         assertEquals( 200, result.getResponse().getStatus());
-        assertTrue(expected == actual);
+        assertEquals(expected, actual,0);
 
     }
 
