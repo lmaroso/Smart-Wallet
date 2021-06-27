@@ -36,6 +36,7 @@ public class IncomeController {
 
         incomeService.checkValidProgrammedValues(income);
         incomeService.saveIncome(income);
+        userService.updateAccountCredit(income.getUserId(), income.getAmount());
         userService.createIncomeTask(income);
 
         return HttpStatus.OK;
