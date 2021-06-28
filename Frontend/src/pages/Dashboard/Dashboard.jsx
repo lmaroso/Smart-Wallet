@@ -19,9 +19,9 @@ const Dashboard = ({ history }) => {
 	useIonViewDidEnter(() => {
 		const initialDate = moment().subtract(1, "w").format("YYYY-MM-DD[T]HH:mm:ss");
 		const endDate = moment().format("YYYY-MM-DD[T]HH:mm:ss");
-		setLoading(true);
 
 		if(getKey("token")) {
+			setLoading(true);
 			let movements = [];
 
 			setTimeout(() => {
