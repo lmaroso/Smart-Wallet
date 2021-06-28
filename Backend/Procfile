@@ -1,0 +1,1 @@
+web: java -jar target/smartwallet-1.0-SNAPSHOT.jar

@@ -690,6 +690,8 @@ public class IntegrationTests {
                 .content(jsonRequest).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
+        Thread.sleep(1000);
+
         List<Expense> expenses = expenseService.getExpenseHistory(String.valueOf(user.getId()));
         User userFinal = userService.findUserByEmail("smart.wallet.app2@gmail.com");
 
