@@ -6,6 +6,7 @@ import app.model.Exceptions.InvalidDateException;
 import app.model.Exceptions.NotFoundExpense;
 import app.model.Exceptions.NotFoundIncome;
 import app.model.Expense.Expense;
+import app.model.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,6 @@ public class ExpenseController {
 
         expenseService.checkValidProgrammedValues(expense);
         expenseService.saveExpense(expense);
-        userService.updateAccountExpense(expense.getUserId(), expense.getAmount());
         userService.createExpenseTask(expense);
 
         return HttpStatus.OK;
